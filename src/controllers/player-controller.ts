@@ -23,8 +23,7 @@ const playerController = {
         } else {
             response.status(404).send('Player not found');
         }
-    }
+    },
 };
 
 export default playerController;
-

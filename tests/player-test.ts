@@ -8,7 +8,7 @@ describe('Integration Tests', () => {
                 const response = await request(app).get('/players');
                 expect(response.status).toBe(200);
             });
-            
+
             it('When request has invalid parameter, then response status code should be 404 (Not Found)', async () => {
                 const response = await request(app).get('/players/invalid');
                 expect(response.status).toBe(404);
@@ -33,7 +33,7 @@ describe('Integration Tests', () => {
                 abbrPosition: 'RW',
                 team: 'Inter Miami CF',
                 league: 'Major League Soccer',
-                starting11: true
+                starting11: true,
             });
         });
         it('When request parameter does not identify existing Player, then response status code should be 404 (Not Found)', async () => {

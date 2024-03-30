@@ -1,8 +1,23 @@
 {
-    "semi": false,
-    "singleQuote": true,
     "useTabs": false,
     "tabWidth": 4,
+    "overrides": [
+        {
+            "files": [
+                "*.json",
+                "*.yaml",
+                "*.yml",
+                ".prettierrc"
+            ],
+            "options": {
+                "tabWidth": 2
+            }
+        }
+    ],
     "printWidth": 127,
-    "trailingComma": "none"
+    "singleQuote": true,
+    "trailingComma": "all",
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "endOfLine": "auto"
 }
