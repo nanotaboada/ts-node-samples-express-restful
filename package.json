@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Proof of Concept for a RESTful API made with Node.js 20 (LTS), Express.js 4 in TypeScript.",
   "engines": {
-    "node": ">=18.18.1 <19 || >=20.12.0 <21"
+    "node": ">=18.18.1 <19 || >=20.9.0 <21"
   },
   "main": "dist/server.js",
   "scripts": {
@@ -30,10 +30,7 @@
   "devDependencies": {
     "@types/body-parser": "^1.19.5",
     "@types/cors": "^2.8.17",
-    "@types/dotenv": "^8.2.0",
-    "@types/helmet": "^4.0.0",
     "@types/jest": "^29.5.12",
-    "@types/prettier": "^3.0.0",
     "@types/supertest": "^6.0.2",
     "jest": "^29.7.0",
     "nodemon": "^3.1.0",
