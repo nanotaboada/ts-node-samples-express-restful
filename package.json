@@ -1,0 +1,37 @@
+{
+  "name": "ts-node-samples-express-restful",
+  "version": "1.0.0",
+  "description": "Proof of Concept for a RESTful API made with Node.js 20 (LTS), Express.js 4 in TypeScript.",
+  "engines": {
+    "node": ">=20.12.0 <21"
+  },
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "nodemon",
+    "start": "node dist/server.js",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "Nano Taboada",
+  "license": "MIT",
+  "dependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.30",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "helmet": "^7.1.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.3"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.5",
+    "@types/cors": "^2.8.17",
+    "@types/dotenv": "^8.2.0",
+    "@types/helmet": "^4.0.0",
+    "@types/prettier": "^3.0.0",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2"
+  }
+}
