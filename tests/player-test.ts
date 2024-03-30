@@ -23,7 +23,7 @@ describe('Integration Tests', () => {
         it('When request parameter identifies existing Player, then response body should be the Player', async () => {
             const response = await request(app).get('/players/10');
             expect(response.body).toEqual({
-                id: '10',
+                id: 10,
                 firstName: 'Lionel',
                 middleName: 'Andrés',
                 lastName: 'Messi',
@@ -33,7 +33,7 @@ describe('Integration Tests', () => {
                 abbrPosition: 'RW',
                 team: 'Inter Miami CF',
                 league: 'Major League Soccer',
-                starting11: true,
+                starting11: 'TRUE',
             });
         });
         it('When request parameter does not identify existing Player, then response status code should be 404 (Not Found)', async () => {
