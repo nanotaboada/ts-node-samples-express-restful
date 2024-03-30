@@ -1,0 +1,5 @@
+exclude_patterns:
+- "src/data/"
+- "tests/"
+- "dist/"
+- "**/node_modules/"
