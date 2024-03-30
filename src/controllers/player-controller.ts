@@ -5,19 +5,17 @@
  */
 
 import { Request, Response } from 'express';
-import { Player } from '../models/player-model';
-import { seedPlayers } from '../data/players-data';
+import playerDatabase from '../data/player-database';
 
 const playerController = {
     getPlayers: (request: Request, response: Response): void => {
-        const players = seedPlayers();
+        const players = playerDatabase.getAll();
         response.json(players);
     },
 
     getPlayerBySquadNumber: (request: Request, response: Response): void => {
         const squadNumber = parseInt(request.params.squadNumber);
-        const players = seedPlayers();
-        const player = players.find((p: Player) => p.squadNumber === squadNumber);
+        const player = playerDatabase.getBySquadNumber(squadNumber);
         if (player) {
             response.json(player);
         } else {
