@@ -10,6 +10,7 @@
     "dev": "nodemon",
     "start": "node dist/server.js",
     "build": "tsc",
+    "lint": "eslint .",
     "test": "jest"
   },
   "keywords": [],
