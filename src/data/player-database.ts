@@ -1,3 +1,7 @@
+/* -----------------------------------------------------------------------------
+ * Database
+ * -------------------------------------------------------------------------- */
+
 import Database from 'better-sqlite3';
 import { Player } from '../models/player-model';
 import { join } from 'path';
@@ -8,15 +12,23 @@ const db = new Database(filename, { fileMustExist: true });
 db.pragma('journal_mode = WAL');
 
 const playerDatabase = {
-    getAll: (): Player[] => {
+    selectAll: (): Player[] => {
         const query = db.prepare(`
             SELECT * 
             FROM players
         `);
         return query.all() as Player[];
     },
-
-    getBySquadNumber: (squadNumber: number): Player | null => {
+    selectById: (id: number): Player | null => {
+        const query = db.prepare(`
+            SELECT *
+            FROM players
+            WHERE id = ?
+        `);
+        const result = query.get(id);
+        return result ? (result as Player) : null;
+    },
+    selectBySquadNumber: (squadNumber: number): Player | null => {
         const query = db.prepare(`
             SELECT *
             FROM players
@@ -25,7 +37,6 @@ const playerDatabase = {
         const result = query.get(squadNumber);
         return result ? (result as Player) : null;
     },
-
     insert: (player: Player): void => {
         const query = db.prepare(`
             INSERT INTO players 
@@ -36,16 +47,15 @@ const playerDatabase = {
             player.firstName,
             player.middleName,
             player.lastName,
-            player.dateOfBirth.toISOString(),
+            player.dateOfBirth,
             player.squadNumber,
             player.position,
             player.abbrPosition,
             player.team,
             player.league,
-            player.starting11 ? 1 : 0,
+            player.starting11,
         );
     },
-
     update: (player: Player): void => {
         const query = db.prepare(`
             UPDATE players 
@@ -66,23 +76,22 @@ const playerDatabase = {
             player.firstName,
             player.middleName,
             player.lastName,
-            player.dateOfBirth.toISOString(),
+            player.dateOfBirth,
             player.squadNumber,
             player.position,
             player.abbrPosition,
             player.team,
             player.league,
-            player.starting11 ? 1 : 0,
+            player.starting11,
             player.id,
         );
     },
-
-    delete: (playerId: string): void => {
+    delete: (id: number): void => {
         const query = db.prepare(`
             DELETE FROM players 
             WHERE id = ?
         `);
-        query.run(playerId);
+        query.run(id);
     },
 };
 
