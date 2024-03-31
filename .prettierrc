@@ -1,6 +1,7 @@
 {
     "useTabs": false,
     "tabWidth": 4,
+    "printWidth": 127,
     "overrides": [
         {
             "files": [
@@ -14,7 +15,6 @@
             }
         }
     ],
-    "printWidth": 127,
     "singleQuote": true,
     "trailingComma": "all",
     "bracketSpacing": true,
