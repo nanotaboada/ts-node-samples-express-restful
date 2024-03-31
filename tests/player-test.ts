@@ -30,7 +30,7 @@ describe('Integration Tests', () => {
             expect(response.body).toEqual(player10);
         });
         it('When request parameter does not identify existing Player, then response status code should be 404 (Not Found)', async () => {
-            const response = await request(app).get('/players//squadNumber/42');
+            const response = await request(app).get('/players/squadNumber/42');
             expect(response.status).toBe(404);
         });
     });
