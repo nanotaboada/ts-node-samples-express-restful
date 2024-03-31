@@ -7,11 +7,11 @@ import playerDatabase from '../data/player-database';
 import { Player } from '../models/player-model';
 
 const playerController = {
-    getPlayers: (request: Request, response: Response): void => {
+    getAll: (request: Request, response: Response): void => {
         const players = playerDatabase.selectAll();
         response.json(players);
     },
-    getPlayerById: (request: Request, response: Response): void => {
+    getById: (request: Request, response: Response): void => {
         const id = parseInt(request.params.id);
         const player = playerDatabase.selectById(id);
         if (player) {
@@ -20,7 +20,7 @@ const playerController = {
             response.status(404).send('Player not found.');
         }
     },
-    getPlayerBySquadNumber: (request: Request, response: Response): void => {
+    getBySquadNumber: (request: Request, response: Response): void => {
         const squadNumber = parseInt(request.params.squadNumber);
         const player = playerDatabase.selectBySquadNumber(squadNumber);
         if (player) {
@@ -29,7 +29,7 @@ const playerController = {
             response.status(404).send('Player not found.');
         }
     },
-    postPlayer: (request: Request, response: Response): void => {
+    post: (request: Request, response: Response): void => {
         const id = parseInt(request.params.id);
         const player: Player = request.body;
         if (playerDatabase.selectById(id)) {
@@ -39,7 +39,7 @@ const playerController = {
             response.status(201).send('Player successfully created.');
         }
     },
-    putPlayer: (request: Request, response: Response): void => {
+    put: (request: Request, response: Response): void => {
         const id = parseInt(request.params.id);
         const player: Player = request.body;
         if (!playerDatabase.selectById(id)) {
@@ -49,7 +49,7 @@ const playerController = {
             response.status(204);
         }
     },
-    deletePlayer: (request: Request, response: Response): void => {
+    delete: (request: Request, response: Response): void => {
         const id = parseInt(request.params.id);
         if (!playerDatabase.selectById(id)) {
             response.status(404).send('Player not found');
