@@ -3,15 +3,15 @@
  * -------------------------------------------------------------------------- */
 
 export interface Player {
-    id: string;
+    id: number;
     firstName: string;
-    middleName?: string;
+    middleName: string | null;
     lastName: string;
-    dateOfBirth: Date;
+    dateOfBirth: string; // ISO 8601
     squadNumber: number;
     position: string;
     abbrPosition: string;
     team: string;
     league: string;
-    starting11: boolean;
+    starting11: string;
 }
