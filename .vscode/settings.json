@@ -1,6 +1,5 @@
 {
     "editor.detectIndentation": false,
-    "editor.wordWrap": "on",
     "editor.formatOnSave": true,
     "git.autofetch": true,
     "git.autorefresh": true,

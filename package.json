@@ -11,7 +11,7 @@
     "start": "node dist/server.js",
     "build": "tsc",
     "lint": "eslint .",
-    "test": "jest"
+    "test": "jest --detectOpenHandles"
   },
   "keywords": [],
   "author": "Nano Taboada",

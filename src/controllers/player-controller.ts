@@ -17,7 +17,7 @@ const playerController = {
         if (player) {
             response.json(player);
         } else {
-            response.status(404).send('Player not found.');
+            response.sendStatus(404);
         }
     },
     getBySquadNumber: (request: Request, response: Response): void => {
@@ -26,36 +26,44 @@ const playerController = {
         if (player) {
             response.json(player);
         } else {
-            response.status(404).send('Player not found.');
+            response.sendStatus(404);
         }
     },
     post: (request: Request, response: Response): void => {
-        const id = parseInt(request.params.id);
+        const id = parseInt(request.body.id);
         const player: Player = request.body;
-        if (playerDatabase.selectById(id)) {
-            response.status(409).send('Player already exists.');
+        if (Object.keys(player).length !== 0) {
+            if (playerDatabase.selectById(id)) {
+                response.sendStatus(409);
+            } else {
+                playerDatabase.insert(player);
+                response.sendStatus(201);
+            }
         } else {
-            playerDatabase.insert(player);
-            response.status(201).send('Player successfully created.');
+            response.sendStatus(400);
         }
     },
     put: (request: Request, response: Response): void => {
         const id = parseInt(request.params.id);
         const player: Player = request.body;
-        if (!playerDatabase.selectById(id)) {
-            response.status(404).send('Player not found.');
+        if (Object.keys(player).length !== 0) {
+            if (!playerDatabase.selectById(id)) {
+                response.sendStatus(404);
+            } else {
+                playerDatabase.update(player);
+                response.sendStatus(204);
+            }
         } else {
-            playerDatabase.update(player);
-            response.status(204);
+            response.sendStatus(400);
         }
     },
     delete: (request: Request, response: Response): void => {
         const id = parseInt(request.params.id);
         if (!playerDatabase.selectById(id)) {
-            response.status(404).send('Player not found');
+            response.sendStatus(404);
         } else {
             playerDatabase.delete(id);
-            response.status(204);
+            response.sendStatus(204);
         }
     },
 };

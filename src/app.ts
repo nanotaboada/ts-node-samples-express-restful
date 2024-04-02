@@ -24,10 +24,7 @@ app.use(bodyParser.json());
 
 // Sample middleware to log incoming requests
 app.use((request, response, next) => {
-    logger.debug(`[Request] URI: ${request.method} ${request.url}`);
-    logger.debug('[Request] Query Parameters: ' + JSON.stringify(request.query));
-    logger.debug('[Request] Headers: ' + JSON.stringify(request.headers));
-    logger.debug('[Request] Body: ' + JSON.stringify(request.body));
+    logger.debug(`[request] URI: ${request.method} ${request.url}`);
     next(); // Call the next middleware in the stack
 });
 
