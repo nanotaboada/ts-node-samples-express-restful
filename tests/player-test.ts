@@ -10,7 +10,7 @@ const path = '/players';
 
 describe('Integration Tests', () => {
     describe('GET', () => {
-        describe('/players/', () => {
+        describe(path, () => {
             it('When request has invalid path, then response status should be 404 (Not Found)', async () => {
                 const response = await request(app)
                     .get('/players-invalid-path/');
@@ -21,14 +21,14 @@ describe('Integration Tests', () => {
                     .get(path);
                 expect(response.status).toBe(200);
             });
-            it('When request has no parameters, then response body should be collection of players', async () => {
+            it('When request has no parameters, then response body should be the collection of players', async () => {
                 const players = playerStub.players;
                 const response = await request(app)
                     .get(path);
                 expect(response.body).toEqual(players);
             });
         });
-        describe('/players/:id', () => {
+        describe(`${path}/:id`, () => {
             it('When request parameter does not identify a player, then response status should be 404 (Not Found)', async () => {
                 const id = 999;
                 const response = await request(app)
@@ -50,7 +50,7 @@ describe('Integration Tests', () => {
                 expect(response.body).toEqual(player);
             });
         });
-        describe('/players/squadNumber/:squadNumber', () => {
+        describe(`${path}/squadNumber/:squadNumber`, () => {
             it('When request parameter is non-existing squad number, then response status should be 404 (Not Found)', async () => {
                 const squadNumber = 999;
                 const response = await request(app)
@@ -74,7 +74,7 @@ describe('Integration Tests', () => {
         });
     });
     describe('POST', () => {
-        describe('/players', () => {
+        describe(path, () => {
             it('When request body is empty, then response status should be 400 (Bad Request)', async () => {
                 const body: Record<string, any> = {};
                 const response = await request(app)
@@ -99,7 +99,7 @@ describe('Integration Tests', () => {
         });
     });
     describe('PUT', () => {
-        describe('/players/:id', () => {
+        describe(`${path}/:id`, () => {
             it('When request body is empty, then response status should be 400 (Bad Request)', async () => {
                 const id = playerStub.player.id;
                 const body: Record<string, any> = {};
@@ -127,7 +127,7 @@ describe('Integration Tests', () => {
         });
     });
     describe('DELETE', () => {
-        describe('/players/:id', () => {
+        describe(`${path}/:id`, () => {
             it('When request parameter is non-existing player, then response status should be 404 (Not Found)', async () => {
                 const id = 999;
                 const player = { id: 999, firstName: 'John', lastName: 'Doe' };
