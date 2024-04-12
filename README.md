@@ -12,6 +12,12 @@
 
 Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) 20.x LTS and [Express.js](https://expressjs.com/) 4 in [TypeScript](https://www.typescriptlang.org/).
 
+## Structure
+
+The following is a simplified dependency diagram of modules and main libraries:
+
+![Dependency Diagram](ts-node-samples-express-restful.svg)
+
 ## Install
 
 ```console

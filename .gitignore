@@ -7,3 +7,5 @@ yarn-error.log*
 /prettier-debug.log
 .env
 *.js
+src/data/players-sqlite3.db-shm
+src/data/players-sqlite3.db-wal
