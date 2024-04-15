@@ -27,7 +27,7 @@
     "express": "^4.19.2",
     "helmet": "^7.1.0",
     "prettier": "^3.2.5",
-    "typescript": "^5.4.4",
+    "typescript": "^5.4.5",
     "winston": "^3.13.0"
   },
   "devDependencies": {
