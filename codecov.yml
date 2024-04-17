@@ -1,0 +1,22 @@
+# https://api.codecov.io/validate
+
+# Usage:
+# curl -X POST --data-binary @codecov.yml https://codecov.io/validate
+
+ignore:
+- "src/data"
+- "src/models"
+- "src/routes"
+- "src/tests"
+- "src/app.ts"
+- "src/server.ts"
+coverage:
+  status:
+    project:
+      controllers:
+        informational: true
+        paths:
+          - "src/controllers/player-controller.ts"
+    patch:
+      default:
+        informational: true
