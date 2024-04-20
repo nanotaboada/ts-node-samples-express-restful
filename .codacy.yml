@@ -3,9 +3,17 @@ eslint:
   config_file: .eslintrc.ts
 
 exclude_paths:
-  - 'src/app.ts'
-  - 'tests/**'
-  - 'jest.config.ts'
+  - '.github'
+  - '.vscode'
+  - 'LICENSE'
   - 'README.md'
-
-
+  - '**/*.json'
+  - '**/prettier*'
+  - 'jest.config.js'
+  - 'postman-collections'
+  - 'tests/**/*'
+  - 'src/data/**/*'
+  - 'src/models/**/*'
+  - 'src/utils/**/*'
+  - 'app.ts'
+  - 'server.ts'
