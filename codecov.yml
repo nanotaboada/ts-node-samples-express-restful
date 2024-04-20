@@ -7,12 +7,12 @@
 # The pattern folder/* will not match recursively in the folder.
 # Please use this folder/**/*, which will exclude all files within the given folder.
 ignore:
-  - 'tests/**/*'
-  - 'src/data/**/*'
-  - 'src/models/**/*'
-  - 'src/utils/**/*'
-  - 'app.ts'
-  - 'server.ts'
+  - 'src/data'
+  - 'src/models'
+  - 'src/utils'
+  - 'src/app.ts'
+  - 'src/server.ts'
+  - 'tests'
 
 coverage:
   status:
@@ -21,10 +21,10 @@ coverage:
     project:
       controllers:
         paths:
-          - 'src/controllers/**/*'
+          - 'src/controllers'
       routes:
         paths:
-          - 'src/routes/**/*'
+          - 'src/routes'
     patch:
       default:
         informational: true
