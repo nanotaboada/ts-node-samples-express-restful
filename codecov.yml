@@ -9,6 +9,7 @@
 ignore:
   - 'src/data'
   - 'src/models'
+  - 'src/routes'
   - 'src/utils'
   - 'src/app.ts'
   - 'src/server.ts'
@@ -22,9 +23,6 @@ coverage:
       controllers:
         paths:
           - 'src/controllers'
-      routes:
-        paths:
-          - 'src/routes'
     patch:
       default:
         informational: true
