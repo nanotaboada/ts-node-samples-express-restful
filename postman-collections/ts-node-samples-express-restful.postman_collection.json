@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "7f70eb24-4b59-4653-9a15-299bb245175c",
 		"name": "ts-node-samples-express-restful",
+		"description": "🧪 Proof of Concept for a RESTful API made with Node.js 20 (LTS), Express.js 4 in TypeScript\n\n[https://github.com/nanotaboada/ts-node-samples-express-restful](https://github.com/nanotaboada/ts-node-samples-express-restful)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "32077259"
 	},
@@ -13,7 +14,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"id\": 12,\n  \"firstName\": \"Leandro\",\n  \"middleName\": \"Daniel\",\n  \"lastName\": \"Paredes\",\n  \"dateOfBirth\": \"1994-06-29T00:00:00.000Z\",\n  \"squadNumber\": 5,\n  \"position\": \"Defensive Midfield\",\n  \"abbrPosition\": \"DM\",\n  \"team\": \"AS Roma\",\n  \"league\": \"Serie A\",\n  \"starting11\": \"FALSE\"\n}",
+					"raw": "{\n  \"id\": 12,\n  \"firstName\": \"Leandro\",\n  \"middleName\": \"Daniel\",\n  \"lastName\": \"Paredes\",\n  \"dateOfBirth\": \"1994-06-29T00:00:00.000Z\",\n  \"squadNumber\": 5,\n  \"position\": \"Defensive Midfield\",\n  \"abbrPosition\": \"DM\",\n  \"team\": \"AS Roma\",\n  \"league\": \"Serie A\",\n  \"starting11\": false\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -30,7 +31,71 @@
 					"path": [
 						"players"
 					]
-				}
+				},
+				"description": "Creates a new Player"
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/players",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"players"
+					]
+				},
+				"description": "Retrieves all the Players"
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/players/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"players",
+						"1"
+					]
+				},
+				"description": "Retrieves one Player by Id"
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve By Squad Number",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/players/squadNumber/23",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"players",
+						"squadNumber",
+						"23"
+					]
+				},
+				"description": "Retrieves one Player by Squad Number"
 			},
 			"response": []
 		},
@@ -41,7 +106,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"id\": 12,\n  \"firstName\": \"Leandro\",\n  \"middleName\": \"Daniel\",\n  \"lastName\": \"Paredes\",\n  \"dateOfBirth\": \"1994-06-29T00:00:00.000Z\",\n  \"squadNumber\": 5,\n  \"position\": \"Defensive Midfield\",\n  \"abbrPosition\": \"DM\",\n  \"team\": \"AS Roma\",\n  \"league\": \"Serie A\",\n  \"starting11\": \"TRUE\"\n}",
+					"raw": "{\n  \"id\": 12,\n  \"firstName\": \"Leandro\",\n  \"middleName\": \"Daniel\",\n  \"lastName\": \"Paredes\",\n  \"dateOfBirth\": \"1994-06-29T00:00:00.000Z\",\n  \"squadNumber\": 5,\n  \"position\": \"Defensive Midfield\",\n  \"abbrPosition\": \"DM\",\n  \"team\": \"AS Roma\",\n  \"league\": \"Serie A\",\n  \"starting11\": true\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -59,7 +124,8 @@
 						"players",
 						"12"
 					]
-				}
+				},
+				"description": "Updates an existing Player"
 			},
 			"response": []
 		},
@@ -79,103 +145,8 @@
 						"players",
 						"12"
 					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Retrieve",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
 				},
-				"url": {
-					"raw": "http://localhost:9000/players",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"players"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Retrieve By Id",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:9000/players/1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"players",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Retrieve By Squad Number",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:9000/players/squadNumber/23",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"players",
-						"squadNumber",
-						"23"
-					]
-				}
+				"description": "Deletes an existing Player"
 			},
 			"response": []
 		}
