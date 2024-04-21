@@ -21,6 +21,10 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "[yml]": {
+    "editor.formatOnSave": false,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "yaml.schemas": {
     "https://github.com/actions/schema/blob/main/schema.json": [".github/workflows/*.yml"]
   }
