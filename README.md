@@ -1,4 +1,4 @@
-# Sample RESTful API with Node.js and Express.js in TypeScript
+# 🧪 RESTful API with Node.js and Express.js in TypeScript
 
 ## Status
 
@@ -45,6 +45,11 @@ By default the application server will start as follows:
 ```
 
 You can change the port by setting the `PORT` environment variable in the `.env` file.
+
+```console
+# /.env
+PORT=9999
+```
 
 ## Credits
 
