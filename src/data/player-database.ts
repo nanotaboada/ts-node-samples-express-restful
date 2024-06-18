@@ -14,32 +14,32 @@ db.pragma('journal_mode = WAL');
 const playerDatabase = {
     selectAll: (): Player[] => {
         const query = db.prepare(`
-            SELECT * 
+            SELECT *
             FROM players
         `);
         return query.all() as Player[];
     },
-    selectById: (id: number): Player | null => {
+    selectById: (id: number): Player | undefined => {
         const query = db.prepare(`
             SELECT *
             FROM players
             WHERE id = ?
         `);
         const result = query.get(id);
-        return result ? (result as Player) : null;
+        return result ? (result as Player) : undefined;
     },
-    selectBySquadNumber: (squadNumber: number): Player | null => {
+    selectBySquadNumber: (squadNumber: number): Player | undefined => {
         const query = db.prepare(`
             SELECT *
             FROM players
             WHERE squadNumber = ?
         `);
         const result = query.get(squadNumber);
-        return result ? (result as Player) : null;
+        return result ? (result as Player) : undefined;
     },
     insert: (player: Player): void => {
         const query = db.prepare(`
-            INSERT INTO players 
+            INSERT INTO players
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `);
         query.run(
@@ -58,18 +58,18 @@ const playerDatabase = {
     },
     update: (player: Player): void => {
         const query = db.prepare(`
-            UPDATE players 
-            SET 
-                firstName = ?, 
-                middleName = ?, 
-                lastName = ?, 
-                dateOfBirth = ?, 
-                squadNumber = ?, 
-                position = ?, 
-                abbrPosition = ?, 
-                team = ?, 
-                league = ?, 
-                starting11 = ? 
+            UPDATE players
+            SET
+                firstName = ?,
+                middleName = ?,
+                lastName = ?,
+                dateOfBirth = ?,
+                squadNumber = ?,
+                position = ?,
+                abbrPosition = ?,
+                team = ?,
+                league = ?,
+                starting11 = ?
             WHERE id = ?
         `);
         query.run(
@@ -88,7 +88,7 @@ const playerDatabase = {
     },
     delete: (id: number): void => {
         const query = db.prepare(`
-            DELETE FROM players 
+            DELETE FROM players
             WHERE id = ?
         `);
         query.run(id);
