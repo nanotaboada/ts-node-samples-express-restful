@@ -51,6 +51,14 @@ You can change the port by setting the `PORT` environment variable in the `.env`
 PORT=9999
 ```
 
+## Documentation
+
+```console
+http://localhost:9000/swagger/
+```
+
+![API Documentation](ts-node-samples-express-restful-swagger.png)
+
 ## Credits
 
 The solution has been coded using [Visual Studio Code](https://code.visualstudio.com/).
