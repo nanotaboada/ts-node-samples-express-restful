@@ -2,96 +2,26 @@
  * Database
  * -------------------------------------------------------------------------- */
 
-import Database from 'better-sqlite3';
-import { Player } from '../models/player-model';
-import { join } from 'path';
-
-const filename = join(__dirname, 'players-sqlite3.db');
-
-const db = new Database(filename, { fileMustExist: true });
-db.pragma('journal_mode = WAL');
+import Player from '../models/player-model';
 
 const playerDatabase = {
-    selectAll: (): Player[] => {
-        const query = db.prepare(`
-            SELECT *
-            FROM players
-        `);
-        return query.all() as Player[];
+    selectAll: async (): Promise<Player[]> => {
+        return await Player.findAll();
     },
-    selectById: (id: number): Player | undefined => {
-        const query = db.prepare(`
-            SELECT *
-            FROM players
-            WHERE id = ?
-        `);
-        const result = query.get(id);
-        return result ? (result as Player) : undefined;
+    selectById: async (id: number): Promise<Player | null> => {
+        return await Player.findByPk(id);
     },
-    selectBySquadNumber: (squadNumber: number): Player | undefined => {
-        const query = db.prepare(`
-            SELECT *
-            FROM players
-            WHERE squadNumber = ?
-        `);
-        const result = query.get(squadNumber);
-        return result ? (result as Player) : undefined;
+    selectBySquadNumber: async (squadNumber: number): Promise<Player | null> => {
+        return await Player.findOne({ where: { squadNumber } });
     },
-    insert: (player: Player): void => {
-        const query = db.prepare(`
-            INSERT INTO players
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `);
-        query.run(
-            player.id,
-            player.firstName,
-            player.middleName,
-            player.lastName,
-            player.dateOfBirth,
-            player.squadNumber,
-            player.position,
-            player.abbrPosition,
-            player.team,
-            player.league,
-            player.starting11,
-        );
+    insert: async (player: Partial<Player>): Promise<void> => {
+        await Player.create(player);
     },
-    update: (player: Player): void => {
-        const query = db.prepare(`
-            UPDATE players
-            SET
-                firstName = ?,
-                middleName = ?,
-                lastName = ?,
-                dateOfBirth = ?,
-                squadNumber = ?,
-                position = ?,
-                abbrPosition = ?,
-                team = ?,
-                league = ?,
-                starting11 = ?
-            WHERE id = ?
-        `);
-        query.run(
-            player.firstName,
-            player.middleName,
-            player.lastName,
-            player.dateOfBirth,
-            player.squadNumber,
-            player.position,
-            player.abbrPosition,
-            player.team,
-            player.league,
-            player.starting11,
-            player.id,
-        );
+    update: async (player: Partial<Player>): Promise<void> => {
+        await Player.update(player, { where: { id: player.id } });
     },
-    delete: (id: number): void => {
-        const query = db.prepare(`
-            DELETE FROM players
-            WHERE id = ?
-        `);
-        query.run(id);
+    delete: async (id: number): Promise<void> => {
+        await Player.destroy({ where: { id } });
     },
 };
 

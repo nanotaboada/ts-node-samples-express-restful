@@ -2,8 +2,6 @@
  * Stub
  * -------------------------------------------------------------------------- */
 
-import { Player } from '../src/models/player-model';
-
 const playerStub = {
     players: [
         {
@@ -163,10 +161,10 @@ const playerStub = {
         league: 'Serie A',
         starting11: 'FALSE',
     },
-    findById(id: number): Player | null {
+    findById(id: number): any | null {
         return this.players.find((player: { id: number }) => player.id === id) || null;
     },
-    findBySquadNumber(squadNumber: number): Player | null {
+    findBySquadNumber(squadNumber: number): any | null {
         return this.players.find((player: { squadNumber: number }) => player.squadNumber === squadNumber) || null;
     },
 };

@@ -29,8 +29,8 @@ const playerController = {
      *               items:
      *                 $ref: '#/components/schemas/Player'
      */
-    getAll: (request: Request, response: Response): void => {
-        const players = playerService.retrieveAll();
+    getAll: async (request: Request, response: Response): Promise<void> => {
+        const players = await playerService.retrieveAll();
         response.json(players);
     },
     /**
@@ -56,9 +56,9 @@ const playerController = {
      *       404:
      *         description: Not Found
      */
-    getById: (request: Request, response: Response): void => {
+    getById: async (request: Request, response: Response): Promise<void> => {
         const id = parseInt(request.params.id);
-        const player = playerService.retrieveById(id);
+        const player = await playerService.retrieveById(id);
         if (player) {
             response.json(player);
         } else {
@@ -88,9 +88,9 @@ const playerController = {
      *       404:
      *         description: Not Found
      */
-    getBySquadNumber: (request: Request, response: Response): void => {
+    getBySquadNumber: async (request: Request, response: Response): Promise<void> => {
         const squadNumber = parseInt(request.params.squadNumber);
-        const player = playerService.retrieveBySquadNumber(squadNumber);
+        const player = await playerService.retrieveBySquadNumber(squadNumber);
         if (player) {
             response.json(player);
         } else {
@@ -117,14 +117,15 @@ const playerController = {
      *       409:
      *         description: Conflict
      */
-    post: (request: Request, response: Response): void => {
+    post: async (request: Request, response: Response): Promise<void> => {
         const id = parseInt(request.body.id);
-        const player: Player = request.body;
-        if (Object.keys(player).length !== 0) {
-            if (playerService.retrieveById(id)) {
+        const create: Player = request.body;
+        if (Object.keys(create).length !== 0) {
+            const player = await playerService.retrieveById(id);
+            if (player) {
                 response.sendStatus(409);
             } else {
-                playerService.create(player);
+                await playerService.create(create);
                 response.sendStatus(201);
             }
         } else {
@@ -158,14 +159,15 @@ const playerController = {
      *       404:
      *         description: Not Found
      */
-    put: (request: Request, response: Response): void => {
+    put: async (request: Request, response: Response): Promise<void> => {
         const id = parseInt(request.params.id);
-        const player: Player = request.body;
-        if (Object.keys(player).length !== 0) {
-            if (!playerService.retrieveById(id)) {
+        const update: Player = request.body;
+        if (Object.keys(update).length !== 0) {
+            const player = await playerService.retrieveById(id);
+            if (!player) {
                 response.sendStatus(404);
             } else {
-                playerService.update(player);
+                await playerService.update(update);
                 response.sendStatus(204);
             }
         } else {
@@ -191,12 +193,13 @@ const playerController = {
      *       404:
      *         description: Not Found
      */
-    delete: (request: Request, response: Response): void => {
+    delete: async (request: Request, response: Response): Promise<void> => {
         const id = parseInt(request.params.id);
-        if (!playerService.retrieveById(id)) {
+        const player = await playerService.retrieveById(id);
+        if (!player) {
             response.sendStatus(404);
         } else {
-            playerService.delete(id);
+            await playerService.delete(id);
             response.sendStatus(204);
         }
     },
