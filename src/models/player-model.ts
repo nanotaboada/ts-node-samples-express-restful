@@ -2,6 +2,9 @@
  * Model
  * -------------------------------------------------------------------------- */
 
+import { Model, DataTypes } from 'sequelize';
+import sequelize from '../data/sequelize';
+
 /**
  * @swagger
  * components:
@@ -68,17 +71,40 @@
  *         league: Major League Soccer
  *         starting11: TRUE
  */
-
-export interface Player {
-    id: number;
-    firstName: string;
-    middleName: string | null;
-    lastName: string;
-    dateOfBirth: string; // ISO 8601
-    squadNumber: number;
-    position: string;
-    abbrPosition: string;
-    team: string;
-    league: string;
-    starting11: string;
+export class Player extends Model {
+    declare id: number;
+    declare firstName: string;
+    declare middleName: string;
+    declare lastName: string;
+    declare dateOfBirth: Date;
+    declare squadNumber: number;
+    declare position: string;
+    declare abbrPosition: string;
+    declare team: string;
+    declare league: string;
+    declare starting11: boolean;
 }
+
+Player.init(
+    {
+        id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+        firstName: { type: DataTypes.STRING, allowNull: false },
+        middleName: { type: DataTypes.STRING, allowNull: true },
+        lastName: { type: DataTypes.STRING, allowNull: false },
+        dateOfBirth: { type: DataTypes.DATE, allowNull: false },
+        squadNumber: { type: DataTypes.INTEGER, allowNull: false },
+        position: { type: DataTypes.STRING, allowNull: false },
+        abbrPosition: { type: DataTypes.STRING, allowNull: false },
+        team: { type: DataTypes.STRING, allowNull: false },
+        league: { type: DataTypes.STRING, allowNull: false },
+        starting11: { type: DataTypes.BOOLEAN, allowNull: false },
+    },
+    {
+        sequelize,
+        modelName: 'Player',
+        tableName: 'players',
+        timestamps: false,
+    },
+);
+
+export default Player;
