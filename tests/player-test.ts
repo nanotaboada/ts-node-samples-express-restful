@@ -29,7 +29,7 @@ describe('Integration Tests', () => {
             });
         });
         describe(`${path}/:id`, () => {
-            it('Given GET, when request path is non-existing Id, then response status should be 404 (Not Found)', async () => {
+            it('Given GET, when request path is nonexistent Id, then response status should be 404 (Not Found)', async () => {
                 const id = 999;
                 const response = await request(app)
                     .get(`${path}/${id}`);
@@ -51,7 +51,7 @@ describe('Integration Tests', () => {
             });
         });
         describe(`${path}/squadNumber/:squadNumber`, () => {
-            it('Given GET, when request path is non-existing Squad Number, then response status should be 404 (Not Found)', async () => {
+            it('Given GET, when request path is nonexistent Squad Number, then response status should be 404 (Not Found)', async () => {
                 const squadNumber = 999;
                 const response = await request(app)
                     .get(`${path}/squadNumber/${squadNumber}`);
@@ -89,7 +89,7 @@ describe('Integration Tests', () => {
                     .send(player);
                 expect(response.status).toBe(409);
             });
-            it('Given POST, when request body is non-existing Player, then response status should be 201 (Created)', async () => {
+            it('Given POST, when request body is nonexistent Player, then response status should be 201 (Created)', async () => {
                 const player = playerStub.player;
                 const response = await request(app)
                     .post(path)
@@ -128,7 +128,7 @@ describe('Integration Tests', () => {
     });
     describe('DELETE', () => {
         describe(`${path}/:id`, () => {
-            it('Given DELETE, when request path is non-existing Id, then response status should be 404 (Not Found)', async () => {
+            it('Given DELETE, when request path is nonexistent Id, then response status should be 404 (Not Found)', async () => {
                 const id = 999;
                 const player = { id: 999, firstName: 'John', lastName: 'Doe' };
                 const response = await request(app)
