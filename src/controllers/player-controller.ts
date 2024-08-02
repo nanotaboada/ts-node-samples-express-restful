@@ -29,8 +29,8 @@ const playerController = {
      *               items:
      *                 $ref: '#/components/schemas/Player'
      */
-    getAll: async (request: Request, response: Response): Promise<void> => {
-        const players = await playerService.retrieveAll();
+    getAllAsync: async (request: Request, response: Response): Promise<void> => {
+        const players = await playerService.retrieveAllAsync();
         response.json(players);
     },
     /**
@@ -56,9 +56,9 @@ const playerController = {
      *       404:
      *         description: Not Found
      */
-    getById: async (request: Request, response: Response): Promise<void> => {
+    getByIdAsync: async (request: Request, response: Response): Promise<void> => {
         const id = parseInt(request.params.id);
-        const player = await playerService.retrieveById(id);
+        const player = await playerService.retrieveByIdAsync(id);
         if (player) {
             response.json(player);
         } else {
@@ -88,9 +88,9 @@ const playerController = {
      *       404:
      *         description: Not Found
      */
-    getBySquadNumber: async (request: Request, response: Response): Promise<void> => {
+    getBySquadNumberAsync: async (request: Request, response: Response): Promise<void> => {
         const squadNumber = parseInt(request.params.squadNumber);
-        const player = await playerService.retrieveBySquadNumber(squadNumber);
+        const player = await playerService.retrieveBySquadNumberAsync(squadNumber);
         if (player) {
             response.json(player);
         } else {
@@ -117,15 +117,15 @@ const playerController = {
      *       409:
      *         description: Conflict
      */
-    post: async (request: Request, response: Response): Promise<void> => {
+    postAsync: async (request: Request, response: Response): Promise<void> => {
         const id = parseInt(request.body.id);
         const create: Player = request.body;
         if (Object.keys(create).length !== 0) {
-            const player = await playerService.retrieveById(id);
+            const player = await playerService.retrieveByIdAsync(id);
             if (player) {
                 response.sendStatus(409);
             } else {
-                await playerService.create(create);
+                await playerService.createAsync(create);
                 response.sendStatus(201);
             }
         } else {
@@ -159,15 +159,15 @@ const playerController = {
      *       404:
      *         description: Not Found
      */
-    put: async (request: Request, response: Response): Promise<void> => {
+    putAsync: async (request: Request, response: Response): Promise<void> => {
         const id = parseInt(request.params.id);
         const update: Player = request.body;
         if (Object.keys(update).length !== 0) {
-            const player = await playerService.retrieveById(id);
+            const player = await playerService.retrieveByIdAsync(id);
             if (!player) {
                 response.sendStatus(404);
             } else {
-                await playerService.update(update);
+                await playerService.updateAsync(update);
                 response.sendStatus(204);
             }
         } else {
@@ -193,13 +193,13 @@ const playerController = {
      *       404:
      *         description: Not Found
      */
-    delete: async (request: Request, response: Response): Promise<void> => {
+    deleteAsync: async (request: Request, response: Response): Promise<void> => {
         const id = parseInt(request.params.id);
-        const player = await playerService.retrieveById(id);
+        const player = await playerService.retrieveByIdAsync(id);
         if (!player) {
             response.sendStatus(404);
         } else {
-            await playerService.delete(id);
+            await playerService.deleteAsync(id);
             response.sendStatus(204);
         }
     },

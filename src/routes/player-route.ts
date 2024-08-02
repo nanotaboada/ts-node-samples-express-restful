@@ -7,11 +7,11 @@ import playerController from '../controllers/player-controller';
 
 const playerRoute = express.Router();
 
-playerRoute.get('/players/', playerController.getAll);
-playerRoute.get('/players/:id', playerController.getById);
-playerRoute.get('/players/squadNumber/:squadNumber', playerController.getBySquadNumber);
-playerRoute.post('/players/', playerController.post);
-playerRoute.put('/players/:id', playerController.put);
-playerRoute.delete('/players/:id', playerController.delete);
+playerRoute.get('/players/', playerController.getAllAsync);
+playerRoute.get('/players/:id', playerController.getByIdAsync);
+playerRoute.get('/players/squadNumber/:squadNumber', playerController.getBySquadNumberAsync);
+playerRoute.post('/players/', playerController.postAsync);
+playerRoute.put('/players/:id', playerController.putAsync);
+playerRoute.delete('/players/:id', playerController.deleteAsync);
 
 export default playerRoute;
