@@ -3,7 +3,7 @@
  * -------------------------------------------------------------------------- */
 
 const playerStub = {
-    players: [
+    all: [
         {
             id: 1,
             firstName: 'Damián',
@@ -148,7 +148,7 @@ const playerStub = {
             starting11: 'TRUE',
         },
     ],
-    player: {
+    new: {
         id: 12,
         firstName: 'Leandro',
         middleName: 'Daniel',
@@ -162,10 +162,10 @@ const playerStub = {
         starting11: 'FALSE',
     },
     findById(id: number): any | null {
-        return this.players.find((player: { id: number }) => player.id === id) || null;
+        return this.all.find((player: { id: number }) => player.id === id) || null;
     },
     findBySquadNumber(squadNumber: number): any | null {
-        return this.players.find((player: { squadNumber: number }) => player.squadNumber === squadNumber) || null;
+        return this.all.find((player: { squadNumber: number }) => player.squadNumber === squadNumber) || null;
     },
 };
 
