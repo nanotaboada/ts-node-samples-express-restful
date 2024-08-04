@@ -8,6 +8,8 @@
 # Please use this folder/**/*, which will exclude all files within the given folder.
 ignore:
   - 'src/data'
+  - 'src/docs'
+  - 'src/middlewares'
   - 'src/models'
   - 'src/routes'
   - 'src/utils'

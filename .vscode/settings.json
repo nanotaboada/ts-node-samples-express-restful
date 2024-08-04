@@ -27,5 +27,6 @@
   },
   "yaml.schemas": {
     "https://github.com/actions/schema/blob/main/schema.json": [".github/workflows/*.yml"]
-  }
+  },
+  "jest.runMode": "on-demand"
 }

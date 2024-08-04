@@ -13,6 +13,8 @@ exclude_paths:
   - 'postman-collections'
   - 'tests/**/*'
   - 'src/data/**/*'
+  - 'src/docs/**/*'
+  - 'src/middlewares/**/*'
   - 'src/models/**/*'
   - 'src/utils/**/*'
   - 'app.ts'
