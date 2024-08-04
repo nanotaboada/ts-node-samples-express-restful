@@ -1,17 +1,29 @@
-/* -----------------------------------------------------------------------------
- * Route
- * -------------------------------------------------------------------------- */
+import { IPlayerRoute } from '../routes/player-route-interface';
+import { IPlayerController } from '../controllers/player-controller-interface';
+import { Router } from 'express';
 
-import express from 'express';
-import playerController from '../controllers/player-controller';
+/**
+ * Implementation of IPlayerRoute for handing the routing operations of a Player.
+ */
+export default class PlayerRoute implements IPlayerRoute {
+    public router: Router;
+    private playerController: IPlayerController;
 
-const playerRoute = express.Router();
+    constructor(playerController: IPlayerController) {
+        this.router = Router();
+        this.playerController = playerController;
+        this.defineRoutes();
+    }
 
-playerRoute.get('/players/', playerController.getAllAsync);
-playerRoute.get('/players/:id', playerController.getByIdAsync);
-playerRoute.get('/players/squadNumber/:squadNumber', playerController.getBySquadNumberAsync);
-playerRoute.post('/players/', playerController.postAsync);
-playerRoute.put('/players/:id', playerController.putAsync);
-playerRoute.delete('/players/:id', playerController.deleteAsync);
-
-export default playerRoute;
+    private defineRoutes() {
+        this.router.get('/players/', this.playerController.getAllAsync.bind(this.playerController));
+        this.router.get('/players/:id', this.playerController.getByIdAsync.bind(this.playerController));
+        this.router.get(
+            '/players/squadNumber/:squadNumber',
+            this.playerController.getBySquadNumberAsync.bind(this.playerController),
+        );
+        this.router.post('/players/', this.playerController.postAsync.bind(this.playerController));
+        this.router.put('/players/:id', this.playerController.putAsync.bind(this.playerController));
+        this.router.delete('/players/:id', this.playerController.deleteAsync.bind(this.playerController));
+    }
+}

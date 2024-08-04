@@ -1,5 +1,8 @@
 exclude_patterns:
 - "src/data/"
+- "src/docs/"
+- "src/middlewares/"
+- "src/models/"
 - "tests/"
 - "dist/"
 - "**/node_modules/"

@@ -1,77 +1,23 @@
-/* -----------------------------------------------------------------------------
- * Model
- * -------------------------------------------------------------------------- */
-
-import { Model, DataTypes } from 'sequelize';
 import sequelize from '../data/sequelize';
+import { Model, DataTypes } from 'sequelize';
 
 /**
- * @swagger
- * components:
- *   schemas:
- *     Player:
- *       type: object
- *       required:
- *         - id
- *         - firstName
- *         - lastName
- *         - dateOfBirth
- *         - squadNumber
- *         - position
- *         - abbrPosition
- *         - team
- *         - league
- *         - starting11
- *       properties:
- *         id:
- *           type: integer
- *           description: The unique identifier for the Player
- *         firstName:
- *           type: string
- *           description: The first name of the Player
- *         middleName:
- *           type: string
- *           nullable: true
- *           description: The middle name of the Player, if any
- *         lastName:
- *           type: string
- *           description: The last name of the Player
- *         dateOfBirth:
- *           type: string
- *           format: date
- *           description: The date of birth of the Player (ISO 8601)
- *         squadNumber:
- *           type: integer
- *           description: The unique squad number assigned to the Player
- *         position:
- *           type: string
- *           description: The playing position of the Player
- *         abbrPosition:
- *           type: string
- *           description: The abbreviated form of the Player's position
- *         team:
- *           type: string
- *           description: The team to which the Player belongs
- *         league:
- *           type: string
- *           description: The league where the team plays
- *         starting11:
- *           type: string
- *           description: Indicates if the Player is in the starting 11
- *       example:
- *         id: 10
- *         firstName: Lionel
- *         middleName: Andrés
- *         lastName: Messi
- *         dateOfBirth: 1987-06-24
- *         squadNumber: 10
- *         position: Right Winger
- *         abbrPosition: RW
- *         team: Inter Miami CF
- *         league: Major League Soccer
- *         starting11: TRUE
+ * Sequelize model representing a football Player.
+ * @extends Model
+ *
+ * @property {number} id - The unique identifier for the Player.
+ * @property {string} firstName - The first name of the Player.
+ * @property {string} [middleName] - The middle name of the Player.
+ * @property {string} lastName - The last name of the Player.
+ * @property {Date} dateOfBirth - The date of birth of the Player.
+ * @property {number} squadNumber - The unique squad number assigned to the Player.
+ * @property {string} position - The playing position of the Player.
+ * @property {string} abbrPosition - The abbreviated form of the Player's position.
+ * @property {string} team - The team to which the Player belongs.
+ * @property {string} league - The league where the team plays.
+ * @property {boolean} starting11 - Indicates if the Player is in the starting 11.
  */
-export class Player extends Model {
+export default class Player extends Model {
     declare id: number;
     declare firstName: string;
     declare middleName: string;
@@ -106,5 +52,3 @@ Player.init(
         timestamps: false,
     },
 );
-
-export default Player;

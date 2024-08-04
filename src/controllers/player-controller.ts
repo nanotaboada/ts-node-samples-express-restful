@@ -2,19 +2,25 @@
  * Controller
  * -------------------------------------------------------------------------- */
 
+import Player from '../models/player-model';
+import { IPlayerController } from './player-controller-interface';
+import { IPlayerService } from '../services/player-service-interface';
 import { Request, Response } from 'express';
-import playerService from '../services/player-service';
-import { Player } from '../models/player-model';
 
 /**
- * @swagger
+ * @openapi
  * tags:
  *   name: Players
  */
+export default class PlayerController implements IPlayerController {
+    private playerService: IPlayerService;
 
-const playerController = {
+    constructor(playerService: IPlayerService) {
+        this.playerService = playerService;
+    }
+
     /**
-     * @swagger
+     * @openapi
      * /players:
      *   get:
      *     summary: Retrieves all players
@@ -29,12 +35,13 @@ const playerController = {
      *               items:
      *                 $ref: '#/components/schemas/Player'
      */
-    getAllAsync: async (request: Request, response: Response): Promise<void> => {
-        const players = await playerService.retrieveAllAsync();
+    async getAllAsync(request: Request, response: Response): Promise<void> {
+        const players = await this.playerService.retrieveAllAsync();
         response.json(players);
-    },
+    }
+
     /**
-     * @swagger
+     * @openapi
      * /players/{id}:
      *   get:
      *     summary: Retrieves a Player by its ID
@@ -56,17 +63,18 @@ const playerController = {
      *       404:
      *         description: Not Found
      */
-    getByIdAsync: async (request: Request, response: Response): Promise<void> => {
+    async getByIdAsync(request: Request, response: Response): Promise<void> {
         const id = parseInt(request.params.id);
-        const player = await playerService.retrieveByIdAsync(id);
+        const player = await this.playerService.retrieveByIdAsync(id);
         if (player) {
             response.json(player);
         } else {
             response.sendStatus(404);
         }
-    },
+    }
+
     /**
-     * @swagger
+     * @openapi
      * /players/squadNumber/{squadNumber}:
      *   get:
      *     summary: Retrieves a Player by its Squad Number
@@ -88,17 +96,18 @@ const playerController = {
      *       404:
      *         description: Not Found
      */
-    getBySquadNumberAsync: async (request: Request, response: Response): Promise<void> => {
+    async getBySquadNumberAsync(request: Request, response: Response): Promise<void> {
         const squadNumber = parseInt(request.params.squadNumber);
-        const player = await playerService.retrieveBySquadNumberAsync(squadNumber);
+        const player = await this.playerService.retrieveBySquadNumberAsync(squadNumber);
         if (player) {
             response.json(player);
         } else {
             response.sendStatus(404);
         }
-    },
+    }
+
     /**
-     * @swagger
+     * @openapi
      * /players:
      *   post:
      *     summary: Creates a new Player
@@ -117,23 +126,24 @@ const playerController = {
      *       409:
      *         description: Conflict
      */
-    postAsync: async (request: Request, response: Response): Promise<void> => {
+    async postAsync(request: Request, response: Response): Promise<void> {
         const id = parseInt(request.body.id);
         const create: Player = request.body;
         if (Object.keys(create).length !== 0) {
-            const player = await playerService.retrieveByIdAsync(id);
+            const player = await this.playerService.retrieveByIdAsync(id);
             if (player) {
                 response.sendStatus(409);
             } else {
-                await playerService.createAsync(create);
+                await this.playerService.createAsync(create);
                 response.sendStatus(201);
             }
         } else {
             response.sendStatus(400);
         }
-    },
+    }
+
     /**
-     * @swagger
+     * @openapi
      * /players/{id}:
      *   put:
      *     summary: Updates (entirely) a Player by its ID
@@ -159,23 +169,24 @@ const playerController = {
      *       404:
      *         description: Not Found
      */
-    putAsync: async (request: Request, response: Response): Promise<void> => {
+    async putAsync(request: Request, response: Response): Promise<void> {
         const id = parseInt(request.params.id);
         const update: Player = request.body;
         if (Object.keys(update).length !== 0) {
-            const player = await playerService.retrieveByIdAsync(id);
+            const player = await this.playerService.retrieveByIdAsync(id);
             if (!player) {
                 response.sendStatus(404);
             } else {
-                await playerService.updateAsync(update);
+                await this.playerService.updateAsync(update);
                 response.sendStatus(204);
             }
         } else {
             response.sendStatus(400);
         }
-    },
+    }
+
     /**
-     * @swagger
+     * @openapi
      * /players/{id}:
      *   delete:
      *     summary: Deletes a Player by its ID
@@ -193,16 +204,14 @@ const playerController = {
      *       404:
      *         description: Not Found
      */
-    deleteAsync: async (request: Request, response: Response): Promise<void> => {
+    async deleteAsync(request: Request, response: Response): Promise<void> {
         const id = parseInt(request.params.id);
-        const player = await playerService.retrieveByIdAsync(id);
+        const player = await this.playerService.retrieveByIdAsync(id);
         if (!player) {
             response.sendStatus(404);
         } else {
-            await playerService.deleteAsync(id);
+            await this.playerService.deleteAsync(id);
             response.sendStatus(204);
         }
-    },
-};
-
-export default playerController;
+    }
+}

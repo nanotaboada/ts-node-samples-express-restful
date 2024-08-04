@@ -15,7 +15,7 @@ const playerStub = {
             abbrPosition: 'GK',
             team: 'Aston Villa FC',
             league: 'Premier League',
-            starting11: 'TRUE',
+            starting11: true,
         },
         {
             id: 2,
@@ -28,7 +28,7 @@ const playerStub = {
             abbrPosition: 'RB',
             team: 'Atlético Madrid',
             league: 'La Liga',
-            starting11: 'TRUE',
+            starting11: true,
         },
         {
             id: 3,
@@ -41,7 +41,7 @@ const playerStub = {
             abbrPosition: 'CB',
             team: 'Tottenham Hotspur',
             league: 'Premier League',
-            starting11: 'TRUE',
+            starting11: true,
         },
         {
             id: 4,
@@ -54,7 +54,7 @@ const playerStub = {
             abbrPosition: 'CB',
             team: 'SL Benfica',
             league: 'Liga Portugal',
-            starting11: 'TRUE',
+            starting11: true,
         },
         {
             id: 5,
@@ -67,7 +67,7 @@ const playerStub = {
             abbrPosition: 'LB',
             team: 'Olympique Lyon',
             league: 'Ligue 1',
-            starting11: 'TRUE',
+            starting11: true,
         },
         {
             id: 6,
@@ -80,7 +80,7 @@ const playerStub = {
             abbrPosition: 'LW',
             team: 'SL Benfica',
             league: 'Liga Portugal',
-            starting11: 'TRUE',
+            starting11: true,
         },
         {
             id: 7,
@@ -93,7 +93,7 @@ const playerStub = {
             abbrPosition: 'CM',
             team: 'Atlético Madrid',
             league: 'La Liga',
-            starting11: 'TRUE',
+            starting11: true,
         },
         {
             id: 8,
@@ -106,7 +106,7 @@ const playerStub = {
             abbrPosition: 'CM',
             team: 'Chelsea FC',
             league: 'Premier League',
-            starting11: 'TRUE',
+            starting11: true,
         },
         {
             id: 9,
@@ -119,7 +119,7 @@ const playerStub = {
             abbrPosition: 'CM',
             team: 'Liverpool FC',
             league: 'Premier League',
-            starting11: 'TRUE',
+            starting11: true,
         },
         {
             id: 10,
@@ -132,7 +132,7 @@ const playerStub = {
             abbrPosition: 'RW',
             team: 'Inter Miami CF',
             league: 'Major League Soccer',
-            starting11: 'TRUE',
+            starting11: true,
         },
         {
             id: 11,
@@ -145,7 +145,7 @@ const playerStub = {
             abbrPosition: 'CF',
             team: 'Manchester City',
             league: 'Premier League',
-            starting11: 'TRUE',
+            starting11: true,
         },
     ],
     new: {
