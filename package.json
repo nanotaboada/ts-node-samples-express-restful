@@ -18,7 +18,7 @@
   "author": "Nano Taboada",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.19.2",
+    "express": "^4.20.0",
     "cors": "^2.8.5",
     "helmet": "^7.1.0",
     "body-parser": "^1.20.2",
