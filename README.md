@@ -10,7 +10,7 @@
 
 ## About
 
-Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) 20.x LTS and [Express.js](https://expressjs.com/) 4 in [TypeScript](https://www.typescriptlang.org/).
+Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/en/blog/release/v22.14.0) 22.14.0 (LTS) and [Express.js](https://expressjs.com/) 4 in [TypeScript](https://www.typescriptlang.org/).
 
 ## Structure
 
