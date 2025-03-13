@@ -11,9 +11,9 @@ name: Codacy Security Scan
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ['master']
   pull_request:
-    branches: [ "master" ]
+    branches: ['master']
   schedule:
     - cron: '0 21 * * 5' # Runs at 21:00, only on Friday
 
@@ -34,7 +34,7 @@ jobs:
       # Execute Codacy Analysis CLI and generate a SARIF output with the security
       # issues identified during the analysis
       - name: Run Codacy Analysis CLI
-        uses: codacy/codacy-analysis-cli-action@v4
+        uses: codacy/codacy-analysis-cli-action@master
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           verbose: true
