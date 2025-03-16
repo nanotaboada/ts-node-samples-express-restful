@@ -9,77 +9,81 @@ on:
   pull_request:
     branches: [master]
 
+env:
+  NODE_VERSION: 'lts/jod'
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [22.14.0]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Set up Node.js ${{ matrix.node-version }}
+
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
           cache-dependency-path: package-lock.json
+
       - name: Install dependencies
         run: npm ci
+
       - name: Compile application
         run: npm run build
+
   test:
     needs: build
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [22.14.0]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Set up Node.js ${{ matrix.node-version }}
+
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ env.NODE_VERSION }} # Use the LTS version alias from env variable
           cache: 'npm'
           cache-dependency-path: package-lock.json
+
       - name: Install dependencies
         run: npm ci
+
       - name: Run tests with Jest
         run: npm test
-      - name: Create coverage report with Jest
+
+      - name: Create coverage report
         run: npm run coverage
+
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v4
         with:
           name: coverage
           path: coverage/
-  coverage-codecov:
+
+  coverage:
     needs: test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [codecov, codacy]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Download coverage report artifact
         uses: actions/download-artifact@v4
         with:
           name: coverage
-      - name: Upload coverage report to Codecov
+
+      - name: Upload coverage report to ${{ matrix.service }}
+        if: ${{ matrix.service == 'codecov' }}
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: nanotaboada/ts-node-samples-express-restful
-  coverage-codacy:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Download coverage report artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage
-      - name: Upload coverage report to Codacy
+
+      - name: Upload coverage report to ${{ matrix.service }}
+        if: ${{ matrix.service == 'codacy' }}
         uses: codacy/codacy-coverage-reporter-action@v1
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
