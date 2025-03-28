@@ -13,7 +13,7 @@ import { Request, Response } from 'express';
  *   name: Players
  */
 export default class PlayerController implements IPlayerController {
-    private playerService: IPlayerService;
+    private readonly playerService: IPlayerService;
 
     constructor(playerService: IPlayerService) {
         this.playerService = playerService;
