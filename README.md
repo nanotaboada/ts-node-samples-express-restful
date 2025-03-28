@@ -15,7 +15,7 @@
 
 ## About
 
-Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/en/blog/release/v22.14.0) 22.14.0 (LTS) and [Express.js](https://expressjs.com/) 4 in [TypeScript](https://www.typescriptlang.org/).
+Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) [LTS/Jod](https://nodejs.org/en/blog/release/v22.11.0) and [Express.js](https://expressjs.com/) 4 in [TypeScript](https://www.typescriptlang.org/).
 
 ## Structure
 
@@ -41,7 +41,6 @@ By default the application server will start as follows:
 > ts-node-samples-express-restful@1.0.0 dev
 > nodemon
 
-[nodemon] 3.1.0
 [nodemon] to restart at any time, enter `rs`
 [nodemon] watching path(s): src/**/*
 [nodemon] watching extensions: ts
