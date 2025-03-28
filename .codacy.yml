@@ -1,3 +1,5 @@
+# https://docs.codacy.com/repositories-configure/codacy-configuration-file/
+
 eslint:
   enabled: true
   config_file: .eslintrc.ts

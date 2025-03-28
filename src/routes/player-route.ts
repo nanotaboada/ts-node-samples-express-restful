@@ -7,7 +7,7 @@ import { Router } from 'express';
  */
 export default class PlayerRoute implements IPlayerRoute {
     public router: Router;
-    private playerController: IPlayerController;
+    private readonly playerController: IPlayerController;
 
     constructor(playerController: IPlayerController) {
         this.router = Router();

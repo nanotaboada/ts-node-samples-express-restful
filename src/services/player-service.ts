@@ -7,8 +7,8 @@ import { IPlayerDatabase } from '../data/player-database-interface';
  * Implementation of IPlayerDatabase for handing the service operations of a Player.
  */
 export default class PlayerService implements IPlayerService {
-    private cache: NodeCache;
-    private playerDatabase: IPlayerDatabase;
+    private readonly cache: NodeCache;
+    private readonly playerDatabase: IPlayerDatabase;
 
     constructor(playerDatabase: IPlayerDatabase) {
         this.cache = new NodeCache({ stdTTL: 3600, checkperiod: 600 });
