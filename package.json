@@ -23,7 +23,7 @@
     "helmet": "^8.1.0",
     "body-parser": "^2.2.0",
     "node-cache": "^5.1.2",
-    "sequelize": "^6.37.6",
+    "sequelize": "^6.37.7",
     "sqlite3": "^5.1.7",
     "dotenv": "^16.4.7",
     "swagger-jsdoc": "^6.2.8",
