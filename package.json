@@ -39,7 +39,7 @@
     "eslint": "^9.23.0",
     "eslint-config-prettier": "^10.1.1",
     "prettier": "^3.5.3",
-    "@types/node": "^22.13.17",
+    "@types/node": "^22.14.0",
     "@types/express": "^5.0.1",
     "@types/cors": "^2.8.17",
     "@types/body-parser": "^1.19.5",
