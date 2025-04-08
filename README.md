@@ -21,7 +21,7 @@ Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) [LTS
 
 The following is a simplified dependency diagram of modules and main libraries:
 
-![Dependency Diagram](ts-node-samples-express-restful.svg)
+![Dependency Diagram](assets/images/ts-node-samples-express-restful.svg)
 
 ## Install
 
@@ -61,7 +61,7 @@ PORT=9999
 http://localhost:9000/swagger/
 ```
 
-![API Documentation](ts-node-samples-express-restful-swagger.png)
+![API Documentation](assets/images/ts-node-samples-express-restful-swagger.png)
 
 ## Credits
 

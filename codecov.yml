@@ -1,22 +1,71 @@
 # https://docs.codecov.com/docs/codecov-yaml
 
-ignore:
-  - 'src/data'
-  - 'src/docs'
-  - 'src/middlewares'
-  - 'src/models'
-  - 'src/routes'
-  - 'src/utils'
-  - 'src/app.ts'
-  - 'src/server.ts'
-  - 'tests'
-
 coverage:
   status:
     project:
-      controllers:
-        paths:
-          - 'src/controllers'
+      default:
+        target: 80%
+        threshold: 10%
+        if_not_found: success
+        if_ci_failed: error
+
     patch:
       default:
-        informational: true
+        target: 80%
+        threshold: 10%
+
+flags:
+  unit:
+    paths:
+      - "src/services/"
+      - "src/controllers/"
+      - "src/routes/"
+    carryforward: true
+
+component_management:
+  default_rules:
+    statuses:
+      - type: project
+        target: auto
+        branches:
+          - "!main"
+
+  individual_components:
+    - component_id: services
+      name: Services
+      paths:
+        - "src/services/"
+    - component_id: controllers
+      name: Controllers
+      paths:
+        - "src/controllers/"
+    - component_id: routes
+      name: Routes
+      paths:
+        - "src/routes/"
+
+comment:
+  layout: "header, diff, flags, components"
+
+ignore:
+  - ".github"
+  - ".vscode"
+  - "assets/**/*"
+  - "postman-collections/**/*"
+  - "src/data/**/*"
+  - "src/docs/**/*"
+  - "src/middlewares/**/*"
+  - "src/models/**/*"
+  - "src/app.ts"
+  - "src/server.ts"
+  - "**/*interface*.*"
+  - "tests/**/*"
+  - "**/*.yml"
+  - "**/*.json"
+  - "**/*.env"
+  - ".gitignore"
+  - ".prettierignore"
+  - ".prettierrc"
+  - "jest.config.js"
+  - "LICENSE"
+  - "README.md"
