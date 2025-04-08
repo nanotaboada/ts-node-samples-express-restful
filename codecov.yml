@@ -4,68 +4,63 @@ coverage:
   status:
     project:
       default:
-        target: 80%
-        threshold: 10%
-        if_not_found: success
-        if_ci_failed: error
+        target: 80%                    # Default target for all components
+        threshold: 10%                 # Allowable drop in coverage without failing
+        if_not_found: success          # If no coverage report is found, don't fail
+        if_ci_failed: error            # CI failure should fail coverage check
 
-    patch:
-      default:
-        target: 80%
-        threshold: 10%
+      patch:
+        default:
+          target: 80%                  # Target for changed lines
+          threshold: 10%               # Allowable drop in coverage without failing
 
 flags:
   unit:
     paths:
-      - "src/services/"
-      - "src/controllers/"
-      - "src/routes/"
+      - "**/src/services/"
+      - "**/src/controllers/"
+      - "**/src/routes/"
     carryforward: true
 
 component_management:
-  default_rules:
-    statuses:
-      - type: project
-        target: auto
-        branches:
-          - "!main"
-
   individual_components:
     - component_id: services
       name: Services
       paths:
-        - "src/services/"
+        - "**/src/services/"
     - component_id: controllers
       name: Controllers
       paths:
-        - "src/controllers/"
+        - "**/src/controllers/"
     - component_id: routes
       name: Routes
       paths:
-        - "src/routes/"
+        - "**/src/routes/"
 
 comment:
   layout: "header, diff, flags, components"
 
+# https://docs.codecov.com/docs/ignoring-paths
 ignore:
-  - ".github"
-  - ".vscode"
-  - "assets/**/*"
-  - "postman-collections/**/*"
-  - "src/data/**/*"
-  - "src/docs/**/*"
-  - "src/middlewares/**/*"
-  - "src/models/**/*"
-  - "src/app.ts"
-  - "src/server.ts"
-  - "**/*interface*.*"
-  - "tests/**/*"
+  # Ignoring a specific folder
+  - "**/assets/**/*"
+  - "**/postman-collections/**/*"
+  - "**/src/data/**/*"
+  - "**/src/docs/**/*"
+  - "**/src/middlewares/**/*"
+  - "**/src/models/**/*"
+  - "**/tests/**/*"
+  # Ignoring specific file types
   - "**/*.yml"
   - "**/*.json"
   - "**/*.env"
-  - ".gitignore"
-  - ".prettierignore"
-  - ".prettierrc"
-  - "jest.config.js"
-  - "LICENSE"
-  - "README.md"
+  # Ignoring specific file names
+  - "**/interface**"
+  - "**/src/app.ts"
+  - "**/src/server.ts"
+  - "**/.gitignore"
+  - "**/.prettierignore"
+  - "**/.prettierrc"
+  - "**/jest.config.js"
+  - "**/LICENSE"
+  - "**/README.md"
