@@ -12,7 +12,12 @@
       "cwd": "${workspaceFolder}",
       "internalConsoleOptions": "openOnSessionStart",
       "skipFiles": ["<node_internals>/**", "node_modules/**"],
-      "restart": true
+      "restart": true,
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "Server is running at http://localhost:([0-9]+)",
+        "uriFormat": "http://localhost:%s/swagger/"
+      }
     }
   ]
 }
