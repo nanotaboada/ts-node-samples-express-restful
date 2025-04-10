@@ -28,5 +28,9 @@
   "yaml.schemas": {
     "https://github.com/actions/schema/blob/main/schema.json": [".github/workflows/*.yml"]
   },
-  "jest.runMode": "on-demand"
+  "jest.runMode": "on-demand",
+  "sonarlint.connectedMode.project": {
+    "connectionId": "nanotaboada",
+    "projectKey": "nanotaboada_ts-node-samples-express-restful"
+  }
 }
