@@ -1,4 +1,8 @@
 import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUiExpress from 'swagger-ui-express';
+import type { SwaggerUiOptions } from 'swagger-ui-express';
+
+const envPath = process.env.NODE_ENV === 'development' ? 'src' : 'dist';
 
 /**
  * Swagger configuration for generating API documentation.
@@ -18,7 +22,7 @@ import swaggerJSDoc from 'swagger-jsdoc';
  * @see {@link https://swagger.io/tools/swagger-ui/} for Swagger UI documentation.
  * @see {@link https://github.com/Surnet/swagger-jsdoc} for `swagger-jsdoc` documentation.
  */
-const options = {
+const swaggerJSDocOptions = {
     definition: {
         openapi: '3.0.0',
         info: {
@@ -102,9 +106,21 @@ const options = {
     ],
     basePath: '/',
     schemes: ['http'],
-    apis: ['./src/models/*.ts', './src/controllers/*.ts'],
+    apis: process.env.NODE_ENV === 'development' ? ['./src/controllers/*.ts'] : ['./dist/controllers/*.js'],
 };
 
-const swaggerSpec = swaggerJSDoc(options);
+const validatedSwaggerSpecJSON = swaggerJSDoc(swaggerJSDocOptions);
 
-export default swaggerSpec;
+// Swagger UI Configuration
+const customSwaggerUiOptions: SwaggerUiOptions = {
+    customSiteTitle: '🧪 RESTful API with Node.js and Express.js in TypeScript',
+    swaggerOptions: {
+        validatorUrl: null, // Disable external validator
+        defaultModelsExpandDepth: -1, // Hide schemas by default
+        tryItOutEnabled: true, // Enable "Try it out" by default
+        displayRequestDuration: true,
+        docExpansion: 'list',
+    },
+};
+
+export { validatedSwaggerSpecJSON as swaggerSpec, swaggerUiExpress as swaggerUi, customSwaggerUiOptions as swaggerUiOptions };
