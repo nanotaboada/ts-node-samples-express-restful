@@ -1,6 +1,11 @@
-import swaggerUi from 'swagger-ui-express';
-import swaggerSpec from '../docs/swagger';
 import { Request, Response, NextFunction } from 'express';
+
+const SWAGGER_CSP = [
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com", // Allow Swagger's JS
+    "style-src 'self' 'unsafe-inline'", // Required for Swagger UI styles
+    "img-src 'self' data:", // Allow embedded image data
+].join('; ');
 
 /**
  * Middleware for handling requests to Swagger UI.
@@ -11,9 +16,7 @@ import { Request, Response, NextFunction } from 'express';
  *
  * @see {@link https://github.com/swagger-api/swagger-ui/issues?q=Content-Security-Policy+is%3Aopen}
  */
-const swaggerMiddleware = (request: Request, response: Response, next: NextFunction) => {
-    response.setHeader('Content-Security-Policy', `script-src 'self'`);
+export const swaggerMiddleware = (request: Request, response: Response, next: NextFunction) => {
+    response.setHeader('Content-Security-Policy', SWAGGER_CSP);
     next();
 };
-
-export { swaggerMiddleware, swaggerUi, swaggerSpec };
