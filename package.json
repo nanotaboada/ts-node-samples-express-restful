@@ -2,9 +2,6 @@
   "name": "ts-node-samples-express-restful",
   "version": "1.0.0",
   "description": "Proof of Concept for a RESTful API made with Node.js LTS/Jod, Express.js 4 in TypeScript.",
-  "engines": {
-    "node": "22.14.0"
-  },
   "main": "dist/server.js",
   "scripts": {
     "dev": "nodemon",
@@ -13,7 +10,10 @@
     "lint": "eslint .",
     "lint:commit": "git log -1 --pretty=%B | npx commitlint --verbose",
     "test": "jest --detectOpenHandles",
-    "coverage": "jest --coverage"
+    "coverage": "jest --coverage",
+    "swagger:docs": "ts-node src/docs/swagger-docs.ts",
+    "docker:build": "docker build --tag ts-node-samples-express-restful .",
+    "docker:run": "docker run --name express-app -p 9000:9000 ts-node-samples-express-restful:latest"
   },
   "keywords": [],
   "author": "Nano Taboada",
@@ -31,13 +31,13 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.1",
     "@types/body-parser": "^1.19.5",
-    "@types/cors": "^2.8.17",
+    "@types/cors": "^2.8.18",
     "@types/eslint": "^9.6.1",
     "@types/express": "^5.0.1",
     "@types/jest": "^29.5.14",
-    "@types/node": "^22.15.14",
+    "@types/node": "^22.15.17",
     "@types/sequelize": "^4.28.20",
     "@types/supertest": "^6.0.3",
     "@types/swagger-jsdoc": "^6.0.4",

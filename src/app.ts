@@ -13,7 +13,8 @@ import PlayerService from './services/player-service';
 import PlayerController from './controllers/player-controller';
 import PlayerRoute from './routes/player-route';
 
-import { swaggerMiddleware, swaggerUi, swaggerSpec } from './middlewares/swagger-middleware';
+import { swaggerSpec, swaggerUi, swaggerUiOptions } from './docs/swagger';
+import { swaggerMiddleware } from './middlewares/swagger-middleware';
 
 // Loads environment variables from the .env file
 dotenv.config();
@@ -36,7 +37,14 @@ app.use(cors());
 // Body-parser - https://expressjs.com/en/resources/middleware/body-parser.html
 app.use(bodyParser.json());
 // Swagger UI Express - https://github.com/scottie1984/swagger-ui-express
-app.use('/swagger', swaggerMiddleware, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/swagger', swaggerMiddleware, swaggerUi.serve, swaggerUi.setup(swaggerSpec, swaggerUiOptions));
+app.get('/swagger/index.html', (_, response) => {
+    response.redirect(301, '/swagger');
+});
+app.get('/swagger.json', (_, response) => {
+    response.setHeader('Content-Type', 'application/json');
+    response.send(swaggerSpec);
+});
 // express.Router - https://expressjs.com/en/guide/routing.html
 app.use('/', playerRoute.router);
 
