@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode", // Prettier formatter
+    "dbaeumer.vscode-eslint", // ESLint support for TypeScript
+    "sonarsource.sonarlint-vscode", // Inline analysis via SonarLint
+    "redhat.vscode-yaml", // YAML schema and formatting
+    "codezombiech.gitignore", // .gitignore syntax and validation
+    "ms-azuretools.vscode-containers", // Dockerfile + container support (preferred over Docker)
+    "orta.vscode-jest", // Jest integration
+    "github.vscode-pull-request-github", // GitHub PR/issues view
+    "github.vscode-github-actions", // GitHub Actions support
+    "conventionalcommits.extension", // Assist with conventional commits
+    "yy0931.vscode-sqlite3-editor" // SQLite3 editor for your DB files
+  ]
+}

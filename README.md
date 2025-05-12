@@ -59,6 +59,22 @@ http://localhost:9000/swagger/
 
 ![API Documentation](assets/images/swagger.png)
 
+## Container
+
+This project includes a multi-stage `Dockerfile` for local development and production builds.
+
+### Build the image
+
+```bash
+docker build -t ts-node-samples-express-restful .
+```
+
+### Run the container
+
+```bash
+docker run -p 9000:9000 ts-node-samples-express-restful:latest
+```
+
 ## Credits
 
 The solution has been coded using [Visual Studio Code](https://code.visualstudio.com/).
