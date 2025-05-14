@@ -66,13 +66,13 @@ This project includes a multi-stage `Dockerfile` for local development and produ
 ### Build the image
 
 ```bash
-docker build -t ts-node-samples-express-restful .
+npm run docker:build
 ```
 
 ### Run the container
 
 ```bash
-docker run -p 9000:9000 ts-node-samples-express-restful:latest
+npm run docker:run
 ```
 
 ## Credits
