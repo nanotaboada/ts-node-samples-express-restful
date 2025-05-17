@@ -30,7 +30,7 @@ const config: Config = {
     coveragePathIgnorePatterns: [
         '/node_modules/',
         '/dist/',
-        '<rootDir>/src/data/',
+        '<rootDir>/src/database/',
         '<rootDir>/src/docs/',
         '<rootDir>/src/middlewares/',
         '<rootDir>/src/models/',

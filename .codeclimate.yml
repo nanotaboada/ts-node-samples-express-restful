@@ -1,10 +1,10 @@
 # https://docs.codeclimate.com/docs/advanced-configuration
 
 exclude_patterns:
-- "src/data/"
-- "src/docs/"
-- "src/middlewares/"
-- "src/models/"
-- "tests/"
-- "dist/"
-- "**/node_modules/"
+  - 'src/database/'
+  - 'src/docs/'
+  - 'src/middlewares/'
+  - 'src/models/'
+  - 'tests/'
+  - 'dist/'
+  - '**/node_modules/'

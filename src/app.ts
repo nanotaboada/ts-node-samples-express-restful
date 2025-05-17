@@ -8,7 +8,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 
-import PlayerDatabase from './data/player-database';
+import PlayerDatabase from './database/player-database';
 import PlayerService from './services/player-service';
 import PlayerController from './controllers/player-controller';
 import PlayerRoute from './routes/player-route';
