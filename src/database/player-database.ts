@@ -1,5 +1,5 @@
 import Player from '../models/player-model';
-import { IPlayerDatabase } from '../data/player-database-interface';
+import { IPlayerDatabase } from './player-database-interface';
 
 /**
  * Implementation of IPlayerDatabase for handing the database operations of a Player.

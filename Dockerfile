@@ -1,6 +1,7 @@
-# - Stage 1: Builder -----------------------------------------------------------
-
+﻿# ------------------------------------------------------------------------------
+# Stage 1: Builder
 # This stage builds the application and its dependencies.
+# ------------------------------------------------------------------------------
 FROM node:jod-alpine AS builder
 
 WORKDIR /app
@@ -24,9 +25,10 @@ RUN npm run build && \
     npm run swagger:docs && \
     npm prune --omit=dev
 
-# - Stage 2: Runtime -----------------------------------------------------------
-
+# ------------------------------------------------------------------------------
+# Stage 2: Runtime
 # This stage creates the final, minimal image to run the application.
+# ------------------------------------------------------------------------------
 FROM node:jod-alpine AS runtime
 
 WORKDIR /app
@@ -37,25 +39,28 @@ LABEL org.opencontainers.image.description="Proof of Concept for a RESTful API m
 LABEL org.opencontainers.image.licenses="MIT"
 LABEL org.opencontainers.image.source="https://github.com/nanotaboada/ts-node-samples-express-restful"
 
-# Install the SQLite runtime libraries, add a non-root user for security
-# hardening, and set the ownership of the /app directory to this user.
+# Transpiled JavaScript, pruned node_modules and Swagger JSON.
+COPY --from=builder --chown=root:root --chmod=755      /app/dist                   ./dist
+COPY --from=builder --chown=root:root --chmod=755      /app/node_modules           ./dist/node_modules
+COPY --from=builder --chown=root:root --chmod=644      /app/dist/swagger.json      ./dist/swagger.json
+
+# Metadata for container registries (e.g., Docker Hub, GitHub Container Registry).
+COPY --chown=root:root --chmod=644      README.md                   ./
+COPY --chown=root:root --chmod=755      assets                      ./assets
+
+# Entrypoint script and image-bundled, pre-seeded SQLite database
+COPY --chown=root:root --chmod=755      scripts/entrypoint.sh       ./entrypoint.sh
+COPY --chown=root:root --chmod=755      storage                     ./docker-compose/storage
+
+# Install SQLite runtime libs, add non-root user and prepare volume mount point
 RUN apk add --no-cache sqlite-libs && \
     adduser -D -g "" express && \
-    chown -R express:express /app
-
-# Copy transpiled JavaScript, pruned node_modules, SQLite database and Swagger JSON.
-COPY --from=builder --chown=express:express /app/dist ./dist
-COPY --from=builder --chown=express:express /app/node_modules ./dist/node_modules
-COPY --from=builder --chown=express:express /app/src/data/players-sqlite3.db ./dist/data/players-sqlite3.db
-COPY --from=builder --chown=express:express /app/dist/swagger.json ./dist/swagger.json
-
-# Copy README and assets to the root of the app.
-# This is often displayed in registries like GitHub Container Registry.
-COPY README.md ./
-COPY assets/ ./assets/
+    mkdir -p /storage && \
+    chown -R express:express /storage
 
 USER express
 
 EXPOSE 9000
 
+ENTRYPOINT ["./entrypoint.sh"]
 CMD ["node", "dist/server.js"]

@@ -5,24 +5,24 @@ eslint:
   config_file: .eslintrc.ts
 
 exclude_paths:
-  - ".github"
-  - ".vscode"
-  - "assets/**/*"
-  - "postman-collections/**/*"
-  - "src/data/**/*"
-  - "src/docs/**/*"
-  - "src/middlewares/**/*"
-  - "src/models/**/*"
-  - "src/app.ts"
-  - "src/server.ts"
-  - "**/*interface*.*"
-  - "tests/**/*"
-  - "**/*.yml"
-  - "**/*.json"
-  - "**/*.env"
-  - ".gitignore"
-  - ".prettierignore"
-  - ".prettierrc"
-  - "jest.config.js"
-  - "LICENSE"
-  - "README.md"
+  - '.github'
+  - '.vscode'
+  - 'assets/**/*'
+  - 'postman-collections/**/*'
+  - 'src/database/**/*'
+  - 'src/docs/**/*'
+  - 'src/middlewares/**/*'
+  - 'src/models/**/*'
+  - 'src/app.ts'
+  - 'src/server.ts'
+  - '**/*interface*.*'
+  - 'tests/**/*'
+  - '**/*.yml'
+  - '**/*.json'
+  - '**/*.env'
+  - '.gitignore'
+  - '.prettierignore'
+  - '.prettierrc'
+  - 'jest.config.js'
+  - 'LICENSE'
+  - 'README.md'

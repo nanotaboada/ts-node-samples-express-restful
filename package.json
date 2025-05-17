@@ -12,8 +12,9 @@
     "test": "jest --detectOpenHandles",
     "coverage": "jest --coverage",
     "swagger:docs": "ts-node src/docs/swagger-docs.ts",
-    "docker:build": "docker build --tag ts-node-samples-express-restful .",
-    "docker:run": "docker run --name express-app -p 9000:9000 ts-node-samples-express-restful:latest"
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up",
+    "docker:down": "docker compose down -v"
   },
   "keywords": [],
   "author": "Nano Taboada",
