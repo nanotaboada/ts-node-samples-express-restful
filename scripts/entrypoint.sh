@@ -1,5 +1,5 @@
-#!/usr/bin/env sh
-set -euo pipefail
+#!/bin/sh
+set -e
 
 echo "✔ Executing entrypoint script..."
 
