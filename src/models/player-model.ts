@@ -1,4 +1,4 @@
-import sequelize from '../data/sequelize';
+import sequelize from '../database/sequelize';
 import { Model, DataTypes } from 'sequelize';
 
 /**

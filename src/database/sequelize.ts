@@ -1,5 +1,8 @@
+import path from 'path';
 import { Sequelize } from 'sequelize';
-import { join } from 'path';
+
+// Read from env var, fallback to relative path (for local dev)
+const storagePath = process.env.STORAGE_PATH ?? path.join(process.cwd(), 'storage', 'players-sqlite3.db');
 
 /**
  * Initializes a new Sequelize instance with SQLite dialect.
@@ -8,7 +11,7 @@ import { join } from 'path';
  */
 const sequelize: Sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: join(__dirname, 'players-sqlite3.db'),
+    storage: storagePath,
     logging: console.log,
 });
 

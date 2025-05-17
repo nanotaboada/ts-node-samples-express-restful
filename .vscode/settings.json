@@ -16,5 +16,11 @@
   "sonarlint.connectedMode.project": {
     "connectionId": "nanotaboada",
     "projectKey": "nanotaboada_ts-node-samples-express-restful"
+  },
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[ignore]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
   }
 }
