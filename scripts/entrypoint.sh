@@ -3,7 +3,7 @@ set -e
 
 echo "✔ Executing entrypoint script..."
 
-IMAGE_STORAGE_PATH="/app/docker-compose/storage/players-sqlite3.db"
+IMAGE_STORAGE_PATH="/app/docker-compose/players-sqlite3.db"
 VOLUME_STORAGE_PATH="/storage/players-sqlite3.db"
 
 echo "✔ Starting container..."

@@ -31,6 +31,9 @@ RUN npm run build && \
 # ------------------------------------------------------------------------------
 FROM node:jod-alpine AS runtime
 
+# Install curl for health check
+RUN apk add --no-cache curl
+
 WORKDIR /app
 
 # Metadata labels for the image. These are useful for registries and inspection.
@@ -39,18 +42,23 @@ LABEL org.opencontainers.image.description="Proof of Concept for a RESTful API m
 LABEL org.opencontainers.image.licenses="MIT"
 LABEL org.opencontainers.image.source="https://github.com/nanotaboada/ts-node-samples-express-restful"
 
+# https://rules.sonarsource.com/docker/RSPEC-6504/
+
 # Transpiled JavaScript, pruned node_modules and Swagger JSON.
-COPY --from=builder --chown=root:root --chmod=755      /app/dist                   ./dist
-COPY --from=builder --chown=root:root --chmod=755      /app/node_modules           ./dist/node_modules
-COPY --from=builder --chown=root:root --chmod=644      /app/dist/swagger.json      ./dist/swagger.json
+COPY --from=builder     /app/dist/                  ./dist/
+COPY --from=builder     /app/node_modules/          ./dist/node_modules/
+COPY --from=builder     /app/dist/swagger.json/     ./dist/swagger.json
 
-# Metadata for container registries (e.g., Docker Hub, GitHub Container Registry).
-COPY --chown=root:root --chmod=644      README.md                   ./
-COPY --chown=root:root --chmod=755      assets                      ./assets
+# Metadata docs for container registries (e.g.: GitHub Container Registry)
+COPY --chmod=444        README.md                   ./
+COPY --chmod=555        assets/                     ./assets/
 
-# Entrypoint script and image-bundled, pre-seeded SQLite database
-COPY --chown=root:root --chmod=755      scripts/entrypoint.sh       ./entrypoint.sh
-COPY --chown=root:root --chmod=755      storage                     ./docker-compose/storage
+# Copy entrypoint and healthcheck scripts
+COPY --chmod=555        scripts/entrypoint.sh       ./entrypoint.sh
+COPY --chmod=555        scripts/healthcheck.sh      ./healthcheck.sh
+
+# Pre-seeded SQLite database as init bundle
+COPY --chmod=555        storage/                    ./docker-compose/
 
 # Install SQLite runtime libs, add non-root user and prepare volume mount point
 RUN apk add --no-cache sqlite-libs && \
@@ -62,5 +70,9 @@ USER express
 
 EXPOSE 9000
 
-ENTRYPOINT ["./entrypoint.sh"]
+# https://docs.docker.com/reference/dockerfile/#healthcheck
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+    CMD ["/app/healthcheck.sh"]
+
+ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["node", "dist/server.js"]
