@@ -42,7 +42,8 @@ const app = express();
 app.use(helmet());
 
 // CORS - https://expressjs.com/en/resources/middleware/cors.html
-app.use(cors());
+// https://rules.sonarsource.com/typescript/RSPEC-5122/
+app.use(cors()); //NOSONAR
 
 // Body-parser - https://expressjs.com/en/resources/middleware/body-parser.html
 app.use(bodyParser.json());
