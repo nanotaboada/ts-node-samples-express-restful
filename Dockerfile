@@ -47,7 +47,7 @@ LABEL org.opencontainers.image.source="https://github.com/nanotaboada/ts-node-sa
 # Transpiled JavaScript, pruned node_modules and Swagger JSON.
 COPY --from=builder     /app/dist/                  ./dist/
 COPY --from=builder     /app/node_modules/          ./dist/node_modules/
-COPY --from=builder     /app/dist/swagger.json/     ./dist/swagger.json
+COPY --from=builder     /app/dist/swagger.json      ./dist/swagger.json
 
 # Metadata docs for container registries (e.g.: GitHub Container Registry)
 COPY --chmod=444        README.md                   ./
