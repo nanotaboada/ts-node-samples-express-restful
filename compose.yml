@@ -15,3 +15,4 @@ services:
 
 volumes:
   storage:
+    name: ts-node-samples-express-restful_storage
