@@ -62,7 +62,8 @@ COPY --chmod=555        storage/                    ./docker-compose/
 
 # Install SQLite runtime libs, add non-root user and prepare volume mount point
 RUN apk add --no-cache sqlite-libs && \
-    adduser -D -g "" express && \
+    addgroup -S express && \
+    adduser -S -G express express && \
     mkdir -p /storage && \
     chown -R express:express /storage
 
