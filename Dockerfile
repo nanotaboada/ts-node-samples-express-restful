@@ -57,8 +57,10 @@ COPY --chmod=555        assets/                     ./assets/
 COPY --chmod=555        scripts/entrypoint.sh       ./entrypoint.sh
 COPY --chmod=555        scripts/healthcheck.sh      ./healthcheck.sh
 
-# Pre-seeded SQLite database as init bundle
-COPY --chmod=555        storage/                    ./docker-compose/
+# The 'hold' is our storage compartment within the image. Here, we copy a
+# pre-seeded SQLite database file, which Compose will mount as a persistent
+# 'storage' volume when the container starts up.
+COPY --chmod=555        storage/                    ./hold/
 
 # Install SQLite runtime libs, add non-root user and prepare volume mount point
 RUN apk add --no-cache sqlite-libs && \
