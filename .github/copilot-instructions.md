@@ -2,13 +2,13 @@
 
 ## Project Overview
 
-This is a **RESTful API** built with **Node.js LTS/Jod (v22.11.0)**, **Express.js 5**, and **TypeScript**. It manages football player data with a SQLite database using Sequelize ORM. The API features Swagger documentation, in-memory caching (node-cache), health checks, and is fully containerized with Docker.
+This is a **RESTful API** built with **Node.js LTS/Krypton (v24.11.1)**, **Express.js 5**, and **TypeScript**. It manages football player data with a SQLite database using Sequelize ORM. The API features Swagger documentation, in-memory caching (node-cache), health checks, and is fully containerized with Docker.
 
 **Module System**: Uses **native ECMAScript Modules (ESM)** with `"type": "module"` in package.json. All relative imports require `.js` extensions.
 
 ## Tech Stack
 
-- **Runtime**: Node.js 22 (LTS/Jod)
+- **Runtime**: Node.js 24 (LTS/Krypton)
 - **Framework**: Express.js 5
 - **Language**: TypeScript 5.9
 - **Module System**: Native ESM (ES2022)
@@ -140,7 +140,7 @@ npm run docker:down     # Stop container and remove volume (resets DB)
 ### CI/CD Pipeline (.github/workflows/node.js.yml)
 
 - **Jobs**: build → test → coverage → container (on master push)
-- **Node version**: `lts/jod` from env var
+- **Node version**: `lts/krypton` from env var
 - **Checks**: Commitlint, Jest, ESLint
 - **Coverage**: Uploads to Codecov & Codacy
 - **Container**: Pushes to GitHub Container Registry (ghcr.io) with `latest` and `sha-*` tags
