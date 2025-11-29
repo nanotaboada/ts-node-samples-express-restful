@@ -9,7 +9,8 @@ const config: Config = {
     testMatch: ['<rootDir>/tests/**/*-test.ts'],
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
     transform: {
-        '^.+\.ts$': [
+        // SonarQube S6535: Escapes are required for regex literal dot matching
+        '^.+\\.ts$': [
             'ts-jest',
             {
                 useESM: true,
