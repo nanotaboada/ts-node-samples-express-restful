@@ -7,61 +7,156 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/nanotaboada/ts-node-samples-express-restful/badge)](https://www.codefactor.io/repository/github/nanotaboada/ts-node-samples-express-restful)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) [LTS/Jod (v22)](https://nodejs.org/en/blog/release/v22.11.0) and [Express.js](https://expressjs.com/) 5 in [TypeScript](https://www.typescriptlang.org/). Manage football player data with SQLite, Sequelize ORM, Swagger documentation, and in-memory caching.
+Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) [LTS/Krypton (v24)](https://nodejs.org/en/blog/release/v24.11.1) and [Express.js](https://expressjs.com/) 5 in [TypeScript](https://www.typescriptlang.org/). Manage football player data with SQLite, Sequelize ORM, Swagger documentation, and in-memory caching.
 
 ## Table of Contents
 
 - [Features](#features)
 - [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Architecture](#architecture)
+- [API Endpoints](#api-endpoints)
 - [Prerequisites](#prerequisites)
 - [Quick Start](#quick-start)
-- [API Documentation](#api-documentation)
-- [API Endpoints](#api-endpoints)
 - [Testing](#testing)
 - [Docker](#docker)
 - [Environment Variables](#environment-variables)
-- [Project Structure](#project-structure)
 - [Available Scripts](#available-scripts)
 - [Contributing](#contributing)
-- [License](#license)
+- [Legal](#legal)
 
 ## Features
 
-- ✅ RESTful CRUD operations for football player data
-- 📚 Interactive API documentation with Swagger UI
-- ⚡ In-memory caching with node-cache (1-hour TTL)
-- 🏥 Health check endpoint for monitoring
-- 🐳 Full Docker containerization with Docker Compose
-- 🗄️ SQLite database with Sequelize ORM
-- 🔒 Security headers with Helmet
-- 🧪 Comprehensive integration tests with Jest and Supertest
-- 🎨 TypeScript strict mode enabled
-- 🔄 Hot reload with nodemon for development
+- 🔌 RESTful CRUD operations for football player data
+- 📚 Interactive API documentation
+- ⚡ In-memory caching (1-hour TTL)
+- 🩺 Health check endpoint for monitoring
+- 🐳 Full containerization support
+- 💿 Relational database with ORM
+- 🔒 Security headers and CORS
+- ✅ Comprehensive integration tests
+- 📃 TypeScript strict mode enabled
+- 🔄 Hot reload for development
 
 ## Tech Stack
 
-- **Runtime**: Node.js 22 (LTS/Jod)
-- **Framework**: Express.js 5
-- **Language**: TypeScript 5.9
-- **Module System**: Native ECMAScript Modules (ESM)
-- **Database**: SQLite3 with Sequelize ORM
-- **Testing**: Jest 30 with Supertest
-- **Documentation**: Swagger (OpenAPI 3.0)
-- **Caching**: node-cache
-- **Security**: Helmet, CORS
-- **Containerization**: Docker with multi-stage builds
-- **Code Quality**: ESLint, Prettier, Commitlint
-- **Dev Tools**: tsx (TypeScript executor), nodemon
+| Category | Technology |
+|----------|------------|
+| **Runtime** | [Node.js 24 (LTS/Krypton)](https://github.com/nodejs/node) |
+| **Framework** | [Express.js 5](https://github.com/expressjs/express) |
+| **Language** | [TypeScript 5.9](https://github.com/microsoft/TypeScript) |
+| **Module System** | Native ECMAScript Modules (ESM) - uses [tsx](https://github.com/privatenumber/tsx) for execution |
+| **Database** | [SQLite3](https://github.com/sqlite/sqlite) with [Sequelize ORM](https://github.com/sequelize/sequelize) |
+| **Testing** | [Jest 30](https://github.com/jestjs/jest) with [Supertest](https://github.com/ladjs/supertest) |
+| **Documentation** | [Swagger (OpenAPI 3.0)](https://github.com/swagger-api/swagger-ui) |
+| **Caching** | [node-cache](https://github.com/node-cache/node-cache) |
+| **Security** | [Helmet](https://github.com/helmetjs/helmet), [CORS](https://github.com/expressjs/cors) |
+| **Containerization** | [Docker](https://github.com/docker) with multi-stage builds |
+| **Code Quality** | [ESLint](https://github.com/eslint/eslint), [Prettier](https://github.com/prettier/prettier), [Commitlint](https://github.com/conventional-changelog/commitlint) |
+| **Dev Tools** | [tsx](https://github.com/privatenumber/tsx) (TypeScript executor), [nodemon](https://github.com/remy/nodemon) |
 
-> **Note:** This project uses native ESM (ECMAScript Modules) with TypeScript. While the repository name references `ts-node` (the original implementation), the project now uses **`tsx`** for faster, cleaner TypeScript execution without experimental flags.
+> 💡 **Note:** While the repository name references `ts-node` (the original implementation), the project now uses [tsx](https://github.com/privatenumber/tsx) for faster, cleaner TypeScript execution without experimental flags.
+
+## Project Structure
+
+```text
+src/
+├── app.ts              # Express app setup & middleware configuration
+├── server.ts           # HTTP server initialization & lifecycle
+├── controllers/        # Request handlers with Swagger annotations
+├── services/           # Business logic + caching layer
+├── database/           # Sequelize DB access (interfaces + implementations)
+├── models/             # Sequelize models (Player)
+├── routes/             # Express Router definitions
+├── docs/               # Swagger configuration & doc generation
+└── middlewares/        # Custom middleware (swagger CSP)
+
+tests/                  # Integration tests with supertest
+scripts/                # Docker entrypoint & healthcheck scripts
+storage/                # Pre-seeded SQLite database
+```
+
+## Architecture
+
+Layered architecture (Route → Controller → Service → Database) with dependency injection via constructors and interface-based contracts.
+
+```mermaid
+%%{init: {'theme':'base'}}%%
+graph TB
+    %% Core Application Flow
+    server[server]
+    app[app]
+    routes[routes]
+    controllers[controllers]
+    services[services]
+    data[data]
+    models[models]
+
+    %% External Dependencies
+    Express[Express]
+    Sequelize[Sequelize]
+    nodeCache[node-cache]
+
+    %% Tests
+    tests[tests]
+
+    %% Main Application Flow
+    data --> services
+    services --> controllers
+    controllers --> routes
+    routes --> app
+    app --> server
+
+    %% Models connections
+    models --> data
+    models --> services
+    models --> controllers
+
+    %% External Dependencies connections
+    nodeCache --> services
+    Sequelize --> models
+    Express --> controllers
+    Express --> routes
+    Express --> app
+
+    %% Tests connection
+    app --> tests
+
+    %% Styling
+    classDef coreModule fill:#b3d9ff,stroke:#333333,stroke-width:2px
+    classDef dependency fill:#ffcccc,stroke:#333333,stroke-width:2px
+    classDef testModule fill:#ccffcc,stroke:#333333,stroke-width:2px
+
+    class server,app,routes,controllers,services,data,models coreModule
+    class Express,Sequelize,nodeCache dependency
+    class tests testModule
+```
+
+_Simplified, conceptual project structure and main application flow. Not all dependencies are shown._
+
+## API Endpoints
+
+Interactive API documentation is available via Swagger UI at `http://localhost:9000/swagger/` when the server is running.
+
+**Quick Reference:**
+
+- `GET /players` - List all players
+- `GET /players/:id` - Get player by ID
+- `GET /players/squadNumber/:squadNumber` - Get player by squad number
+- `POST /players` - Create new player
+- `PUT /players/:id` - Update player
+- `DELETE /players/:id` - Remove player
+- `GET /health` - Health check
+
+For complete endpoint documentation with request/response schemas, explore the [interactive Swagger UI](http://localhost:9000/swagger/). You can also access the OpenAPI JSON specification at `http://localhost:9000/swagger.json`.
 
 ## Prerequisites
 
 Before you begin, ensure you have the following installed:
 
-- [Node.js](https://nodejs.org/) 22 (LTS/Jod) or higher
+- Node.js 24 (LTS/Krypton) or higher
 - npm (comes with Node.js)
-- [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) (optional, for containerized setup)
+- Docker and Docker Compose (optional, for containerized setup)
 
 ## Quick Start
 
@@ -103,30 +198,6 @@ The server will start on `http://localhost:9000` with the following output:
 - Swagger Documentation: `http://localhost:9000/swagger/`
 - Health Check: `http://localhost:9000/health`
 
-## API Documentation
-
-Interactive API documentation is available via Swagger UI at:
-
-```text
-http://localhost:9000/swagger/
-```
-
-![API Documentation](assets/images/swagger.png)
-
-You can also access the OpenAPI JSON specification at `http://localhost:9000/swagger.json`.
-
-## API Endpoints
-
-| Method | Endpoint                              | Description                    |
-|--------|---------------------------------------|--------------------------------|
-| GET    | `/players`                            | Retrieve all players           |
-| GET    | `/players/:id`                        | Retrieve player by ID          |
-| GET    | `/players/squadNumber/:squadNumber`   | Retrieve player by squad number|
-| POST   | `/players`                            | Create a new player            |
-| PUT    | `/players/:id`                        | Update an existing player      |
-| DELETE | `/players/:id`                        | Delete a player                |
-| GET    | `/health`                             | Health check endpoint          |
-
 ## Testing
 
 Run the test suite with Jest:
@@ -167,7 +238,7 @@ npm run docker:up
 docker compose up
 ```
 
-> **Note**: On first run, the container copies a pre-seeded SQLite database into a persistent volume. On subsequent runs, that volume is reused and the data is preserved.
+> 💡 **Note:** On first run, the container copies a pre-seeded SQLite database into a persistent volume. On subsequent runs, that volume is reused and the data is preserved.
 
 ### Stop the application
 
@@ -200,46 +271,21 @@ PORT=9000
 STORAGE_PATH=storage/players-sqlite3.db
 ```
 
-## Project Structure
-
-```text
-src/
-├── app.ts              # Express app setup & middleware configuration
-├── server.ts           # HTTP server initialization & lifecycle
-├── controllers/        # Request handlers with Swagger annotations
-├── services/           # Business logic + caching layer
-├── database/           # Sequelize DB access (interfaces + implementations)
-├── models/             # Sequelize models (Player)
-├── routes/             # Express Router definitions
-├── docs/               # Swagger configuration & doc generation
-└── middlewares/        # Custom middleware (swagger CSP)
-
-tests/                  # Integration tests with supertest
-scripts/                # Docker entrypoint & healthcheck scripts
-storage/                # Pre-seeded SQLite database
-```
-
-**Architecture**: Layered architecture (Route → Controller → Service → Database) with dependency injection via constructors and interface-based contracts.
-
-![Simplified, conceptual project structure and main application flow](assets/images/structure.svg)
-
-_Figure: Simplified, conceptual project structure and main application flow. Not all dependencies are shown._
-
 ## Available Scripts
 
-| Script            | Description                                      |
-|-------------------|--------------------------------------------------|
-| `npm run dev`     | Start development server with hot reload        |
-| `npm start`       | Run compiled application from `dist/`            |
-| `npm run build`   | Compile TypeScript to JavaScript                |
-| `npm test`        | Run Jest tests with --detectOpenHandles flag    |
-| `npm run coverage`| Generate test coverage report                    |
-| `npm run lint`    | Run ESLint on all files                          |
-| `npm run lint:commit` | Validate last commit message format          |
-| `npm run swagger:docs` | Generate swagger.json from JSDoc annotations |
-| `npm run docker:build` | Build Docker image                           |
-| `npm run docker:up`    | Start Docker container                       |
-| `npm run docker:down`  | Stop and remove Docker volume                |
+| Script                 | Description                                       |
+|------------------------|---------------------------------------------------|
+| `npm run dev`          | Start development server with hot reload          |
+| `npm start`            | Run compiled application from `dist/`             |
+| `npm run build`        | Compile TypeScript to JavaScript                  |
+| `npm test`             | Run Jest tests with --detectOpenHandles flag      |
+| `npm run coverage`     | Generate test coverage report                     |
+| `npm run lint`         | Run ESLint on all files                           |
+| `npm run lint:commit`  | Validate last commit message format               |
+| `npm run swagger:docs` | Generate swagger.json from JSDoc annotations      |
+| `npm run docker:build` | Build Docker image                                |
+| `npm run docker:up`    | Start Docker container                            |
+| `npm run docker:down`  | Stop and remove Docker volume                     |
 
 ## Contributing
 
@@ -252,12 +298,6 @@ Key guidelines:
 - Run linter before committing (`npm run lint`)
 - Keep changes small and focused
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-**Acknowledgments**: This solution has been developed using [Visual Studio Code](https://code.visualstudio.com/).
+## Legal
 
 All trademarks, registered trademarks, service marks, product names, company names, or logos mentioned are the property of their respective owners and are used for identification purposes only.

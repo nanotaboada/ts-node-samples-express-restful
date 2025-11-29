@@ -2,7 +2,7 @@
 # Stage 1: Builder
 # This stage builds the application and its dependencies.
 # ------------------------------------------------------------------------------
-FROM node:jod-alpine AS builder
+FROM node:krypton-alpine AS builder
 
 WORKDIR /app
 
@@ -29,7 +29,7 @@ RUN npm run build && \
 # Stage 2: Runtime
 # This stage creates the final, minimal image to run the application.
 # ------------------------------------------------------------------------------
-FROM node:jod-alpine AS runtime
+FROM node:krypton-alpine AS runtime
 
 # Install curl for health check
 RUN apk add --no-cache curl
@@ -38,7 +38,7 @@ WORKDIR /app
 
 # Metadata labels for the image. These are useful for registries and inspection.
 LABEL org.opencontainers.image.title="🧪 RESTful API with Node.js and Express.js in TypeScript"
-LABEL org.opencontainers.image.description="Proof of Concept for a RESTful API made with Node.js 22 (LTS) and Express.js 4 in TypeScript"
+LABEL org.opencontainers.image.description="Proof of Concept for a RESTful API made with Node.js 24 (LTS) and Express.js 5 in TypeScript"
 LABEL org.opencontainers.image.licenses="MIT"
 LABEL org.opencontainers.image.source="https://github.com/nanotaboada/ts-node-samples-express-restful"
 

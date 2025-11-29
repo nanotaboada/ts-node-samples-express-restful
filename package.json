@@ -1,7 +1,7 @@
 {
   "name": "ts-node-samples-express-restful",
   "version": "1.0.0",
-  "description": "Proof of Concept for a RESTful API made with Node.js LTS/Jod, Express.js 5 in TypeScript.",
+  "description": "Proof of Concept for a RESTful API made with Node.js 24 (LTS/Krypton), Express.js 5 in TypeScript.",
   "type": "module",
   "main": "dist/server.js",
   "scripts": {
