@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { IHealthController } from './health-controller-interface';
+import { IHealthController } from './health-controller-interface.js';
 
 /**
  * @openapi

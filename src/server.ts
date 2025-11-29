@@ -2,7 +2,7 @@
  * Server
  * -------------------------------------------------------------------------- */
 
-import app from './app';
+import app from './app.js';
 import http from 'http';
 import dotenv from 'dotenv';
 

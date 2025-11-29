@@ -43,6 +43,7 @@ Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) [LTS
 - **Runtime**: Node.js 22 (LTS/Jod)
 - **Framework**: Express.js 5
 - **Language**: TypeScript 5.9
+- **Module System**: Native ECMAScript Modules (ESM)
 - **Database**: SQLite3 with Sequelize ORM
 - **Testing**: Jest 30 with Supertest
 - **Documentation**: Swagger (OpenAPI 3.0)
@@ -50,6 +51,9 @@ Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) [LTS
 - **Security**: Helmet, CORS
 - **Containerization**: Docker with multi-stage builds
 - **Code Quality**: ESLint, Prettier, Commitlint
+- **Dev Tools**: tsx (TypeScript executor), nodemon
+
+> **Note:** This project uses native ESM (ECMAScript Modules) with TypeScript. While the repository name references `ts-node` (the original implementation), the project now uses **`tsx`** for faster, cleaner TypeScript execution without experimental flags.
 
 ## Prerequisites
 
@@ -89,7 +93,7 @@ The server will start on `http://localhost:9000` with the following output:
 [nodemon] to restart at any time, enter `rs`
 [nodemon] watching path(s): src/**/*
 [nodemon] watching extensions: ts
-[nodemon] starting `ts-node ./src/server.ts`
+[nodemon] starting `tsx ./src/server.ts`
 🚀 Running at http://localhost:9000
 ```
 

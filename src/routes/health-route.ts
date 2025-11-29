@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { IHealthController } from '../controllers/health-controller-interface';
-import { IHealthRoute } from './health-route-interface';
+import { IHealthController } from '../controllers/health-controller-interface.js';
+import { IHealthRoute } from './health-route-interface.js';
 
 export default class HealthRoute implements IHealthRoute {
     public router: Router;

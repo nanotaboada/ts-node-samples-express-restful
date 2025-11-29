@@ -2,18 +2,25 @@ import type { Config } from 'jest';
 
 const config: Config = {
     verbose: true,
-    preset: 'ts-jest',
+    preset: 'ts-jest/presets/default-esm',
     testEnvironment: 'node',
+    extensionsToTreatAsEsm: ['.ts'],
     rootDir: '.', // ensures all paths are relative from project root
     testMatch: ['<rootDir>/tests/**/*-test.ts'],
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
     transform: {
-        '^.+\\.ts$': [
+        // eslint-disable-next-line no-useless-escape
+        '^.+\.ts$': [
             'ts-jest',
             {
+                useESM: true,
                 isolatedModules: true,
             },
         ],
+    },
+    moduleNameMapper: {
+        // eslint-disable-next-line no-useless-escape
+        '^(\.\.?/.+)\.js$': '$1',
     },
     moduleDirectories: ['node_modules', 'src'],
     testPathIgnorePatterns: ['/node_modules/', '/dist/'],

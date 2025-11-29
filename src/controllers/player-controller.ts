@@ -2,9 +2,9 @@
  * Controller
  * -------------------------------------------------------------------------- */
 
-import Player from '../models/player-model';
-import { IPlayerController } from './player-controller-interface';
-import { IPlayerService } from '../services/player-service-interface';
+import Player from '../models/player-model.js';
+import { IPlayerController } from './player-controller-interface.js';
+import { IPlayerService } from '../services/player-service-interface.js';
 import { Request, Response } from 'express';
 
 /**
