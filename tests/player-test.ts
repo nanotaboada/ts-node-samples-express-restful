@@ -3,8 +3,8 @@
  * -------------------------------------------------------------------------- */
 
 import request from 'supertest';
-import app from '../src/app';
-import playerStub from './player-stub';
+import app from '../src/app.js';
+import playerStub from './player-stub.js';
 
 const path = '/players';
 

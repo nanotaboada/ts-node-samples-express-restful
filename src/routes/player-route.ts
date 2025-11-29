@@ -1,5 +1,5 @@
-import { IPlayerRoute } from '../routes/player-route-interface';
-import { IPlayerController } from '../controllers/player-controller-interface';
+import { IPlayerRoute } from '../routes/player-route-interface.js';
+import { IPlayerController } from '../controllers/player-controller-interface.js';
 import { Router } from 'express';
 
 /**

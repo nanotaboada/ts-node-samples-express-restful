@@ -8,16 +8,16 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 
-import PlayerDatabase from './database/player-database';
-import PlayerService from './services/player-service';
-import PlayerController from './controllers/player-controller';
-import PlayerRoute from './routes/player-route';
+import PlayerDatabase from './database/player-database.js';
+import PlayerService from './services/player-service.js';
+import PlayerController from './controllers/player-controller.js';
+import PlayerRoute from './routes/player-route.js';
 
-import { swaggerSpec, swaggerUi, swaggerUiOptions } from './docs/swagger';
-import { swaggerMiddleware } from './middlewares/swagger-middleware';
+import { swaggerSpec, swaggerUi, swaggerUiOptions } from './docs/swagger.js';
+import { swaggerMiddleware } from './middlewares/swagger-middleware.js';
 
-import HealthController from './controllers/health-controller';
-import HealthRoute from './routes/health-route';
+import HealthController from './controllers/health-controller.js';
+import HealthRoute from './routes/health-route.js';
 
 // Loads environment variables from the .env file
 dotenv.config();

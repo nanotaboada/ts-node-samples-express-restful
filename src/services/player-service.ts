@@ -1,7 +1,7 @@
 import NodeCache from 'node-cache';
-import Player from '../models/player-model';
-import { IPlayerService } from '../services/player-service-interface';
-import { IPlayerDatabase } from '../database/player-database-interface';
+import Player from '../models/player-model.js';
+import { IPlayerService } from '../services/player-service-interface.js';
+import { IPlayerDatabase } from '../database/player-database-interface.js';
 
 /**
  * Implementation of IPlayerDatabase for handing the service operations of a Player.

@@ -1,7 +1,8 @@
 {
   "name": "ts-node-samples-express-restful",
   "version": "1.0.0",
-  "description": "Proof of Concept for a RESTful API made with Node.js LTS/Jod, Express.js 4 in TypeScript.",
+  "description": "Proof of Concept for a RESTful API made with Node.js LTS/Jod, Express.js 5 in TypeScript.",
+  "type": "module",
   "main": "dist/server.js",
   "scripts": {
     "dev": "nodemon",
@@ -9,9 +10,9 @@
     "build": "tsc",
     "lint": "eslint .",
     "lint:commit": "git log -1 --pretty=%B | npx commitlint --verbose",
-    "test": "jest --detectOpenHandles",
-    "coverage": "jest --coverage",
-    "swagger:docs": "ts-node src/docs/swagger-docs.ts",
+    "test": "NODE_OPTIONS='--experimental-vm-modules' jest --detectOpenHandles",
+    "coverage": "NODE_OPTIONS='--experimental-vm-modules' jest --coverage",
+    "swagger:docs": "tsx src/docs/swagger-docs.ts",
     "docker:build": "docker compose build",
     "docker:up": "docker compose up",
     "docker:down": "docker compose down -v"
@@ -54,6 +55,7 @@
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
     "typescript": "^5.9.3"
   }
 }

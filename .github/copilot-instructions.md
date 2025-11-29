@@ -4,13 +4,16 @@
 
 This is a **RESTful API** built with **Node.js LTS/Jod (v22.11.0)**, **Express.js 5**, and **TypeScript**. It manages football player data with a SQLite database using Sequelize ORM. The API features Swagger documentation, in-memory caching (node-cache), health checks, and is fully containerized with Docker.
 
+**Module System**: Uses **native ECMAScript Modules (ESM)** with `"type": "module"` in package.json. All relative imports require `.js` extensions.
+
 ## Tech Stack
 
 - **Runtime**: Node.js 22 (LTS/Jod)
 - **Framework**: Express.js 5
 - **Language**: TypeScript 5.9
+- **Module System**: Native ESM (ES2022)
 - **Database**: SQLite3 with Sequelize ORM
-- **Testing**: Jest 30 with Supertest (integration tests)
+- **Testing**: Jest 30 with Supertest (ESM mode with experimental VM modules)
 - **Documentation**: Swagger (swagger-jsdoc, swagger-ui-express)
 - **Cache**: node-cache (1-hour TTL)
 - **Security**: Helmet, CORS
@@ -18,7 +21,7 @@ This is a **RESTful API** built with **Node.js LTS/Jod (v22.11.0)**, **Express.j
 - **Linting**: ESLint (flat config) with @typescript-eslint
 - **Formatting**: Prettier (4 spaces, single quotes, 127 print width)
 - **Commits**: Conventional Commits via commitlint (80 char limit)
-- **Dev Tools**: nodemon, ts-node
+- **Dev Tools**: tsx (TypeScript executor), nodemon
 
 ## Project Structure
 
@@ -47,7 +50,7 @@ storage/                # Pre-seeded SQLite database (copied to volume on first 
 
 ```bash
 npm install             # Install dependencies
-npm run dev             # Start with nodemon (watches src/**/*.ts)
+npm run dev             # Start with nodemon + tsx (watches src/**/*.ts)
 npm run build           # Compile TypeScript to dist/
 npm start               # Run compiled code (node dist/server.js)
 ```
@@ -55,11 +58,11 @@ npm start               # Run compiled code (node dist/server.js)
 ### Testing & Quality
 
 ```bash
-npm test                # Run Jest tests
+npm test                # Run Jest tests (with experimental VM modules for ESM)
 npm run coverage        # Generate coverage report (controllers/services/routes only)
 npm run lint            # Run ESLint
 npm run lint:commit     # Validate last commit message
-npm run swagger:docs    # Generate swagger.json from JSDoc annotations
+npm run swagger:docs    # Generate swagger.json from JSDoc annotations (using tsx)
 ```
 
 ### Docker
@@ -78,7 +81,9 @@ npm run docker:down     # Stop container and remove volume (resets DB)
 
 ### TypeScript Configuration
 
-- **Target**: ES6, CommonJS modules
+- **Target**: ES2022
+- **Module**: ES2022 (native ESM)
+- **Module Resolution**: bundler
 - **Strict mode**: Enabled
 - **Output**: `dist/` directory
 - **Source maps**: Enabled
@@ -88,6 +93,7 @@ npm run docker:down     # Stop container and remove volume (resets DB)
 - **Indentation**: 4 spaces (TypeScript), 2 spaces (JSON/YAML)
 - **Quotes**: Single quotes
 - **Line length**: 127 characters
+- **Imports**: All relative imports must include `.js` extension (ESM requirement)
 - **Disabled rules**: `@typescript-eslint/no-explicit-any` and unsafe assignment rules (see eslint.config.js)
 
 ### Commit Convention (commitlint)
@@ -99,7 +105,8 @@ npm run docker:down     # Stop container and remove volume (resets DB)
 
 ### Testing Standards
 
-- **Framework**: Jest with ts-jest preset
+- **Framework**: Jest with ts-jest ESM preset
+- **Mode**: ESM mode with `NODE_OPTIONS='--experimental-vm-modules'`
 - **Pattern**: `tests/*-test.ts` (e.g., `player-test.ts`)
 - **Style**: Integration tests using supertest against Express app
 - **Structure**: Arrange-Act-Assert with descriptive `it()` blocks
