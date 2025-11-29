@@ -9,7 +9,6 @@ const config: Config = {
     testMatch: ['<rootDir>/tests/**/*-test.ts'],
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
     transform: {
-        // eslint-disable-next-line no-useless-escape
         '^.+\.ts$': [
             'ts-jest',
             {
@@ -19,8 +18,7 @@ const config: Config = {
         ],
     },
     moduleNameMapper: {
-        // eslint-disable-next-line no-useless-escape
-        '^(\.\.?/.+)\.js$': '$1',
+        '^(\\.{1,2}/.+)\\.js$': '$1',
     },
     moduleDirectories: ['node_modules', 'src'],
     testPathIgnorePatterns: ['/node_modules/', '/dist/'],
