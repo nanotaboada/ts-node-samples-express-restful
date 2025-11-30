@@ -28,13 +28,13 @@ Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) [LTS
 ## Features
 
 - 🔌 RESTful CRUD operations for football player data
-- 📚 Interactive API documentation
-- ⚡ In-memory caching (1-hour TTL)
-- 🩺 Health check endpoint for monitoring
-- 🐳 Full containerization support
 - 💿 Relational database with ORM
+- ⚡ In-memory caching (1-hour TTL)
+- 📚 Interactive API documentation
 - 🔒 Security headers and CORS
+- 🩺 Health check endpoint for monitoring
 - ✅ Comprehensive integration tests
+- 🐳 Full containerization support
 - 📃 TypeScript strict mode enabled
 - 🔄 Hot reload for development
 
@@ -43,14 +43,14 @@ Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) [LTS
 | Category | Technology |
 |----------|------------|
 | **Runtime** | [Node.js 24 (LTS/Krypton)](https://github.com/nodejs/node) |
-| **Framework** | [Express.js 5](https://github.com/expressjs/express) |
 | **Language** | [TypeScript 5.9](https://github.com/microsoft/TypeScript) |
 | **Module System** | Native ECMAScript Modules (ESM) - uses [tsx](https://github.com/privatenumber/tsx) for execution |
+| **Framework** | [Express.js 5](https://github.com/expressjs/express) |
 | **Database** | [SQLite3](https://github.com/sqlite/sqlite) with [Sequelize ORM](https://github.com/sequelize/sequelize) |
-| **Testing** | [Jest 30](https://github.com/jestjs/jest) with [Supertest](https://github.com/ladjs/supertest) |
-| **Documentation** | [Swagger (OpenAPI 3.0)](https://github.com/swagger-api/swagger-ui) |
 | **Caching** | [node-cache](https://github.com/node-cache/node-cache) |
+| **Documentation** | [Swagger (OpenAPI 3.0)](https://github.com/swagger-api/swagger-ui) |
 | **Security** | [Helmet](https://github.com/helmetjs/helmet), [CORS](https://github.com/expressjs/cors) |
+| **Testing** | [Jest 30](https://github.com/jestjs/jest) with [Supertest](https://github.com/ladjs/supertest) |
 | **Containerization** | [Docker](https://github.com/docker) with multi-stage builds |
 | **Code Quality** | [ESLint](https://github.com/eslint/eslint), [Prettier](https://github.com/prettier/prettier), [Commitlint](https://github.com/conventional-changelog/commitlint) |
 | **Dev Tools** | [tsx](https://github.com/privatenumber/tsx) (TypeScript executor), [nodemon](https://github.com/remy/nodemon) |
@@ -78,18 +78,26 @@ storage/                # Pre-seeded SQLite database
 
 ## Architecture
 
-Layered architecture (Route → Controller → Service → Database) with dependency injection via constructors and interface-based contracts.
+Layered architecture with dependency injection via constructors and interface-based contracts.
 
 ```mermaid
-%%{init: {'theme':'base'}}%%
-graph TB
-    %% Core Application Flow
+%%{init: {
+  "theme": "default",
+  "themeVariables": {
+    "fontFamily": "Fira Code, Consolas, monospace",
+    "textColor": "#555",
+    "lineColor": "#555",
+    "lineWidth": 2
+  }
+}}%%
+graph LR
+    %% Modules
     server[server]
     app[app]
     routes[routes]
     controllers[controllers]
     services[services]
-    data[data]
+    database[database]
     models[models]
 
     %% External Dependencies
@@ -101,35 +109,36 @@ graph TB
     tests[tests]
 
     %% Main Application Flow
-    data --> services
+    database --> services
     services --> controllers
     controllers --> routes
     routes --> app
     app --> server
 
-    %% Models connections
-    models --> data
+    models --> database
     models --> services
     models --> controllers
 
     %% External Dependencies connections
-    nodeCache --> services
+
+    Sequelize --> database
     Sequelize --> models
+    nodeCache --> services
     Express --> controllers
     Express --> routes
     Express --> app
 
     %% Tests connection
-    app --> tests
+    app -.-> tests
 
-    %% Styling
-    classDef coreModule fill:#b3d9ff,stroke:#333333,stroke-width:2px
-    classDef dependency fill:#ffcccc,stroke:#333333,stroke-width:2px
-    classDef testModule fill:#ccffcc,stroke:#333333,stroke-width:2px
+    %% Node Styling (fallback)
+    classDef core fill:#b3d9ff,stroke:#6db1ff,stroke-width:2px,color:#555,font-family:monospace;
+    classDef deps fill:#ffcccc,stroke:#ff8f8f,stroke-width:2px,color:#555,font-family:monospace;
+    classDef test fill:#ccffcc,stroke:#53c45e,stroke-width:2px,color:#555,font-family:monospace;
 
-    class server,app,routes,controllers,services,data,models coreModule
-    class Express,Sequelize,nodeCache dependency
-    class tests testModule
+    class server,app,routes,controllers,services,database,models core
+    class Express,Sequelize,nodeCache deps
+    class tests test
 ```
 
 _Simplified, conceptual project structure and main application flow. Not all dependencies are shown._
