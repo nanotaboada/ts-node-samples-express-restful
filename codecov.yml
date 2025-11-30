@@ -17,9 +17,9 @@ coverage:
 flags:
   unit:
     paths:
-      - '**/src/services/'
-      - '**/src/controllers/'
-      - '**/src/routes/'
+      - "**/src/services/"
+      - "**/src/controllers/"
+      - "**/src/routes/"
     carryforward: true
 
 component_management:
@@ -27,40 +27,39 @@ component_management:
     - component_id: services
       name: Services
       paths:
-        - '**/src/services/'
+        - "**/src/services/"
     - component_id: controllers
       name: Controllers
       paths:
-        - '**/src/controllers/'
+        - "**/src/controllers/"
     - component_id: routes
       name: Routes
       paths:
-        - '**/src/routes/'
+        - "**/src/routes/"
 
 comment:
-  layout: 'header, diff, flags, components'
+  layout: "header, diff, flags, components"
 
 # https://docs.codecov.com/docs/ignoring-paths
 ignore:
   # Ignoring a specific folder
-  - '**/assets/**/*'
-  - '**/postman-collections/**/*'
-  - '**/src/database/**/*'
-  - '**/src/docs/**/*'
-  - '**/src/middlewares/**/*'
-  - '**/src/models/**/*'
-  - '**/tests/**/*'
+  - "**/postman-collections/**/*"
+  - "**/src/database/**/*"
+  - "**/src/docs/**/*"
+  - "**/src/middlewares/**/*"
+  - "**/src/models/**/*"
+  - "**/tests/**/*"
   # Ignoring specific file types
-  - '**/*.yml'
-  - '**/*.json'
-  - '**/*.env'
+  - "**/*.yml"
+  - "**/*.json"
+  - "**/*.env"
   # Ignoring specific file names
-  - '**/interface**'
-  - '**/src/app.ts'
-  - '**/src/server.ts'
-  - '**/.gitignore'
-  - '**/.prettierignore'
-  - '**/.prettierrc'
-  - '**/jest.config.js'
-  - '**/LICENSE'
-  - '**/README.md'
+  - "**/interface**"
+  - "**/src/app.ts"
+  - "**/src/server.ts"
+  - "**/.gitignore"
+  - "**/.prettierignore"
+  - "**/.prettierrc"
+  - "**/jest.config.js"
+  - "**/LICENSE"
+  - "**/README.md"

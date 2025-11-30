@@ -51,7 +51,6 @@ COPY --from=builder     /app/dist/swagger.json      ./dist/swagger.json
 
 # Metadata docs for container registries (e.g.: GitHub Container Registry)
 COPY --chmod=444        README.md                   ./
-COPY --chmod=555        assets/                     ./assets/
 
 # Copy entrypoint and healthcheck scripts
 COPY --chmod=555        scripts/entrypoint.sh       ./entrypoint.sh
