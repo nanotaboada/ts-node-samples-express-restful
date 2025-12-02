@@ -5,7 +5,7 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/c845d2bc280d4840a86a56a91407cea7)](https://app.codacy.com/gh/nanotaboada/ts-node-samples-express-restful/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![codecov](https://codecov.io/gh/nanotaboada/ts-node-samples-express-restful/graph/badge.svg?token=VxKaWl2DfD)](https://codecov.io/gh/nanotaboada/ts-node-samples-express-restful)
 [![CodeFactor](https://www.codefactor.io/repository/github/nanotaboada/ts-node-samples-express-restful/badge)](https://www.codefactor.io/repository/github/nanotaboada/ts-node-samples-express-restful)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-white.svg)](https://opensource.org/licenses/MIT)
 
 Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) [LTS/Krypton (v24)](https://nodejs.org/en/blog/release/v24.11.1) and [Express.js](https://expressjs.com/) 5 in [TypeScript](https://www.typescriptlang.org/). Manage football player data with SQLite, Sequelize ORM, Swagger documentation, and in-memory caching.
 
@@ -40,20 +40,20 @@ Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) [LTS
 
 ## Tech Stack
 
-| Category | Technology |
-|----------|------------|
-| **Runtime** | [Node.js 24 (LTS/Krypton)](https://github.com/nodejs/node) |
-| **Language** | [TypeScript 5.9](https://github.com/microsoft/TypeScript) |
-| **Module System** | Native ECMAScript Modules (ESM) - uses [tsx](https://github.com/privatenumber/tsx) for execution |
-| **Framework** | [Express.js 5](https://github.com/expressjs/express) |
-| **Database** | [SQLite3](https://github.com/sqlite/sqlite) with [Sequelize ORM](https://github.com/sequelize/sequelize) |
-| **Caching** | [node-cache](https://github.com/node-cache/node-cache) |
-| **Documentation** | [Swagger (OpenAPI 3.0)](https://github.com/swagger-api/swagger-ui) |
-| **Security** | [Helmet](https://github.com/helmetjs/helmet), [CORS](https://github.com/expressjs/cors) |
-| **Testing** | [Jest 30](https://github.com/jestjs/jest) with [Supertest](https://github.com/ladjs/supertest) |
+| Category             | Technology |
+|----------------------|------------|
+| **Runtime**          | [Node.js 24 (LTS/Krypton)](https://github.com/nodejs/node) |
+| **Language**         | [TypeScript 5.9](https://github.com/microsoft/TypeScript) |
+| **Module System**    | Native ECMAScript Modules (ESM) - uses [tsx](https://github.com/privatenumber/tsx) for execution |
+| **Framework**        | [Express.js 5](https://github.com/expressjs/express) |
+| **Database**         | [SQLite3](https://github.com/sqlite/sqlite) with [Sequelize ORM](https://github.com/sequelize/sequelize) |
+| **Caching**          | [node-cache](https://github.com/node-cache/node-cache) |
+| **Documentation**    | [Swagger (OpenAPI 3.0)](https://github.com/swagger-api/swagger-ui) |
+| **Security**         | [Helmet](https://github.com/helmetjs/helmet), [CORS](https://github.com/expressjs/cors) |
+| **Testing**          | [Jest 30](https://github.com/jestjs/jest) with [Supertest](https://github.com/ladjs/supertest) |
 | **Containerization** | [Docker](https://github.com/docker) with multi-stage builds |
-| **Code Quality** | [ESLint](https://github.com/eslint/eslint), [Prettier](https://github.com/prettier/prettier), [Commitlint](https://github.com/conventional-changelog/commitlint) |
-| **Dev Tools** | [tsx](https://github.com/privatenumber/tsx) (TypeScript executor), [nodemon](https://github.com/remy/nodemon) |
+| **Code Quality**     | [ESLint](https://github.com/eslint/eslint), [Prettier](https://github.com/prettier/prettier), [Commitlint](https://github.com/conventional-changelog/commitlint) |
+| **Dev Tools**        | [tsx](https://github.com/privatenumber/tsx) (TypeScript executor), [nodemon](https://github.com/remy/nodemon) |
 
 > 💡 **Note:** While the repository name references `ts-node` (the original implementation), the project now uses [tsx](https://github.com/privatenumber/tsx) for faster, cleaner TypeScript execution without experimental flags.
 
@@ -87,40 +87,46 @@ Layered architecture with dependency injection via constructors and interface-ba
     "fontFamily": "Fira Code, Consolas, monospace",
     "textColor": "#555",
     "lineColor": "#555",
-    "lineWidth": 2
+    "lineWidth": 2,
+    "clusterBkg": "#f5f5f5",
+    "clusterBorder": "#999"
   }
 }}%%
-graph LR
-    %% Modules
-    server[server]
-    app[app]
-    routes[routes]
-    controllers[controllers]
-    services[services]
-    database[database]
-    models[models]
+graph BT
+    subgraph API[" "]
+        server[server]
+        app[app]
+        routes[routes]
+        controllers[controllers]
+        Express[Express]
+    end
 
-    %% External Dependencies
-    Express[Express]
-    Sequelize[Sequelize]
-    nodeCache[node-cache]
+    subgraph Business[" "]
+        services[services]
+        nodeCache[node-cache]
+    end
 
-    %% Tests
+    subgraph Data[" "]
+        database[database]
+        models[models]
+        Sequelize[Sequelize]
+    end
+
+    %% Tests (outside layers)
     tests[tests]
 
-    %% Main Application Flow
+    %% Detailed connections within layers
     database --> services
+    models --> database
+    models --> services
+    models --> controllers
+
     services --> controllers
     controllers --> routes
     routes --> app
     app --> server
 
-    models --> database
-    models --> services
-    models --> controllers
-
-    %% External Dependencies connections
-
+    %% External Dependencies
     Sequelize --> database
     Sequelize --> models
     nodeCache --> services
@@ -131,7 +137,7 @@ graph LR
     %% Tests connection
     app -.-> tests
 
-    %% Node Styling (fallback)
+    %% Styling
     classDef core fill:#b3d9ff,stroke:#6db1ff,stroke-width:2px,color:#555,font-family:monospace;
     classDef deps fill:#ffcccc,stroke:#ff8f8f,stroke-width:2px,color:#555,font-family:monospace;
     classDef test fill:#ccffcc,stroke:#53c45e,stroke-width:2px,color:#555,font-family:monospace;
@@ -309,4 +315,4 @@ Key guidelines:
 
 ## Legal
 
-All trademarks, registered trademarks, service marks, product names, company names, or logos mentioned are the property of their respective owners and are used for identification purposes only.
+This project is provided for educational and demonstration purposes and may be used in production environments at your discretion. All referenced trademarks, service marks, product names, company names, and logos are the property of their respective owners and are used solely for identification or illustrative purposes.
