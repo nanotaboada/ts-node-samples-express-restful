@@ -44,7 +44,7 @@ export default class PlayerValidator implements IPlayerValidator {
         body('abbrPosition').optional({ checkFalsy: true }).isString().withMessage('Abbreviated position must be a string'),
         body('team').optional({ checkFalsy: true }).isString().withMessage('Team must be a string'),
         body('league').optional({ checkFalsy: true }).isString().withMessage('League must be a string'),
-        body('starting11').optional({ checkFalsy: true }).isBoolean().withMessage('Starting 11 must be a boolean'),
+        body('starting11').optional({ checkFalsy: false }).isBoolean().withMessage('Starting 11 must be a boolean'),
     ];
 
     /**
