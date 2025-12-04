@@ -129,16 +129,12 @@ export default class PlayerController implements IPlayerController {
     async postAsync(request: Request, response: Response): Promise<void> {
         const id = parseInt(request.body.id);
         const create: Player = request.body;
-        if (Object.keys(create).length !== 0) {
-            const player = await this.playerService.retrieveByIdAsync(id);
-            if (player) {
-                response.sendStatus(409);
-            } else {
-                await this.playerService.createAsync(create);
-                response.sendStatus(201);
-            }
+        const player = await this.playerService.retrieveByIdAsync(id);
+        if (player) {
+            response.sendStatus(409);
         } else {
-            response.sendStatus(400);
+            await this.playerService.createAsync(create);
+            response.sendStatus(201);
         }
     }
 
@@ -172,16 +168,12 @@ export default class PlayerController implements IPlayerController {
     async putAsync(request: Request, response: Response): Promise<void> {
         const id = parseInt(request.params.id);
         const update: Player = request.body;
-        if (Object.keys(update).length !== 0) {
-            const player = await this.playerService.retrieveByIdAsync(id);
-            if (!player) {
-                response.sendStatus(404);
-            } else {
-                await this.playerService.updateAsync(update);
-                response.sendStatus(204);
-            }
+        const player = await this.playerService.retrieveByIdAsync(id);
+        if (!player) {
+            response.sendStatus(404);
         } else {
-            response.sendStatus(400);
+            await this.playerService.updateAsync(update);
+            response.sendStatus(204);
         }
     }
 

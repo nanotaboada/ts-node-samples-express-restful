@@ -159,7 +159,7 @@ const playerStub = {
         abbrPosition: 'DM',
         team: 'AS Roma',
         league: 'Serie A',
-        starting11: 'FALSE',
+        starting11: false,
     },
     findById(id: number): any | null {
         return this.all.find((player: { id: number }) => player.id === id) || null;

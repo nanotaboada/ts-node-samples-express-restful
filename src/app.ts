@@ -11,6 +11,7 @@ import dotenv from 'dotenv';
 import PlayerDatabase from './database/player-database.js';
 import PlayerService from './services/player-service.js';
 import PlayerController from './controllers/player-controller.js';
+import PlayerValidator from './middlewares/player-validator.js';
 import PlayerRoute from './routes/player-route.js';
 
 import { swaggerSpec, swaggerUi, swaggerUiOptions } from './docs/swagger.js';
@@ -22,11 +23,12 @@ import HealthRoute from './routes/health-route.js';
 // Loads environment variables from the .env file
 dotenv.config();
 
-// Creates instances of the database, service, controller, and routes
+// Creates instances of the database, service, controller, validator, and routes
 const playerDatabase = new PlayerDatabase();
 const playerService = new PlayerService(playerDatabase);
 const playerController = new PlayerController(playerService);
-const playerRoute = new PlayerRoute(playerController);
+const playerValidator = new PlayerValidator();
+const playerRoute = new PlayerRoute(playerController, playerValidator);
 
 const healthController = new HealthController();
 const healthRoute = new HealthRoute(healthController);
