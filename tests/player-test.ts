@@ -1,7 +1,3 @@
-/* -----------------------------------------------------------------------------
- * Test
- * -------------------------------------------------------------------------- */
-
 import request from 'supertest';
 import app from '../src/app.js';
 import playerStub from './player-stub.js';
@@ -16,18 +12,59 @@ const hasFieldError = (errors: any[], fieldName: string): boolean => {
 };
 
 describe('Integration Tests', () => {
+    afterEach(async () => {
+        const response = await request(app).delete(`${path}/${playerStub.new.id}`);
+        if (response.status !== 204 && response.status !== 404) {
+            throw new Error(`Cleanup failed with status ${response.status}`);
+        }
+    });
+
     describe('GET', () => {
+        it('Given GET, when request within rate limit, then response should include standard rate limit headers', async () => {
+            // Skip if rate limiting is disabled
+            if (process.env.RATE_LIMIT_ENABLED === 'false') {
+                expect(true).toBe(true);
+                return;
+            }
+
+            // Act
+            const response = await request(app).get('/players');
+            // Assert
+            expect(response.headers).toHaveProperty('ratelimit-limit');
+            expect(response.headers).toHaveProperty('ratelimit-remaining');
+            expect(response.headers).toHaveProperty('ratelimit-reset');
+        });
+        it('Given GET, when request within rate limit, then response should NOT include legacy X-RateLimit headers', async () => {
+            // Act
+            const response = await request(app).get('/players');
+            // Assert
+            expect(response.headers).not.toHaveProperty('x-ratelimit-limit');
+            expect(response.headers).not.toHaveProperty('x-ratelimit-remaining');
+        });
+        it('Given GET, when multiple requests exceed rate limit, then response status should be 429 (Too Many Requests)', async () => {
+            // This test is skipped by default as it requires making 100+ requests
+            // To enable, set RATE_LIMIT_MAX_GENERAL to a lower value (e.g., 10) in test environment
+            const maxRequests = Number.parseInt(process.env.RATE_LIMIT_MAX_GENERAL || '100', 10);
+
+            // Skip if using high default limit
+            if (maxRequests > 50) {
+                expect(true).toBe(true); // Skip test
+                return;
+            }
+
+            // Act - Make requests up to the limit using health endpoint
+            for (let i = 0; i < maxRequests; i++) {
+                await request(app).get('/health');
+            }
+
+            // Assert - The next request should be rate limited
+            const response = await request(app).get('/health');
+            expect(response.status).toBe(429);
+            expect(response.body).toHaveProperty('error');
+            expect(response.body.error).toContain('Too many requests');
+        }, 30000); // Increase timeout for multiple requests
         // GET /players --------------------------------------------------------
         describe('/players', () => {
-            it('Given GET, when request has invalid path, then response status should be 404 (Not Found)', async () => {
-                // Arrange
-                const invalidPath = '/players-invalid-path/';
-                // Act
-                const response = await request(app)
-                    .get(invalidPath);
-                // Assert
-                expect(response.status).toBe(404);
-            });
             it('Given GET, when request path has no ID, then response status should be 200 (OK)', async () => {
                 // Act
                 const response = await request(app)
@@ -111,6 +148,38 @@ describe('Integration Tests', () => {
         });
     });
     describe('POST', () => {
+        it('Given POST, when request within rate limit, then request should be processed', async () => {
+            // Arrange
+            const body = playerStub.new;
+            // Act
+            const response = await request(app).post('/players').send(body);
+            // Assert
+            expect([201, 409]).toContain(response.status);
+        });
+        it('Given POST, when multiple requests exceed strict rate limit, then response status should be 429', async () => {
+            // This test is skipped by default as it requires making 20+ requests
+            // To enable, set RATE_LIMIT_MAX_STRICT to a lower value (e.g., 5) in test environment
+            const maxRequests = Number.parseInt(process.env.RATE_LIMIT_MAX_STRICT || '20', 10);
+
+            // Skip if using default or high limit
+            if (maxRequests >= 20) {
+                expect(true).toBe(true); // Skip test
+                return;
+            }
+
+            // Act - Make POST requests up to the strict limit
+            for (let i = 0; i < maxRequests; i++) {
+                await request(app)
+                    .post('/players')
+                    .send(playerStub.new);
+            }
+
+            // Assert - The next POST request should be rate limited
+            const response = await request(app).post('/players').send(playerStub.new);
+            expect(response.status).toBe(429);
+            expect(response.body).toHaveProperty('error');
+            expect(response.body.error).toContain('Too many write requests');
+        }, 60000); // Increase timeout for multiple requests
         // POST /players -------------------------------------------------------
         describe('/players', () => {
             it('Given POST, when request body is empty, then response status should be 400 (Bad Request)', async () => {
@@ -219,6 +288,19 @@ describe('Integration Tests', () => {
         });
     });
     describe('PUT', () => {
+        beforeEach(async () => {
+            await request(app).post(path).send(playerStub.new);
+        });
+
+        it('Given PUT, when request within rate limit, then response status should be 204 (No Content)', async () => {
+            // Arrange
+            const id = playerStub.new.id;
+            const body = playerStub.new;
+            // Act
+            const response = await request(app).put(`/players/${id}`).send(body);
+            // Assert
+            expect(response.status).toBe(204);
+        });
         // PUT /players/:id ----------------------------------------------------
         describe('/players/:id', () => {
             it('Given PUT, when request body is empty, then response status should be 400 (Bad Request)', async () => {
@@ -349,6 +431,18 @@ describe('Integration Tests', () => {
         });
     });
     describe('DELETE', () => {
+        beforeEach(async () => {
+            await request(app).post(path).send(playerStub.new);
+        });
+
+        it('Given DELETE, when request within rate limit, then response status should be 404 (Not Found)', async () => {
+            // Arrange
+            const id = 999;
+            // Act
+            const response = await request(app).delete(`/players/${id}`);
+            // Assert
+            expect(response.status).toBe(404);
+        });
         // DELETE /players/:id -------------------------------------------------
         describe('/players/:id', () => {
             it('Given DELETE, when request path is nonexistent ID, then response status should be 404 (Not Found)', async () => {

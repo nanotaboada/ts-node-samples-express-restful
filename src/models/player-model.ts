@@ -22,7 +22,7 @@ export default class Player extends Model {
     declare firstName: string;
     declare middleName?: string;
     declare lastName: string;
-    declare dateOfBirth?: Date;
+    declare dateOfBirth?: string;
     declare squadNumber: number;
     declare position: string;
     declare abbrPosition?: string;
@@ -37,7 +37,14 @@ Player.init(
         firstName: { type: DataTypes.STRING, allowNull: false },
         middleName: { type: DataTypes.STRING, allowNull: true },
         lastName: { type: DataTypes.STRING, allowNull: false },
-        dateOfBirth: { type: DataTypes.DATE, allowNull: true },
+        dateOfBirth: {
+            type: DataTypes.DATE,
+            allowNull: true,
+            get() {
+                const rawValue = this.getDataValue('dateOfBirth');
+                return rawValue ? new Date(rawValue).toISOString() : rawValue;
+            },
+        },
         squadNumber: { type: DataTypes.INTEGER, allowNull: false, unique: true },
         position: { type: DataTypes.STRING, allowNull: false },
         abbrPosition: { type: DataTypes.STRING, allowNull: true },

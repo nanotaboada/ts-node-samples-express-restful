@@ -24,6 +24,9 @@ const config: Config = {
     moduleDirectories: ['node_modules', 'src'],
     testPathIgnorePatterns: ['/node_modules/', '/dist/'],
 
+    // Setup files to run before tests
+    setupFiles: ['<rootDir>/tests/setup.ts'],
+
     // Only include coverage for controllers, services, and routes
     collectCoverage: true,
     collectCoverageFrom: ['src/controllers/**/*.{ts,tsx}', 'src/services/**/*.{ts,tsx}', 'src/routes/**/*.{ts,tsx}'],
