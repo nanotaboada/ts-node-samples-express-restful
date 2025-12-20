@@ -9,7 +9,7 @@ import { Model, DataTypes } from 'sequelize';
  * @property {string} firstName - The first name of the Player.
  * @property {string} [middleName] - The middle name of the Player. (Optional)
  * @property {string} lastName - The last name of the Player.
- * @property {Date} [dateOfBirth] - The date of birth of the Player. (Optional)
+ * @property {string} [dateOfBirth] - The date of birth of the Player in ISO 8601 format. (Optional)
  * @property {number} squadNumber - The unique squad number assigned to the Player.
  * @property {string} position - The playing position of the Player.
  * @property {string} [abbrPosition] - The abbreviated form of the Player's position. (Optional)

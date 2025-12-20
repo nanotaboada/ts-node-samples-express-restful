@@ -32,9 +32,9 @@ export default class RateLimiter implements IRateLimiter {
     public readonly strictLimiter: RateLimitRequestHandler;
 
     constructor() {
-        const windowMs = Number.parseInt(process.env.RATE_LIMIT_WINDOW_MS || '60000', 10); // 1 minute
-        const maxGeneral = Number.parseInt(process.env.RATE_LIMIT_MAX_GENERAL || '100', 10);
-        const maxStrict = Number.parseInt(process.env.RATE_LIMIT_MAX_STRICT || '20', 10);
+        const windowMs = Number.parseInt(process.env.RATE_LIMIT_WINDOW_MS ?? '60000', 10); // 1 minute
+        const maxGeneral = Number.parseInt(process.env.RATE_LIMIT_MAX_GENERAL ?? '100', 10);
+        const maxStrict = Number.parseInt(process.env.RATE_LIMIT_MAX_STRICT ?? '20', 10);
         const isEnabled = process.env.RATE_LIMIT_ENABLED !== 'false';
 
         this.generalLimiter = rateLimit({
