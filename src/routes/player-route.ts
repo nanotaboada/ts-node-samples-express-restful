@@ -4,7 +4,8 @@ import { IPlayerValidator } from '../middlewares/player-validator-interface.js';
 import { Router } from 'express';
 
 /**
- * Implementation of IPlayerRoute for handing the routing operations of a Player.
+ * Implementation of IPlayerRoute for handling the routing operations of a Player.
+ * Defines all player-related routes and applies validation middleware.
  */
 export default class PlayerRoute implements IPlayerRoute {
     public router: Router;

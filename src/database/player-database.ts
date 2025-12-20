@@ -2,7 +2,8 @@ import Player from '../models/player-model.js';
 import { IPlayerDatabase } from './player-database-interface.js';
 
 /**
- * Implementation of IPlayerDatabase for handing the database operations of a Player.
+ * Implementation of IPlayerDatabase for handling the database operations of a Player.
+ * Provides data access layer using Sequelize ORM.
  */
 export default class PlayerDatabase implements IPlayerDatabase {
     async selectAllAsync(): Promise<Player[]> {

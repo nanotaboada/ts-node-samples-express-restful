@@ -4,7 +4,8 @@ import { IPlayerService } from '../services/player-service-interface.js';
 import { IPlayerDatabase } from '../database/player-database-interface.js';
 
 /**
- * Implementation of IPlayerDatabase for handing the service operations of a Player.
+ * Implementation of IPlayerService for handling the service operations of a Player.
+ * Provides business logic layer with caching support for player data operations.
  */
 export default class PlayerService implements IPlayerService {
     private readonly cache: NodeCache;

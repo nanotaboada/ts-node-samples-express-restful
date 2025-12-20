@@ -2,6 +2,9 @@ import { Request, Response } from 'express';
 import { IHealthController } from './health-controller-interface.js';
 
 /**
+ * Implementation of IHealthController for handling health check operations.
+ * Provides endpoints to monitor application status, uptime, and system information.
+ *
  * @openapi
  * tags:
  *   name: Health

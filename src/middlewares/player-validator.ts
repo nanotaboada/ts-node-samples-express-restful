@@ -1,7 +1,3 @@
-/* -----------------------------------------------------------------------------
- * Validator Middleware
- * -------------------------------------------------------------------------- */
-
 import { body, ValidationChain, validationResult } from 'express-validator';
 import { Request, Response, NextFunction } from 'express';
 import { IPlayerValidator } from './player-validator-interface.js';
