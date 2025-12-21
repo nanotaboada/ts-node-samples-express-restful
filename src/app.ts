@@ -1,7 +1,3 @@
-/* -----------------------------------------------------------------------------
- * Application
- * -------------------------------------------------------------------------- */
-
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
@@ -16,6 +12,8 @@ import PlayerRoute from './routes/player-route.js';
 
 import { swaggerSpec, swaggerUi, swaggerUiOptions } from './docs/swagger.js';
 import { swaggerMiddleware } from './middlewares/swagger-middleware.js';
+
+import RateLimiter from './middlewares/rate-limiter.js';
 
 import HealthController from './controllers/health-controller.js';
 import HealthRoute from './routes/health-route.js';
@@ -33,12 +31,10 @@ const playerRoute = new PlayerRoute(playerController, playerValidator);
 const healthController = new HealthController();
 const healthRoute = new HealthRoute(healthController);
 
+const rateLimiter = new RateLimiter();
+
 // Creates the Express app
 const app = express();
-
-/* -----------------------------------------------------------------------------
- * Middlewares
- * -------------------------------------------------------------------------- */
 
 // Helmet - https://helmetjs.github.io/
 app.use(helmet());
@@ -50,6 +46,9 @@ app.use(cors()); //NOSONAR
 // Body-parser - https://expressjs.com/en/resources/middleware/body-parser.html
 app.use(bodyParser.json());
 
+// Rate Limiter - https://www.npmjs.com/package/express-rate-limit
+app.use(rateLimiter.generalLimiter);
+
 // Swagger UI Express - https://github.com/scottie1984/swagger-ui-express
 app.use('/swagger', swaggerMiddleware, swaggerUi.serve, swaggerUi.setup(swaggerSpec, swaggerUiOptions));
 app.get('/swagger/index.html', (_, response) => {
@@ -58,6 +57,14 @@ app.get('/swagger/index.html', (_, response) => {
 app.get('/swagger.json', (_, response) => {
     response.setHeader('Content-Type', 'application/json');
     response.send(swaggerSpec);
+});
+
+// Strict rate limiter for write operations
+app.use('/players', (request, response, next) => {
+    if (['POST', 'PUT', 'DELETE'].includes(request.method)) {
+        return rateLimiter.strictLimiter(request, response, next);
+    }
+    next();
 });
 
 // express.Router - https://expressjs.com/en/guide/routing.html

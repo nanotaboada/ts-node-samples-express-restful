@@ -2,6 +2,10 @@ import { Router } from 'express';
 import { IHealthController } from '../controllers/health-controller-interface.js';
 import { IHealthRoute } from './health-route-interface.js';
 
+/**
+ * Implementation of IHealthRoute for handling health check routing operations.
+ * Provides health status endpoint for monitoring application availability.
+ */
 export default class HealthRoute implements IHealthRoute {
     public router: Router;
     private readonly healthController: IHealthController;

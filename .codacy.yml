@@ -22,6 +22,6 @@ exclude_paths:
   - ".gitignore"
   - ".prettierignore"
   - ".prettierrc"
-  - "jest.config.js"
+  - "jest.config.ts"
   - "LICENSE"
   - "README.md"

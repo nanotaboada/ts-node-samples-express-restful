@@ -1,13 +1,12 @@
-/* -----------------------------------------------------------------------------
- * Controller
- * -------------------------------------------------------------------------- */
-
 import Player from '../models/player-model.js';
 import { IPlayerController } from './player-controller-interface.js';
 import { IPlayerService } from '../services/player-service-interface.js';
 import { Request, Response } from 'express';
 
 /**
+ * Implementation of IPlayerController for handling Player HTTP request operations.
+ * Manages all player-related endpoints including CRUD operations.
+ *
  * @openapi
  * tags:
  *   name: Players
@@ -64,7 +63,7 @@ export default class PlayerController implements IPlayerController {
      *         description: Not Found
      */
     async getByIdAsync(request: Request, response: Response): Promise<void> {
-        const id = parseInt(request.params.id);
+        const id = Number.parseInt(request.params.id);
         const player = await this.playerService.retrieveByIdAsync(id);
         if (player) {
             response.json(player);
@@ -97,7 +96,7 @@ export default class PlayerController implements IPlayerController {
      *         description: Not Found
      */
     async getBySquadNumberAsync(request: Request, response: Response): Promise<void> {
-        const squadNumber = parseInt(request.params.squadNumber);
+        const squadNumber = Number.parseInt(request.params.squadNumber);
         const player = await this.playerService.retrieveBySquadNumberAsync(squadNumber);
         if (player) {
             response.json(player);
@@ -166,7 +165,7 @@ export default class PlayerController implements IPlayerController {
      *         description: Not Found
      */
     async putAsync(request: Request, response: Response): Promise<void> {
-        const id = parseInt(request.params.id);
+        const id = Number.parseInt(request.params.id);
         const update: Player = request.body;
         const player = await this.playerService.retrieveByIdAsync(id);
         if (!player) {
@@ -197,7 +196,7 @@ export default class PlayerController implements IPlayerController {
      *         description: Not Found
      */
     async deleteAsync(request: Request, response: Response): Promise<void> {
-        const id = parseInt(request.params.id);
+        const id = Number.parseInt(request.params.id);
         const player = await this.playerService.retrieveByIdAsync(id);
         if (!player) {
             response.sendStatus(404);

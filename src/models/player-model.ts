@@ -9,7 +9,7 @@ import { Model, DataTypes } from 'sequelize';
  * @property {string} firstName - The first name of the Player.
  * @property {string} [middleName] - The middle name of the Player. (Optional)
  * @property {string} lastName - The last name of the Player.
- * @property {Date} [dateOfBirth] - The date of birth of the Player. (Optional)
+ * @property {string} [dateOfBirth] - The date of birth of the Player in ISO 8601 format. (Optional)
  * @property {number} squadNumber - The unique squad number assigned to the Player.
  * @property {string} position - The playing position of the Player.
  * @property {string} [abbrPosition] - The abbreviated form of the Player's position. (Optional)
@@ -22,7 +22,7 @@ export default class Player extends Model {
     declare firstName: string;
     declare middleName?: string;
     declare lastName: string;
-    declare dateOfBirth?: Date;
+    declare dateOfBirth?: string;
     declare squadNumber: number;
     declare position: string;
     declare abbrPosition?: string;
@@ -37,7 +37,14 @@ Player.init(
         firstName: { type: DataTypes.STRING, allowNull: false },
         middleName: { type: DataTypes.STRING, allowNull: true },
         lastName: { type: DataTypes.STRING, allowNull: false },
-        dateOfBirth: { type: DataTypes.DATE, allowNull: true },
+        dateOfBirth: {
+            type: DataTypes.DATE,
+            allowNull: true,
+            get() {
+                const rawValue = this.getDataValue('dateOfBirth');
+                return rawValue ? new Date(rawValue).toISOString() : rawValue;
+            },
+        },
         squadNumber: { type: DataTypes.INTEGER, allowNull: false, unique: true },
         position: { type: DataTypes.STRING, allowNull: false },
         abbrPosition: { type: DataTypes.STRING, allowNull: true },
