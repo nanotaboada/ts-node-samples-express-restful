@@ -1,5 +1,5 @@
 import app from './app.js';
-import http from 'http';
+import http from 'node:http';
 import dotenv from 'dotenv';
 
 // Loads environment variables from the .env file
