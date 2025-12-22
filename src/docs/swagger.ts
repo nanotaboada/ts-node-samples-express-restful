@@ -1,5 +1,4 @@
 import swaggerJSDoc from 'swagger-jsdoc';
-import swaggerUiExpress from 'swagger-ui-express';
 import type { SwaggerUiOptions } from 'swagger-ui-express';
 
 /**
@@ -121,4 +120,5 @@ const customSwaggerUiOptions: SwaggerUiOptions = {
     },
 };
 
-export { validatedSwaggerSpecJSON as swaggerSpec, swaggerUiExpress as swaggerUi, customSwaggerUiOptions as swaggerUiOptions };
+export { validatedSwaggerSpecJSON as swaggerSpec, customSwaggerUiOptions as swaggerUiOptions };
+export { default as swaggerUi } from 'swagger-ui-express';
