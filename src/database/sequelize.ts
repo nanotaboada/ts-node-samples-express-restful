@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 import { Sequelize } from 'sequelize';
 
 // Read from env var, fallback to relative path (for local dev)
