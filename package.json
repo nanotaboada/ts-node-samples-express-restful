@@ -21,7 +21,7 @@
   "author": "Nano Taboada",
   "license": "MIT",
   "dependencies": {
-    "body-parser": "^2.2.1",
+    "body-parser": "^2.2.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
