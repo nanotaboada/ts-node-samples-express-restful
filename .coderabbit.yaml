@@ -178,7 +178,6 @@ reviews:
     ignore_title_keywords:
       - "WIP"
       - "DO NOT REVIEW"
-      - "wip"
     drafts: false
     base_branches:
       - master
@@ -236,10 +235,9 @@ reviews:
       enabled: true
     osvScanner:
       enabled: true
-
-    # Disable irrelevant tools for TypeScript project
     shellcheck:
-      enabled: false
+      enabled: true
+    # Disable irrelevant tools for TypeScript project
     ruff:
       enabled: false
     swiftlint:
@@ -302,14 +300,10 @@ knowledge_base:
   code_guidelines:
     enabled: true
     filePatterns:
-      - "src/**/*.ts"
-      - "tests/**/*.ts"
-      - "**/package.json"
-      - "**/tsconfig.json"
-      - "**/jest.config.ts"
-      - "**/eslint.config.mjs"
-      - "**/Dockerfile"
-      - "**/*.{yml,yaml}"
+      - "CONTRIBUTING.md"
+      - "CODE_OF_CONDUCT.md"
+      - ".github/copilot-instructions.md"
+      - ".cursorrules"
   learnings:
     scope: auto
   issues:
