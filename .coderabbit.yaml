@@ -1,0 +1,348 @@
+# CodeRabbit Configuration
+# Optimized for Node.js 24 (LTS) / Express.js 5 / TypeScript project
+
+language: en-US
+early_access: true
+enable_free_tier: true
+
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  high_level_summary_placeholder: "@coderabbitai summary"
+  review_status: true
+  commit_status: true
+  fail_commit_status: false
+  collapse_walkthrough: false
+  changed_files_summary: true
+  sequence_diagrams: true
+  estimate_code_review_effort: true
+  assess_linked_issues: true
+  related_issues: true
+  related_prs: true
+  suggested_labels: true
+  auto_apply_labels: false
+  suggested_reviewers: false
+  auto_assign_reviewers: false
+  in_progress_fortune: true
+  poem: false
+  abort_on_close: true
+
+  # Path-based review instructions for this TypeScript/Express project
+  path_instructions:
+    - path: "src/**/*.ts"
+      instructions: |
+        - Follow TypeScript strict mode conventions
+        - Use 4 spaces for indentation (per Prettier config)
+        - Ensure all relative imports include .js extension (ESM requirement)
+        - Verify proper async/await patterns for all I/O operations
+        - Check type safety - avoid excessive use of any
+        - Follow interface-based contracts for dependency injection
+        - Ensure proper error handling with try/catch
+
+    - path: "src/controllers/**/*.ts"
+      instructions: |
+        - Controllers should delegate to services
+        - Verify OpenAPI @openapi JSDoc annotations are present
+        - Check proper HTTP status codes (200, 201, 204, 400, 404)
+        - Ensure methods are bound (.bind(this.controller)) in routes
+        - Validate request/response handling with proper types
+        - Check that controllers return JSON or status codes appropriately
+
+    - path: "src/services/**/*.ts"
+      instructions: |
+        - Services should contain business logic and caching
+        - Verify node-cache is used for GET operations (1-hour TTL)
+        - Check cache.flushAll() is called on CUD operations
+        - Ensure proper database layer calls (async methods)
+        - Validate error handling and propagation
+        - Check constructor-based dependency injection
+
+    - path: "src/database/**/*.ts"
+      instructions: |
+        - Database layer should use Sequelize ORM
+        - Verify async methods (selectAllAsync, insertAsync, etc.)
+        - Check proper connection configuration (SQLite)
+        - Ensure interface definitions match implementations
+        - Validate error handling during database operations
+
+    - path: "src/models/**/*.ts"
+      instructions: |
+        - Models should use Sequelize for ORM definitions
+        - Check proper column types and constraints
+        - Verify auto-increment and unique constraints
+        - Ensure model initialization is correct
+
+    - path: "src/routes/**/*.ts"
+      instructions: |
+        - Routes should use Express Router
+        - Verify proper route definitions with path parameters
+        - Check controller method binding (.bind())
+        - Ensure RESTful route organization
+
+    - path: "src/docs/**/*.ts"
+      instructions: |
+        - Swagger configuration should be correct
+        - Verify swagger-jsdoc setup extracts annotations properly
+        - Check API metadata (title, version, description)
+        - Ensure dist/swagger.json generation works
+
+    - path: "src/middlewares/**/*.ts"
+      instructions: |
+        - Middleware should follow Express middleware pattern
+        - Verify CSP configuration for Swagger UI
+        - Check proper next() calls and error handling
+
+    - path: "src/app.ts"
+      instructions: |
+        - Verify Express app setup with proper middleware
+        - Check Helmet, CORS, and JSON parsing middleware
+        - Ensure Swagger UI middleware is configured correctly
+        - Validate error handling middleware
+
+    - path: "src/server.ts"
+      instructions: |
+        - Check HTTP server initialization
+        - Verify database connection on startup
+        - Ensure graceful shutdown handling
+        - Validate port configuration from env vars
+
+    - path: "tests/**/*-test.ts"
+      instructions: |
+        - Tests should use Jest with Supertest
+        - Verify ESM mode with experimental VM modules
+        - Check integration tests against Express app
+        - Ensure test naming is descriptive (Arrange-Act-Assert structure)
+        - Validate test data uses stubs (e.g., player-stub.ts)
+        - Check coverage targets (controllers, services, routes only)
+
+    - path: "package.json"
+      instructions: |
+        - Verify "type": "module" is set (ESM)
+        - Check Node.js version matches LTS/Krypton (24.11.1)
+        - Ensure scripts are correctly defined
+        - Validate dependencies are up to date
+        - Check that test script uses NODE_OPTIONS for experimental VM modules
+
+    - path: "tsconfig.json"
+      instructions: |
+        - Verify target is ES2022
+        - Check module and moduleResolution are correct
+        - Ensure strict mode is enabled
+        - Validate output directory is dist/
+
+    - path: "eslint.config.mjs"
+      instructions: |
+        - Check flat config format is used
+        - Verify @typescript-eslint is configured
+        - Ensure disabled rules are justified
+        - Validate ignore patterns
+
+    - path: "jest.config.ts"
+      instructions: |
+        - Verify ESM preset with ts-jest
+        - Check experimental VM modules configuration
+        - Ensure coverage collection is limited to relevant paths
+        - Validate test file patterns
+
+    - path: "**/Dockerfile"
+      instructions: |
+        - Verify multi-stage build (builder + runtime)
+        - Check Node.js version matches project (24-alpine)
+        - Ensure non-root user (express) is used
+        - Validate HEALTHCHECK instruction is present
+        - Check that Swagger docs are generated during build
+
+    - path: "**/*.{yml,yaml}"
+      instructions: |
+        - Verify proper YAML syntax
+        - Check Docker Compose configuration
+        - Ensure environment variables are properly set
+        - Validate volume configurations for persistence
+
+  # Ignore patterns for this project
+  path_filters:
+    - "!**/node_modules/**"
+    - "!**/dist/**"
+    - "!**/coverage/**"
+    - "!**/storage/**"
+    - "!**/*.db"
+    - "!**/*.db-shm"
+    - "!**/*.db-wal"
+    - "!**/postman-collections/**"
+    - "!**/*.log"
+
+  auto_review:
+    enabled: true
+    auto_incremental_review: true
+    ignore_title_keywords:
+      - "WIP"
+      - "DO NOT REVIEW"
+    drafts: false
+    base_branches:
+      - master
+      - main
+
+  finishing_touches:
+    docstrings:
+      enabled: true
+    unit_tests:
+      enabled: true
+
+  pre_merge_checks:
+    docstrings:
+      mode: warning
+      threshold: 75
+    title:
+      mode: warning
+      requirements: |
+        - Use Conventional Commits format (feat:, fix:, chore:, docs:, test:, refactor:)
+        - Keep under 80 characters
+        - Be descriptive and specific
+    description:
+      mode: warning
+    issue_assessment:
+      mode: warning
+
+  tools:
+    # Relevant tools for TypeScript/Node.js projects
+    eslint:
+      enabled: true
+    oxc:
+      enabled: true
+    biome:
+      enabled: true
+    gitleaks:
+      enabled: true
+    checkov:
+      enabled: true
+    hadolint:
+      enabled: true
+    yamllint:
+      enabled: true
+    actionlint:
+      enabled: true
+    semgrep:
+      enabled: true
+    markdownlint:
+      enabled: true
+    github-checks:
+      enabled: true
+      timeout_ms: 120000
+    dotenvLint:
+      enabled: true
+    checkmake:
+      enabled: true
+    osvScanner:
+      enabled: true
+    shellcheck:
+      enabled: true
+    # Disable irrelevant tools for TypeScript project
+    ruff:
+      enabled: false
+    swiftlint:
+      enabled: false
+    phpstan:
+      enabled: false
+    phpmd:
+      enabled: false
+    phpcs:
+      enabled: false
+    golangci-lint:
+      enabled: false
+    detekt:
+      enabled: false
+    flake8:
+      enabled: false
+    rubocop:
+      enabled: false
+    buf:
+      enabled: false
+    regal:
+      enabled: false
+    pmd:
+      enabled: false
+    clang:
+      enabled: false
+    cppcheck:
+      enabled: false
+    clippy:
+      enabled: false
+    sqlfluff:
+      enabled: false
+    prismaLint:
+      enabled: false
+    pylint:
+      enabled: false
+    shopifyThemeCheck:
+      enabled: false
+    luacheck:
+      enabled: false
+    brakeman:
+      enabled: false
+    htmlhint:
+      enabled: false
+    languagetool:
+      enabled: false
+    circleci:
+      enabled: false
+    fortitudeLint:
+      enabled: false
+
+chat:
+  art: true
+  auto_reply: true
+
+knowledge_base:
+  opt_out: false
+  web_search:
+    enabled: true
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - "CONTRIBUTING.md"
+      - "CODE_OF_CONDUCT.md"
+      - ".github/copilot-instructions.md"
+      - ".cursorrules"
+  learnings:
+    scope: auto
+  issues:
+    scope: auto
+  pull_requests:
+    scope: auto
+  mcp:
+    usage: auto
+
+code_generation:
+  docstrings:
+    language: en-US
+    path_instructions:
+      - path: "src/**/*.ts"
+        instructions: |
+          - Use JSDoc comments with @openapi for API endpoints
+          - Include @param and @returns tags
+          - Document OpenAPI specs in controllers
+          - Keep documentation concise and meaningful
+  unit_tests:
+    path_instructions:
+      - path: "tests/**/*-test.ts"
+        instructions: |
+          - Use Jest framework with Supertest
+          - Follow integration test patterns with Express app
+          - Use descriptive test names with it() blocks
+          - Structure tests with Arrange-Act-Assert pattern
+          - Use test stubs for consistent test data
+          - Target coverage for controllers, services, and routes only
+
+issue_enrichment:
+  auto_enrich:
+    enabled: true
+  planning:
+    enabled: true
+    auto_planning:
+      enabled: true
+      labels:
+        - planning
+  labeling:
+    labeling_instructions: []
+    auto_apply_labels: false
