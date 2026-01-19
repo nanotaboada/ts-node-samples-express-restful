@@ -406,6 +406,28 @@ describe('Integration Tests', () => {
                 expect(response.body.errors).toBeDefined();
                 expect(hasFieldError(response.body.errors, 'squadNumber')).toBe(true);
             });
+            it('Given PUT, when request body has no id, then response status should be 400 (Bad Request)', async () => {
+                // Arrange
+                const id = 1;
+                const body = playerStub.updateWithoutId;
+                // Act
+                const response = await request(app)
+                    .put(`${path}/${id}`)
+                    .send(body);
+                // Assert
+                expect(response.status).toBe(400);
+            });
+            it('Given PUT, when params.id differs from body.id, then response status should be 400 (Bad Request)', async () => {
+                // Arrange
+                const id = 1;
+                const body = playerStub.updateWithMismatchedId;
+                // Act
+                const response = await request(app)
+                    .put(`${path}/${id}`)
+                    .send(body);
+                // Assert
+                expect(response.status).toBe(400);
+            });
             it('Given PUT, when request path is nonexistent ID, then response status should be 404 (Not Found)', async () => {
                 // Arrange
                 const id = 999;

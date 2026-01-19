@@ -1,5 +1,5 @@
 import NodeCache from 'node-cache';
-import Player from '../models/player-model.js';
+import { IPlayer } from '../models/player-interface.js';
 import { IPlayerService } from '../services/player-service-interface.js';
 import { IPlayerDatabase } from '../database/player-database-interface.js';
 import logger from '../utils/logger.js';
@@ -7,6 +7,7 @@ import logger from '../utils/logger.js';
 /**
  * Implementation of IPlayerService for handling the service operations of a Player.
  * Provides business logic layer with caching support for player data operations.
+ * Uses IPlayer interface to decouple from ORM implementation.
  */
 export default class PlayerService implements IPlayerService {
     private readonly cache: NodeCache;
@@ -17,9 +18,9 @@ export default class PlayerService implements IPlayerService {
         this.playerDatabase = playerDatabase;
     }
 
-    async retrieveAllAsync(): Promise<Player[]> {
+    async retrieveAllAsync(): Promise<IPlayer[]> {
         const cacheKey = 'retrieveAll';
-        let players = this.cache.get<Player[]>(cacheKey);
+        let players = this.cache.get<IPlayer[]>(cacheKey);
         if (players) {
             logger.debug({ cacheKey, cacheHit: true }, 'Cache hit for retrieveAll');
         } else {
@@ -31,9 +32,9 @@ export default class PlayerService implements IPlayerService {
         return players;
     }
 
-    async retrieveByIdAsync(id: number): Promise<Player | undefined> {
+    async retrieveByIdAsync(id: number): Promise<IPlayer | undefined> {
         const cacheKey = `player_${id}`;
-        let player = this.cache.get<Player>(cacheKey);
+        let player = this.cache.get<IPlayer>(cacheKey);
         if (player) {
             logger.debug({ cacheKey, playerId: id, cacheHit: true }, 'Cache hit for player by ID');
         } else {
@@ -47,9 +48,9 @@ export default class PlayerService implements IPlayerService {
         return player;
     }
 
-    async retrieveBySquadNumberAsync(squadNumber: number): Promise<Player | undefined> {
+    async retrieveBySquadNumberAsync(squadNumber: number): Promise<IPlayer | undefined> {
         const cacheKey = `player_squad_${squadNumber}`;
-        let player = this.cache.get<Player>(cacheKey);
+        let player = this.cache.get<IPlayer>(cacheKey);
         if (player) {
             logger.debug({ cacheKey, squadNumber, cacheHit: true }, 'Cache hit for player by squad number');
         } else {
@@ -63,12 +64,12 @@ export default class PlayerService implements IPlayerService {
         return player;
     }
 
-    async createAsync(player: Player): Promise<void> {
+    async createAsync(player: IPlayer): Promise<void> {
         await this.playerDatabase.insertAsync(player);
         this.cache.flushAll();
     }
 
-    async updateAsync(player: Player): Promise<void> {
+    async updateAsync(player: IPlayer): Promise<void> {
         await this.playerDatabase.updateAsync(player);
         this.cache.flushAll();
     }
