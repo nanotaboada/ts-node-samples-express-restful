@@ -1,9 +1,12 @@
 import sequelize from '../database/sequelize.js';
 import { Model, DataTypes } from 'sequelize';
+import { IPlayer } from './player-interface.js';
 
 /**
  * Sequelize model representing a football Player.
+ * Implements IPlayer interface to ensure type compatibility with domain layer.
  * @extends Model
+ * @implements {IPlayer}
  *
  * @property {number} id - The unique identifier for the Player (Primary Key).
  * @property {string} firstName - The first name of the Player.
@@ -17,7 +20,7 @@ import { Model, DataTypes } from 'sequelize';
  * @property {string} [league] - The league where the team plays. (Optional)
  * @property {boolean} [starting11] - Indicates if the Player is in the starting 11. (Optional)
  */
-export default class Player extends Model {
+export default class PlayerModel extends Model implements IPlayer {
     declare id: number;
     declare firstName: string;
     declare middleName?: string;
@@ -31,7 +34,7 @@ export default class Player extends Model {
     declare starting11?: boolean;
 }
 
-Player.init(
+PlayerModel.init(
     {
         id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
         firstName: { type: DataTypes.STRING, allowNull: false },
