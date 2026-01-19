@@ -28,6 +28,9 @@ export default class PlayerDatabase implements IPlayerDatabase {
     }
 
     async updateAsync(player: Partial<IPlayer>): Promise<void> {
+        if (player.id === undefined) {
+            throw new Error('Player id is required for update');
+        }
         await PlayerModel.update(player, { where: { id: player.id } });
     }
 

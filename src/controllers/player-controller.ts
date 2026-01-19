@@ -179,6 +179,22 @@ export default class PlayerController implements IPlayerController {
     async putAsync(request: Request, response: Response): Promise<void> {
         const id = Number.parseInt(request.params.id);
         const update: IPlayer = request.body;
+
+        if (!update.id) {
+            logger.warn({ playerId: id, status: 'bad_request' }, 'Update request missing id in body');
+            response.sendStatus(400);
+            return;
+        }
+
+        if (id !== update.id) {
+            logger.warn(
+                { paramsId: id, bodyId: update.id, status: 'bad_request' },
+                'Mismatched IDs: params.id does not match body.id',
+            );
+            response.sendStatus(400);
+            return;
+        }
+
         logger.info({ playerId: id, action: 'updatePlayer' }, 'Updating player');
         const player = await this.playerService.retrieveByIdAsync(id);
         if (player) {
