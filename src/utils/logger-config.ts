@@ -28,7 +28,7 @@ const getTransport = (): LoggerOptions['transport'] => {
             target: 'pino-pretty',
             options: {
                 colorize: true,
-                translateTime: 'SYS:yyyy-mm-dd HH:MM:ss.l',
+                translateTime: 'SYS:yyyy-MM-dd HH:mm:ss.l',
                 ignore: 'pid,hostname',
                 singleLine: false,
                 levelFirst: true,
@@ -42,7 +42,7 @@ export const loggerConfig: LoggerOptions = {
     level: getLogLevel(),
 
     base: {
-        env: process.env.NODE_ENV || 'development',
+        env: process.env.NODE_ENV ?? 'development',
         app: 'ts-node-samples-express-restful',
         version: '1.0.0',
     },

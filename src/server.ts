@@ -11,13 +11,13 @@ const port = process.env.PORT ?? 9000;
 const server = http.createServer(app);
 // Starts the Server and listens on the specified port
 server.listen(port, () => {
-    logger.info(`🚀 Running at http://localhost:${port}`);
+    logger.info({ port, action: 'serverStart' }, 'Server started');
 });
 // Handles the Server shutdown on SIGINT (e.g., Ctrl+C)
 process.on('SIGINT', () => {
-    logger.info('🛑 Shutting down...');
+    logger.info({ signal: 'SIGINT', action: 'serverShutdown' }, 'Shutting down server');
     server.close(() => {
-        logger.info('👋 Exited cleanly.');
+        logger.info({ action: 'serverExit' }, 'Server exited cleanly');
         process.exit(0);
     });
 });

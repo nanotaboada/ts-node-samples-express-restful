@@ -1,12 +1,12 @@
 {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.defaultFormatter": "prettier.prettier-vscode",
   "editor.formatOnSave": true,
   "editor.tabSize": 2,
   "editor.detectIndentation": true,
   "editor.rulers": [{ "column": 127 }],
   "[typescript]": {
     "editor.tabSize": 4,
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "editor.defaultFormatter": "prettier.prettier-vscode"
   },
   "yaml.schemas": {
     "https://json.schemastore.org/github-workflow.json": ".github/workflows/*"
