@@ -1,6 +1,7 @@
 import app from './app.js';
 import http from 'node:http';
 import dotenv from 'dotenv';
+import logger from './utils/logger.js';
 
 // Loads environment variables from the .env file
 dotenv.config();
@@ -10,13 +11,13 @@ const port = process.env.PORT ?? 9000;
 const server = http.createServer(app);
 // Starts the Server and listens on the specified port
 server.listen(port, () => {
-    console.log(`🚀 Running at http://localhost:${port}`);
+    logger.info({ port, action: 'serverStart' }, 'Server started');
 });
 // Handles the Server shutdown on SIGINT (e.g., Ctrl+C)
 process.on('SIGINT', () => {
-    console.log('🛑 Shutting down...');
+    logger.info({ signal: 'SIGINT', action: 'serverShutdown' }, 'Shutting down server');
     server.close(() => {
-        console.log('👋 Exited cleanly.');
+        logger.info({ action: 'serverExit' }, 'Server exited cleanly');
         process.exit(0);
     });
 });

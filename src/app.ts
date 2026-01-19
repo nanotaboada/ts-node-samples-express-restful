@@ -2,7 +2,11 @@ import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import pinoHttp from 'pino-http';
 import dotenv from 'dotenv';
+import { v4 as uuidv4 } from 'uuid';
+
+import logger from './utils/logger.js';
 
 import PlayerDatabase from './database/player-database.js';
 import PlayerService from './services/player-service.js';
@@ -38,6 +42,18 @@ const app = express();
 
 // Helmet - https://helmetjs.github.io/
 app.use(helmet());
+
+// Pino HTTP Logger - https://github.com/pinojs/pino-http
+app.use(
+    pinoHttp({
+        logger,
+        genReqId: (request) =>
+            (request.headers['x-request-id'] as string) || uuidv4(),
+        autoLogging: {
+            ignore: (request) => request.url === '/health',
+        },
+    })
+);
 
 // CORS - https://expressjs.com/en/resources/middleware/cors.html
 // https://rules.sonarsource.com/typescript/RSPEC-5122/
