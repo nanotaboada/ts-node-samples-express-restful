@@ -5,7 +5,8 @@
   "editor.detectIndentation": true,
   "editor.rulers": [{ "column": 127 }],
   "[typescript]": {
-    "editor.tabSize": 4
+    "editor.tabSize": 4,
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "yaml.schemas": {
     "https://json.schemastore.org/github-workflow.json": ".github/workflows/*"

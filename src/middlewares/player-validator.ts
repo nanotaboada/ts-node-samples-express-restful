@@ -1,6 +1,7 @@
 import { body, ValidationChain, validationResult } from 'express-validator';
 import { Request, Response, NextFunction } from 'express';
 import { IPlayerValidator } from './player-validator-interface.js';
+import logger from '../utils/logger.js';
 
 /**
  * Implementation of IPlayerValidator for handling Player validation.
@@ -54,6 +55,15 @@ export default class PlayerValidator implements IPlayerValidator {
     validate(request: Request, response: Response, next: NextFunction): void {
         const errors = validationResult(request);
         if (!errors.isEmpty()) {
+            logger.warn(
+                {
+                    errors: errors.array(),
+                    method: request.method,
+                    url: request.url,
+                    body: request.body,
+                },
+                'Validation failed'
+            );
             response.status(400).json({ errors: errors.array() });
             return;
         }

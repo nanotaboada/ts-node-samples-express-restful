@@ -2,6 +2,7 @@ import Player from '../models/player-model.js';
 import { IPlayerController } from './player-controller-interface.js';
 import { IPlayerService } from '../services/player-service-interface.js';
 import { Request, Response } from 'express';
+import logger from '../utils/logger.js';
 
 /**
  * Implementation of IPlayerController for handling Player HTTP request operations.
@@ -35,7 +36,9 @@ export default class PlayerController implements IPlayerController {
      *                 $ref: '#/components/schemas/Player'
      */
     async getAllAsync(request: Request, response: Response): Promise<void> {
+        logger.info({ action: 'retrieveAllPlayers' }, 'Retrieving all players');
         const players = await this.playerService.retrieveAllAsync();
+        logger.info({ playerCount: players.length }, 'Players retrieved successfully');
         response.json(players);
     }
 
@@ -64,10 +67,13 @@ export default class PlayerController implements IPlayerController {
      */
     async getByIdAsync(request: Request, response: Response): Promise<void> {
         const id = Number.parseInt(request.params.id);
+        logger.info({ playerId: id, action: 'retrieveById' }, 'Retrieving player by ID');
         const player = await this.playerService.retrieveByIdAsync(id);
         if (player) {
+            logger.info({ playerId: id, status: 'found' }, 'Player found');
             response.json(player);
         } else {
+            logger.warn({ playerId: id, status: 'not_found' }, 'Player not found');
             response.sendStatus(404);
         }
     }
@@ -97,10 +103,13 @@ export default class PlayerController implements IPlayerController {
      */
     async getBySquadNumberAsync(request: Request, response: Response): Promise<void> {
         const squadNumber = Number.parseInt(request.params.squadNumber);
+        logger.info({ squadNumber, action: 'retrieveBySquadNumber' }, 'Retrieving player by squad number');
         const player = await this.playerService.retrieveBySquadNumberAsync(squadNumber);
         if (player) {
+            logger.info({ squadNumber, status: 'found' }, 'Player found');
             response.json(player);
         } else {
+            logger.warn({ squadNumber, status: 'not_found' }, 'Player not found');
             response.sendStatus(404);
         }
     }
@@ -126,13 +135,16 @@ export default class PlayerController implements IPlayerController {
      *         description: Conflict
      */
     async postAsync(request: Request, response: Response): Promise<void> {
-        const id = parseInt(request.body.id);
+        const id = Number.parseInt(request.body.id);
         const create: Player = request.body;
+        logger.info({ playerId: id, action: 'createPlayer' }, 'Creating new player');
         const player = await this.playerService.retrieveByIdAsync(id);
         if (player) {
+            logger.warn({ playerId: id, status: 'conflict' }, 'Player already exists');
             response.sendStatus(409);
         } else {
             await this.playerService.createAsync(create);
+            logger.info({ playerId: id, status: 'created' }, 'Player created successfully');
             response.sendStatus(201);
         }
     }
@@ -167,12 +179,15 @@ export default class PlayerController implements IPlayerController {
     async putAsync(request: Request, response: Response): Promise<void> {
         const id = Number.parseInt(request.params.id);
         const update: Player = request.body;
+        logger.info({ playerId: id, action: 'updatePlayer' }, 'Updating player');
         const player = await this.playerService.retrieveByIdAsync(id);
-        if (!player) {
-            response.sendStatus(404);
-        } else {
+        if (player) {
             await this.playerService.updateAsync(update);
+            logger.info({ playerId: id, status: 'updated' }, 'Player updated successfully');
             response.sendStatus(204);
+        } else {
+            logger.warn({ playerId: id, status: 'not_found' }, 'Player not found for update');
+            response.sendStatus(404);
         }
     }
 
@@ -197,12 +212,15 @@ export default class PlayerController implements IPlayerController {
      */
     async deleteAsync(request: Request, response: Response): Promise<void> {
         const id = Number.parseInt(request.params.id);
+        logger.info({ playerId: id, action: 'deletePlayer' }, 'Deleting player');
         const player = await this.playerService.retrieveByIdAsync(id);
-        if (!player) {
-            response.sendStatus(404);
-        } else {
+        if (player) {
             await this.playerService.deleteAsync(id);
+            logger.info({ playerId: id, status: 'deleted' }, 'Player deleted successfully');
             response.sendStatus(204);
+        } else {
+            logger.warn({ playerId: id, status: 'not_found' }, 'Player not found for deletion');
+            response.sendStatus(404);
         }
     }
 }
