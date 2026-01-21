@@ -1,16 +1,51 @@
 {
   "recommendations": [
-    "codezombiech.gitignore",
-    "conventionalcommits.extension",
-    "dbaeumer.vscode-eslint",
-    "prettier.prettier-vscode",
-    "foxundermoon.shell-format",
-    "github.vscode-github-actions",
-    "github.vscode-pull-request-github",
-    "ms-azuretools.vscode-containers",
-    "orta.vscode-jest",
-    "redhat.vscode-yaml",
-    "sonarsource.sonarlint-vscode",
-    "yy0931.vscode-sqlite3-editor"
+    // AI Assistance
+    "github.copilot-chat",               // GitHub Copilot Chat - AI-powered coding assistant
+    "coderabbit.coderabbit-vscode",      // CodeRabbit - AI-powered code review
+
+    // Code Quality & Linting
+    "sonarsource.sonarlint-vscode",      // SonarLint - Code quality and security analysis
+    "dbaeumer.vscode-eslint",            // ESLint - JavaScript/TypeScript linting
+    "esbenp.prettier-vscode",            // Prettier - Code formatter
+
+    // Testing
+    "orta.vscode-jest",                  // Jest - JavaScript testing framework
+
+    // Formatting & Language Support
+    "redhat.vscode-xml",                 // XML Language Support - XML language server
+    "redhat.vscode-yaml",                // YAML Language Support - YAML language server
+    "davidanson.vscode-markdownlint",    // MarkdownLint - Markdown linting and style checking
+    "foxundermoon.shell-format",         // Shell Format - Shell script formatter
+
+    // Version Control & Collaboration
+    "github.vscode-pull-request-github", // GitHub Pull Requests - Manage pull requests and issues
+    "github.vscode-github-actions",      // GitHub Actions - Manage CI/CD workflows
+    "github.remotehub",                  // Remote Repositories - Browse and edit GitHub repos remotely
+    "ms-vscode.remote-repositories",     // Remote Repositories - Remote repository infrastructure
+    "ms-vscode.azure-repos",             // Azure Repos - Azure DevOps repository support
+    "codezombiech.gitignore",            // gitignore - Generate .gitignore files
+
+    // Containers & Database
+    "ms-azuretools.vscode-containers",   // Container Tools - Docker and container management
+    "yy0931.vscode-sqlite3-editor",      // SQLite3 Editor - View and edit SQLite databases
+
+    // UI Enhancements
+    "usernamehw.errorlens",              // Error Lens - Inline error/warning highlighting
+    "pflannery.vscode-versionlens",      // Version Lens - Package version information in package.json
+    "github.github-vscode-theme",        // GitHub Theme - GitHub color themes
+    "pkief.material-icon-theme",         // Material Icon Theme - Material Design file icons
+    "oderwat.indent-rainbow",            // Indent Rainbow - Colorize indentation levels
+    "mechatroner.rainbow-csv",           // Rainbow CSV - Colorize CSV and TSV files
+    "bierner.markdown-emoji",            // Markdown Emoji - Emoji support in Markdown
+    "bierner.markdown-mermaid",          // Markdown Mermaid - Mermaid diagram support in Markdown
+    "bierner.markdown-preview-github-styles" // Markdown Preview GitHub Styling - GitHub-style Markdown preview
+  ],
+  // Prevent conflicting, deprecated, or alternative extensions from being recommended
+  "unwantedRecommendations": [
+    "ms-azuretools.vscode-docker",       // Docker (legacy) - Use vscode-containers instead
+    "docker.docker",                     // Docker DX - Use ms-azuretools.vscode-containers
+    "github.copilot",                    // Copilot (base) - Unified into copilot-chat
+    "esbenp.prettier-vscode"             // Prettier (legacy) - Use prettier.prettier-vscode instead
   ]
 }
