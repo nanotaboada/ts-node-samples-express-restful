@@ -1,14 +1,14 @@
 # GitHub Copilot Instructions
 
-> **⚡ Token Efficiency Note**: This is a minimal pointer file (~500 tokens, auto-loaded by Copilot).  
-> For complete operational details, reference: `#file:AGENTS.md` (~2,500 tokens, loaded on-demand)  
+> **⚡ Token Efficiency Note**: This is a minimal pointer file (~500 tokens, auto-loaded by Copilot).
+> For complete operational details, reference: `#file:AGENTS.md` (~2,500 tokens, loaded on-demand)
 > For specialized knowledge, use: `#file:SKILLS/<skill-name>/SKILL.md` (loaded on-demand when needed)
 
 ## 🎯 Quick Context
 
-**Project**: Express.js REST API with TypeScript and native ESM  
-**Stack**: Node.js 24 • Express 5 • TypeScript • Sequelize • SQLite • Docker  
-**Pattern**: Routes → Controllers → Services → ORM (layered)  
+**Project**: Express.js REST API with TypeScript and native ESM
+**Stack**: Node.js 24 • Express 5 • TypeScript • Sequelize • SQLite • Docker
+**Pattern**: Routes → Controllers → Services → ORM (layered)
 **Philosophy**: Learning-focused PoC with modern TypeScript and ESM
 
 ## 📐 Core Conventions
@@ -65,13 +65,13 @@ npm test
 # Docker
 docker compose up
 
-# Swagger: http://localhost:3000/api-docs
+# Swagger: http://localhost:9000/api-docs
 ```
 
 ## 📚 Need More Detail?
 
-**For operational procedures**: Load `#file:AGENTS.md`  
-**For Docker expertise**: *(Planned)* `#file:SKILLS/docker-containerization/SKILL.md`  
+**For operational procedures**: Load `#file:AGENTS.md`
+**For Docker expertise**: *(Planned)* `#file:SKILLS/docker-containerization/SKILL.md`
 **For testing patterns**: *(Planned)* `#file:SKILLS/testing-patterns/SKILL.md`
 
 ---
