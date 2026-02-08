@@ -1,0 +1,137 @@
+# Continuous Deployment - Tag-based releases
+# Publishes Docker images and creates GitHub Releases
+
+name: Node.js CD
+
+on:
+  push:
+    tags:
+      - "v*.*.*-*"
+
+env:
+  NODE_VERSION: "lts/krypton"
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.2.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compile application
+        run: npm run build
+
+      - name: Run tests with coverage
+        run: npm run coverage
+
+  release:
+    needs: test
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          echo "tag=${TAG_NAME}" >> $GITHUB_OUTPUT
+          VERSION=$(echo ${TAG_NAME} | sed -E 's/^v([0-9]+\.[0-9]+\.[0-9]+)-.*/\1/')
+          echo "semver=${VERSION}" >> $GITHUB_OUTPUT
+          TERM=$(echo ${TAG_NAME} | sed -E 's/^v[0-9]+\.[0-9]+\.[0-9]+-(.+)/\1/')
+          echo "term=${TERM}" >> $GITHUB_OUTPUT
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3.7.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3.12.0
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6.18.0
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64
+          provenance: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.semver }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.term }}
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          PREVIOUS_TAG=$(git tag --sort=-creatordate | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+-' | sed -n '2p')
+          if [ -z "$PREVIOUS_TAG" ]; then
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" --no-merges)
+          else
+            CHANGELOG=$(git log ${PREVIOUS_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges)
+          fi
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2.5.0
+        with:
+          name: ${{ steps.version.outputs.tag }} ⚽
+          body: |
+            ## Release ${{ steps.version.outputs.semver }} - ${{ steps.version.outputs.term }} ⚽
+
+            ### 📦 Docker Images
+
+            Pull this release:
+
+            ```bash
+            # By semantic version (recommended)
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.semver }}
+
+            # By term name
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.term }}
+
+            # Latest
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ```
+
+            ### 📝 Changes
+
+            ${{ steps.changelog.outputs.changelog }}
+
+            ### 🔗 Links
+
+            - [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/master/CHANGELOG.md)
+            - [Docker Image](${{ env.REGISTRY }}/${{ env.IMAGE_NAME }})
+            - [API Documentation](https://github.com/${{ github.repository }}#api-endpoints)
+          generate_release_notes: true
+          draft: false
+          prerelease: false

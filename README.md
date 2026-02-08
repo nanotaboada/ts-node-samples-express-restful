@@ -1,6 +1,7 @@
 # 🧪 RESTful API with Node.js and Express.js in TypeScript
 
-[![Node.js CI](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/node.js.yml/badge.svg)](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/node.js.yml)
+[![Node.js CI](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/node-ci.yml/badge.svg)](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/node-ci.yml)
+[![Node.js CD](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/node-cd.yml/badge.svg)](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/node-cd.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=nanotaboada_ts-node-samples-express-restful&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=nanotaboada_ts-node-samples-express-restful)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/c845d2bc280d4840a86a56a91407cea7)](https://app.codacy.com/gh/nanotaboada/ts-node-samples-express-restful/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![codecov](https://codecov.io/gh/nanotaboada/ts-node-samples-express-restful/graph/badge.svg?token=VxKaWl2DfD)](https://codecov.io/gh/nanotaboada/ts-node-samples-express-restful)
@@ -272,6 +273,48 @@ docker compose down -v
 ```
 
 The containerized application runs on port 9000 and includes health checks that monitor the `/health` endpoint every 30 seconds.
+
+## Releases
+
+This project uses football terminology as release names ⚽
+
+### Release Naming Convention
+
+Releases follow the pattern: `v{SEMVER}-{TERM}` (e.g., `v1.0.0-assist`)
+
+- **Semantic Version**: Standard versioning (MAJOR.MINOR.PATCH)
+- **Term Name**: Alphabetically ordered codename from the [football terminology list](CHANGELOG.md#football-terminology-names-️)
+
+### Creating a Release
+
+💡 **Important**: Update [CHANGELOG.md](CHANGELOG.md) continuously as you work, not just before releases!
+
+1. **Update CHANGELOG.md**: Move items from `[Unreleased]` to new version section
+2. **Create and push tag**:
+
+   ```bash
+   git tag -a v1.1.0-bicyclekick -m "Release 1.1.0 - Bicycle-kick"
+   git push origin v1.1.0-bicyclekick
+   ```
+
+3. **CD pipeline runs automatically** to build and publish
+
+See [CHANGELOG.md](CHANGELOG.md#how-to-release) for complete release workflow.
+
+### Pull Docker Images
+
+Each release publishes three Docker tags:
+
+```bash
+# By semantic version (recommended for production)
+docker pull ghcr.io/nanotaboada/ts-node-samples-express-restful:1.0.0
+
+# By term name (memorable, useful for staging)
+docker pull ghcr.io/nanotaboada/ts-node-samples-express-restful:assist
+
+# Latest (development/testing only)
+docker pull ghcr.io/nanotaboada/ts-node-samples-express-restful:latest
+```
 
 ## Environment Variables
 
