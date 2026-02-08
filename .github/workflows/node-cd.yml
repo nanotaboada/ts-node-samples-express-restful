@@ -1,5 +1,6 @@
-# Continuous Deployment - Tag-based releases
-# Publishes Docker images and creates GitHub Releases
+# Continuous Deployment for Node.js
+# Triggered only on version tags with football terminology names
+# Example tag: v1.0.0-assist
 
 name: Node.js CD
 
@@ -15,6 +16,7 @@ env:
 
 jobs:
   test:
+    name: Test before deployment
     runs-on: ubuntu-latest
 
     permissions:
@@ -41,6 +43,7 @@ jobs:
         run: npm run coverage
 
   release:
+    name: Build and publish Docker image
     needs: test
     runs-on: ubuntu-latest
 
@@ -54,15 +57,49 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Extract version from tag
-        id: version
+      - name: Extract version and term name from tag
+        id: extract_tag
         run: |
+          # Tag format: v1.0.0-assist
           TAG_NAME=${GITHUB_REF#refs/tags/}
-          echo "tag=${TAG_NAME}" >> $GITHUB_OUTPUT
-          VERSION=$(echo ${TAG_NAME} | sed -E 's/^v([0-9]+\.[0-9]+\.[0-9]+)-.*/\1/')
-          echo "semver=${VERSION}" >> $GITHUB_OUTPUT
-          TERM=$(echo ${TAG_NAME} | sed -E 's/^v[0-9]+\.[0-9]+\.[0-9]+-(.+)/\1/')
-          echo "term=${TERM}" >> $GITHUB_OUTPUT
+
+          # Extract semantic version (e.g., v1.0.0-assist -> 1.0.0)
+          SEMVER=$(echo "$TAG_NAME" | sed -E 's/^v([0-9]+\.[0-9]+\.[0-9]+)-.*/\1/')
+
+          # Extract term name (e.g., v1.0.0-assist -> assist)
+          TERM=$(echo "$TAG_NAME" | sed -E 's/^v[0-9]+\.[0-9]+\.[0-9]+-//')
+
+          # Validate semver format (X.Y.Z)
+          if ! echo "$SEMVER" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "❌ Error: Invalid semantic version '$SEMVER' extracted from tag '$TAG_NAME'"
+            echo "Expected format: v{MAJOR}.{MINOR}.{PATCH}-{TERM} (e.g., v1.0.0-assist)"
+            exit 1
+          fi
+
+          # Valid football terminology terms (A-Z from CHANGELOG.md)
+          VALID_TERMS="assist bicyclekick corner dribble equalizer foul goal header interception juggle keeper lob marking nutmeg offside penalty quickthrow redcard save tackle upset volley wing xpass yellowcard zonedefense"
+
+          # Validate term name against the list
+          if [ -z "$TERM" ]; then
+            echo "❌ Error: Term name is empty in tag '$TAG_NAME'"
+            echo "Expected format: v{MAJOR}.{MINOR}.{PATCH}-{TERM} (e.g., v1.0.0-assist)"
+            exit 1
+          fi
+
+          if ! echo "$VALID_TERMS" | grep -qw "$TERM"; then
+            echo "❌ Error: Invalid term name '$TERM' in tag '$TAG_NAME'"
+            echo "Valid terms (A-Z): $VALID_TERMS"
+            echo "See CHANGELOG.md for the complete list"
+            exit 1
+          fi
+
+          # Export validated outputs
+          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "semver=$SEMVER" >> $GITHUB_OUTPUT
+          echo "term=$TERM" >> $GITHUB_OUTPUT
+
+          echo "📦 Release version: $SEMVER"
+          echo "⚽ Term name: $TERM"
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3.7.0
@@ -85,53 +122,72 @@ jobs:
           cache-to: type=gha,mode=max
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.semver }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.term }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.extract_tag.outputs.semver }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.extract_tag.outputs.term }}
 
       - name: Generate changelog
         id: changelog
         run: |
-          PREVIOUS_TAG=$(git tag --sort=-creatordate | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+-' | sed -n '2p')
+          # Get previous tag
+          PREVIOUS_TAG=$(git tag --sort=-version:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+-' | sed -n '2p')
+
           if [ -z "$PREVIOUS_TAG" ]; then
-            CHANGELOG=$(git log --pretty=format:"- %s (%h)" --no-merges)
+            echo "📝 First release - no previous tag found"
+            CHANGELOG="Initial release"
           else
-            CHANGELOG=$(git log ${PREVIOUS_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges)
+            echo "📝 Generating changelog from $PREVIOUS_TAG to ${{ steps.extract_tag.outputs.tag_name }}"
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" ${PREVIOUS_TAG}..${{ steps.extract_tag.outputs.tag_name }})
           fi
-          echo "changelog<<EOF" >> $GITHUB_OUTPUT
-          echo "$CHANGELOG" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+
+          # Write changelog to file
+          echo "$CHANGELOG" > changelog.txt
+          cat changelog.txt
+
+          # Set output for use in release body
+          {
+            echo "changelog<<EOF"
+            echo "$CHANGELOG"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2.5.0
         with:
-          name: ${{ steps.version.outputs.tag }} ⚽
+          name: "v${{ steps.extract_tag.outputs.semver }} - ${{ steps.extract_tag.outputs.term }} ⚽"
+          tag_name: ${{ steps.extract_tag.outputs.tag_name }}
           body: |
-            ## Release ${{ steps.version.outputs.semver }} - ${{ steps.version.outputs.term }} ⚽
+            # Release ${{ steps.extract_tag.outputs.semver }} - ${{ steps.extract_tag.outputs.term }} ⚽
 
-            ### 📦 Docker Images
+            ## Docker Images
 
-            Pull this release:
+            Pull this release using any of the following tags:
 
             ```bash
             # By semantic version (recommended)
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.semver }}
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.extract_tag.outputs.semver }}
 
             # By term name
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.term }}
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.extract_tag.outputs.term }}
 
             # Latest
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
             ```
 
-            ### 📝 Changes
+            ## Quick Start
+
+            ```bash
+            docker run -p 9000:9000 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.extract_tag.outputs.semver }}
+            ```
+
+            Visit http://localhost:9000/swagger/ for API documentation.
+
+            ## Changelog
 
             ${{ steps.changelog.outputs.changelog }}
 
-            ### 🔗 Links
+            ---
 
-            - [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/master/CHANGELOG.md)
-            - [Docker Image](${{ env.REGISTRY }}/${{ env.IMAGE_NAME }})
-            - [API Documentation](https://github.com/${{ github.repository }}#api-endpoints)
-          generate_release_notes: true
+            📦 **Package:** [${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}](https://github.com/${{ github.repository }}/pkgs/container/ts-node-samples-express-restful)
           draft: false
           prerelease: false
+          generate_release_notes: true
