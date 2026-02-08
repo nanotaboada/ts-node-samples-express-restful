@@ -5,7 +5,6 @@ dist/
 node_modules/
 postman-collections/
 tests/
-.codacy.yml
 .codeclimate.yml
 .env
 .eslintrc.json
