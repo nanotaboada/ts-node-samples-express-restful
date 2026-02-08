@@ -209,7 +209,7 @@ See [CHANGELOG.md](CHANGELOG.md#how-to-release) for complete release instruction
 2. **Lint**: ESLint + commitlint validation
 3. **Build**: TypeScript compilation (`npm run build`)
 4. **Test**: Jest with coverage report
-5. **Coverage**: Upload to Codecov and Codacy
+5. **Coverage**: Upload to Codecov
 
 **Note**: CI only validates code - it does NOT publish Docker images.
 

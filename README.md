@@ -2,8 +2,8 @@
 
 [![Node.js CI](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/node-ci.yml/badge.svg)](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/node-ci.yml)
 [![Node.js CD](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/node-cd.yml/badge.svg)](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/node-cd.yml)
+[![CodeQL](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/github-code-scanning/codeql)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=nanotaboada_ts-node-samples-express-restful&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=nanotaboada_ts-node-samples-express-restful)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/c845d2bc280d4840a86a56a91407cea7)](https://app.codacy.com/gh/nanotaboada/ts-node-samples-express-restful/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![codecov](https://codecov.io/gh/nanotaboada/ts-node-samples-express-restful/graph/badge.svg?token=VxKaWl2DfD)](https://codecov.io/gh/nanotaboada/ts-node-samples-express-restful)
 [![CodeFactor](https://www.codefactor.io/repository/github/nanotaboada/ts-node-samples-express-restful/badge)](https://www.codefactor.io/repository/github/nanotaboada/ts-node-samples-express-restful)
 [![License: MIT](https://img.shields.io/badge/License-MIT-white.svg)](https://opensource.org/licenses/MIT)

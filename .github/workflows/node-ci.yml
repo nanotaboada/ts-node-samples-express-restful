@@ -79,9 +79,6 @@ jobs:
     permissions:
       contents: read
 
-    strategy:
-      matrix:
-        service: [codecov, codacy]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6.0.2
@@ -91,14 +88,7 @@ jobs:
         with:
           name: coverage
 
-      - name: Upload coverage report to ${{ matrix.service }}
-        if: ${{ matrix.service == 'codecov' }}
+      - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v5.5.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: Upload coverage report to ${{ matrix.service }}
-        if: ${{ matrix.service == 'codacy' }}
-        uses: codacy/codacy-coverage-reporter-action@v1.3.0
-        with:
-          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
