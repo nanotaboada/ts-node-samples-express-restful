@@ -1,8 +1,8 @@
 # AGENTS.md
 
-> **⚡ Token Efficiency Note**: This file contains complete operational instructions (~2,500 tokens).  
-> **Auto-loaded**: NO (load explicitly with `#file:AGENTS.md` when you need detailed procedures)  
-> **When to load**: Complex workflows, troubleshooting, CI/CD setup, detailed architecture questions  
+> **⚡ Token Efficiency Note**: This file contains complete operational instructions (~2,500 tokens).
+> **Auto-loaded**: NO (load explicitly with `#file:AGENTS.md` when you need detailed procedures)
+> **When to load**: Complex workflows, troubleshooting, CI/CD setup, detailed architecture questions
 > **Related files**: See `#file:.github/copilot-instructions.md` for quick context (auto-loaded, ~500 tokens)
 
 ---
@@ -70,11 +70,13 @@ npx tsc --noEmit
 ```
 
 **Pre-commit checklist**:
+
 1. Run `npm run lint` - must pass with no errors
 2. Run `npx tsc --noEmit` - must pass type checking
 3. Run `npm run coverage` - all tests must pass with coverage
 
 **Style rules**:
+
 - ESLint configuration in `eslint.config.mjs`
 - Prettier configuration in `.prettierrc`
 - TypeScript strict mode enabled in `tsconfig.json`
@@ -134,20 +136,106 @@ curl http://localhost:9000/health
 
 **First run behavior**: Container initializes SQLite database with seed data. Volume persists data between runs.
 
+## Release Management
+
+### CHANGELOG Maintenance
+
+**Important**: Update CHANGELOG.md continuously as you work, not just before releases.
+
+**For every meaningful commit**:
+
+1. Add your changes to the `[Unreleased]` section in CHANGELOG.md
+2. Categorize under the appropriate heading:
+   - **Added**: New features
+   - **Changed**: Changes in existing functionality
+   - **Deprecated**: Soon-to-be removed features
+   - **Removed**: Removed features
+   - **Fixed**: Bug fixes
+   - **Security**: Security vulnerability fixes
+3. Use clear, user-facing descriptions (not just commit messages)
+4. Include PR/issue numbers when relevant (#123)
+
+**Example**:
+
+```markdown
+## [Unreleased]
+
+### Added
+- User authentication with JWT tokens (#145)
+- Rate limiting middleware for API endpoints
+
+### Deprecated
+- Legacy authentication endpoint /api/v1/auth (use /api/v2/auth instead)
+
+### Fixed
+- Null reference exception in player service (#147)
+
+### Security
+- Fix SQL injection vulnerability in search endpoint (#148)
+```
+
+### Creating a Release
+
+When ready to release:
+
+1. **Update CHANGELOG.md**: Move items from `[Unreleased]` to a new versioned section:
+
+   ```markdown
+   ## [1.1.0 - bicyclekick] - YYYY-MM-DD
+   ```
+
+   Commit and push this change before creating the tag.
+
+2. **Create and push tag**:
+
+   ```bash
+   git tag -a v1.1.0-bicyclekick -m "Release 1.1.0 - Bicycle-kick"
+   git push origin v1.1.0-bicyclekick
+   ```
+
+3. **CD workflow runs automatically** to publish Docker images and create GitHub Release
+
+See [CHANGELOG.md](CHANGELOG.md#how-to-release) for complete release instructions and football terminology naming convention.
+
 ## CI/CD Pipeline
 
-### Continuous Integration (node.js.yml)
+### Continuous Integration (node-ci.yml)
 
-**Trigger**: Push to `main`/`master` or PR
+**Trigger**: Push to `master` or PR
 
 **Jobs**:
+
 1. **Setup**: Node.js 24 installation, npm ci (clean install)
 2. **Lint**: ESLint + commitlint validation
 3. **Build**: TypeScript compilation (`npm run build`)
 4. **Test**: Jest with coverage report
-5. **Coverage**: Upload to Codecov and Codacy
+5. **Coverage**: Upload to Codecov
+
+**Note**: CI only validates code - it does NOT publish Docker images.
+
+### Continuous Deployment (node-cd.yml)
+
+**Trigger**: Version tags in format `v{MAJOR}.{MINOR}.{PATCH}-{TERM}`
+
+Example:
+
+```bash
+git tag -a v1.0.0-assist -m "Release 1.0.0 - Assist"
+git push origin v1.0.0-assist
+```
+
+**Pipeline automatically**:
+
+- Runs full test suite with coverage
+- Builds multi-stage Docker image
+- Pushes to GHCR with multiple tags (version, term name, latest)
+- Generates changelog from commits
+- Creates GitHub Release with auto-generated notes
+
+**Football terminology convention**: Alphabetically ordered codenames (assist, bicyclekick, corner, etc.)
 
 **Local validation** (run this before pushing):
+
 ```bash
 # Matches CI exactly
 npm run lint && \
@@ -192,6 +280,7 @@ tests/                  # Integration tests
 ```
 
 **Key patterns**:
+
 - Native ESM (not CommonJS) - uses `import/export`
 - TypeScript strict mode - full type safety
 - Sequelize ORM for database operations
@@ -215,12 +304,14 @@ DB_PATH=./storage/players.db
 ## Troubleshooting
 
 ### Port already in use
+
 ```bash
 # Kill process on port 9000
 lsof -ti:9000 | xargs kill -9
 ```
 
 ### Module import errors
+
 ```bash
 # Clean install dependencies
 rm -rf node_modules package-lock.json
@@ -231,6 +322,7 @@ node --version  # Should be v24.x
 ```
 
 ### TypeScript compilation errors
+
 ```bash
 # Clean build artifacts
 rm -rf dist/
@@ -243,6 +335,7 @@ npx tsc --noEmit
 ```
 
 ### Database locked errors
+
 ```bash
 # Stop all running instances
 pkill -f "node dist/server.js"
@@ -253,6 +346,7 @@ rm storage/players.db
 ```
 
 ### Jest test failures
+
 ```bash
 # Clear Jest cache
 npx jest --clearCache
@@ -262,6 +356,7 @@ npm test -- --verbose
 ```
 
 ### Docker issues
+
 ```bash
 # Clean slate
 npm run docker:down
@@ -272,12 +367,15 @@ npm run docker:up
 ## Testing the API
 
 ### Using Swagger UI (Recommended)
-Open http://localhost:9000/api-docs - Interactive documentation with "Try it out"
+
+Open <http://localhost:9000/api-docs> - Interactive documentation with "Try it out"
 
 ### Using Postman
+
 Pre-configured collection available in `postman-collections/`
 
 ### Using curl
+
 ```bash
 # Health check
 curl http://localhost:9000/health
