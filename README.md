@@ -168,7 +168,7 @@ For complete endpoint documentation with request/response schemas, explore the [
 
 Before you begin, ensure you have the following installed:
 
-- Node.js (latest LTS - specific version in `.nvmrc`)
+- Node.js (see `.nvmrc` for required version)
 - npm (comes with Node.js)
 - Docker and Docker Compose (optional, for containerized setup)
 

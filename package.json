@@ -21,7 +21,7 @@
   "author": "Nano Taboada",
   "license": "MIT",
   "engines": {
-    "node": ">=24.11.0"
+    "node": ">=24.13.0"
   },
   "dependencies": {
     "body-parser": "^2.2.2",

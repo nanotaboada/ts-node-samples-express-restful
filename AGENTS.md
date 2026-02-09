@@ -31,7 +31,7 @@ npm start
 
 This project uses **`.nvmrc` as the single source of truth** for Node.js version management.
 
-**Current version:** Node.js 24.11.0 (LTS/Krypton)
+**Current version:** See `.nvmrc` — Node.js 24 (LTS/Krypton)
 
 **Philosophy:** This project tracks the latest Node.js LTS release. The specific version is always defined in `.nvmrc`.
 
