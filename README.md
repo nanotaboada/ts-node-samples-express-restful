@@ -28,33 +28,31 @@ Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) [LTS
 
 ## Features
 
-- 🔌 RESTful CRUD operations for football player data
-- 💿 Relational database with ORM
-- ⚡ In-memory caching (1-hour TTL)
-- 📚 Interactive API documentation
-- 🔒 Security headers and CORS
-- 🩺 Health check endpoint for monitoring
-- ✅ Comprehensive integration tests
-- 🐳 Full containerization support
-- 📃 TypeScript strict mode enabled
-- 🔄 Hot reload for development
+- 🏗️ **Modern TypeScript architecture** - Native ESM, strict mode, layered architecture with interface-based contracts
+- 📚 **Interactive API exploration** - Auto-generated OpenAPI docs with Swagger UI and Postman collection
+- ⚡ **Performance optimizations** - In-memory caching with node-cache, Sequelize ORM, and efficient SQLite operations
+- 🧪 **Comprehensive integration tests** - Full endpoint coverage with Jest/Supertest and automated reporting to Codecov
+- 📖 **Token-efficient documentation** - AGENTS.md + auto-loaded Copilot instructions for AI-assisted development
+- 🐳 **Full containerization** - Multi-stage Docker builds with Docker Compose orchestration
+- 🔄 **Complete CI/CD pipeline** - Automated linting (ESLint/Prettier), testing, Docker publishing, and GitHub releases
+- ⚽ **Football-themed semantic versioning** - Memorable, alphabetical release names using football terminology
 
 ## Tech Stack
 
-| Category             | Technology |
-|----------------------|------------|
-| **Runtime**          | [Node.js 24 (LTS/Krypton)](https://github.com/nodejs/node) |
-| **Language**         | [TypeScript 5.9](https://github.com/microsoft/TypeScript) |
-| **Module System**    | Native ECMAScript Modules (ESM) - uses [tsx](https://github.com/privatenumber/tsx) for execution |
-| **Framework**        | [Express.js 5](https://github.com/expressjs/express) |
-| **Database**         | [SQLite3](https://github.com/sqlite/sqlite) with [Sequelize ORM](https://github.com/sequelize/sequelize) |
-| **Caching**          | [node-cache](https://github.com/node-cache/node-cache) |
-| **Documentation**    | [Swagger (OpenAPI 3.0)](https://github.com/swagger-api/swagger-ui) |
-| **Security**         | [Helmet](https://github.com/helmetjs/helmet), [CORS](https://github.com/expressjs/cors) |
-| **Testing**          | [Jest 30](https://github.com/jestjs/jest) with [Supertest](https://github.com/ladjs/supertest) |
-| **Containerization** | [Docker](https://github.com/docker) with multi-stage builds |
-| **Code Quality**     | [ESLint](https://github.com/eslint/eslint), [Prettier](https://github.com/prettier/prettier), [Commitlint](https://github.com/conventional-changelog/commitlint) |
-| **Dev Tools**        | [tsx](https://github.com/privatenumber/tsx) (TypeScript executor), [nodemon](https://github.com/remy/nodemon) |
+| Category               | Technology                                                                                                                   |
+|------------------------|------------------------------------------------------------------------------------------------------------------------------|
+| **Runtime**            | [Node.js 24 (LTS/Krypton)](https://github.com/nodejs/node)                                                                  |
+| **Language**           | [TypeScript 5.9](https://github.com/microsoft/TypeScript)                                                                   |
+| **Module System**      | Native ECMAScript Modules (ESM) - uses [tsx](https://github.com/privatenumber/tsx) for execution                           |
+| **Framework**          | [Express.js 5](https://github.com/expressjs/express)                                                                        |
+| **Database**           | [SQLite3](https://github.com/sqlite/sqlite) with [Sequelize ORM](https://github.com/sequelize/sequelize)                   |
+| **Caching**            | [node-cache](https://github.com/node-cache/node-cache)                                                                      |
+| **Documentation**      | [Swagger (OpenAPI 3.0)](https://github.com/swagger-api/swagger-ui)                                                          |
+| **Security**           | [Helmet](https://github.com/helmetjs/helmet), [CORS](https://github.com/expressjs/cors)                                     |
+| **Testing**            | [Jest 30](https://github.com/jestjs/jest) with [Supertest](https://github.com/ladjs/supertest)                             |
+| **Containerization**   | [Docker](https://github.com/docker) with multi-stage builds                                                                 |
+| **Code Quality**       | [ESLint](https://github.com/eslint/eslint), [Prettier](https://github.com/prettier/prettier), [Commitlint](https://github.com/conventional-changelog/commitlint) |
+| **Dev Tools**          | [tsx](https://github.com/privatenumber/tsx) (TypeScript executor), [nodemon](https://github.com/remy/nodemon)              |
 
 > 💡 **Note:** While the repository name references `ts-node` (the original implementation), the project now uses [tsx](https://github.com/privatenumber/tsx) for faster, cleaner TypeScript execution without experimental flags.
 
@@ -170,7 +168,7 @@ For complete endpoint documentation with request/response schemas, explore the [
 
 Before you begin, ensure you have the following installed:
 
-- Node.js 24 (LTS/Krypton) or higher
+- Node.js (latest LTS - specific version in `.nvmrc`)
 - npm (comes with Node.js)
 - Docker and Docker Compose (optional, for containerized setup)
 

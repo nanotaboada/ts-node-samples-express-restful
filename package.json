@@ -20,6 +20,9 @@
   "keywords": [],
   "author": "Nano Taboada",
   "license": "MIT",
+  "engines": {
+    "node": ">=24.11.0"
+  },
   "dependencies": {
     "body-parser": "^2.2.2",
     "cors": "^2.8.6",
