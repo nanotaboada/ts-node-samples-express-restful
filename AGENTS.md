@@ -29,9 +29,36 @@ npm start
 
 ## Node.js Version
 
-This project requires **Node.js 24 (LTS/Krypton)** specified in `.nvmrc`.
+This project uses **`.nvmrc` as the single source of truth** for Node.js version management.
 
-If using nvm, asdf, or mise, the correct version activates automatically. Otherwise, ensure Node.js 24 is installed.
+**Current version:** See `.nvmrc` — Node.js 24 (LTS/Krypton)
+
+**Philosophy:** This project tracks the latest Node.js LTS release. The specific version is always defined in `.nvmrc`.
+
+### How It Works
+
+- **Local development:** Version managers (nvm, asdf, mise) auto-activate from `.nvmrc`
+- **CI/CD pipelines:** GitHub Actions reads version using `node-version-file: '.nvmrc'`
+- **Version enforcement:** `package.json` engines field requires `>=24.11.0`
+- **Docker:** Uses `node:krypton-alpine` base image (aligned with Node.js 24)
+
+### Updating Node.js Version
+
+To update the Node.js version project-wide:
+
+1. Edit `.nvmrc` with the new version (e.g., `v24.12.0`)
+2. Update `package.json` engines field if minimum version changes
+3. Test locally and in CI/CD
+4. Commit changes
+
+**That's it!** No need to update workflow files - they automatically read from `.nvmrc`.
+
+### Benefits
+
+- **Consistency:** Same version across local dev, CI, and CD environments
+- **Maintainability:** Single file to update, no version duplication
+- **Developer experience:** Auto-activation eliminates manual version switching
+- **Enforcement:** npm warns if Node.js version requirement isn't met
 
 ## Development Workflow
 

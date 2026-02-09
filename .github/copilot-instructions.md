@@ -19,6 +19,10 @@
 - **Async**: All I/O operations use async/await
 - **Testing**: Jest with ESM experimental VM modules
 - **Formatting**: Prettier (4 spaces, single quotes, 127 width)
+- **Commit Messages**: Follow Conventional Commits with issue number suffix
+  - Format: `type(scope): description (#issue)` (max 80 chars)
+  - Types: `feat`, `fix`, `chore`, `docs`, `test`, `refactor`
+  - Example: `feat(api): add player search endpoint (#123)`
 
 ## 🏗️ Architecture at a Glance
 
