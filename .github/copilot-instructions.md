@@ -1,112 +1,58 @@
-# GitHub Copilot Instructions
+# Copilot Instructions
 
-> **⚡ Token Efficiency Note**: This is a minimal pointer file (~500 tokens, auto-loaded by Copilot).
-> For complete operational details, reference: `#file:AGENTS.md` (~2,500 tokens, loaded on-demand)
-> For specialized knowledge, use: `#file:SKILLS/<skill-name>/SKILL.md` (loaded on-demand when needed)
+## Stack
 
-## 🎯 Quick Context
+- **Runtime**: Node.js 24 LTS (Krypton)
+- **Framework**: Express.js 5
+- **Language**: TypeScript (strict mode)
+- **Database**: SQLite with Sequelize ORM
+- **Testing**: Jest 30 with Supertest
+- **Containerization**: Docker with multi-stage builds
 
-**Project**: Express.js REST API with TypeScript and native ESM
-**Stack**: Node.js 24 • Express 5 • TypeScript • Sequelize • SQLite • Docker
-**Pattern**: Routes → Controllers → Services → ORM (layered)
-**Philosophy**: Learning-focused PoC with modern TypeScript and ESM
+## Project Patterns
 
-## 📐 Core Conventions
+- **Layered Architecture**: Routes → Controllers → Services → Database
+- **Dependency Injection**: Constructor injection with interface-based abstractions
+- **Error Handling**: Try/catch in controllers, centralized error middleware
+- **Caching**: In-memory node-cache (1-hour TTL) at service layer
+- **Logging**: Pino structured logging with request correlation IDs
+- **Security**: Helmet middleware for headers, CORS, express-rate-limit
 
-- **Module System**: Native ESM (require `.js` in imports!)
-- **Naming**: camelCase (variables/functions), PascalCase (classes/types)
-- **Type Safety**: Strict TypeScript, no `any` without justification
-- **Async**: All I/O operations use async/await
-- **Testing**: Jest with ESM experimental VM modules
-- **Formatting**: Prettier (4 spaces, single quotes, 127 width)
-- **Commit Messages**: Follow Conventional Commits with issue number suffix
-  - Format: `type(scope): description (#issue)` (max 80 chars)
-  - Types: `feat`, `fix`, `chore`, `docs`, `test`, `refactor`
-  - Example: `feat(api): add player search endpoint (#123)`
+## Code Conventions
 
-## 🧪 Test Naming Convention
+- **Module System**: Native ESM (not CommonJS) - always include `.js` in relative imports
+- **Naming**: camelCase for variables/functions, PascalCase for classes/types/interfaces
+- **File Naming**: kebab-case with suffixes (`player-service.ts`, `player-controller.ts`)
+- **Imports**: Group by external deps → internal modules → types, alphabetically sorted
+- **Type Safety**: Strict TypeScript, avoid `any` unless justified, prefer interfaces over types
+- **Async**: All I/O operations use async/await, never callbacks or synchronous calls
+- **Comments**: JSDoc for public APIs and Swagger annotations, inline comments only when necessary
+- **Formatting**: Prettier (4 spaces, single quotes, 127 width) - enforced pre-commit
+- **Commit Messages**: Conventional Commits format `type(scope): description (#issue)` (max 80 chars)
 
-Integration tests follow an action-oriented pattern with visual flow:
+## Testing
 
-**Pattern:**
-```typescript
-it('Request {METHOD} {/path} {context} → Response {outcome}', async () => {
-```
+- **Structure**: Integration tests in `/tests/`, focus on controller/service/route layers
+- **Naming Convention**: Action-oriented pattern with visual flow
 
-**Components:**
-- `Request` / `Response` - Title Case structural keywords
-- `METHOD` - ALL CAPS HTTP verbs: `GET`, `POST`, `PUT`, `DELETE`
-- `/path` - Actual endpoint with parameters: `/players`, `/players/{id}`
-- `context` - Lowercase descriptors: `existing`, `body empty`, `within rate limit`
-- `→` - Arrow separator showing cause-effect flow
-- `outcome` - What's asserted: `status 200 OK`, `body players`, `header rate limit standard`
-- Status codes - Title Case with number: `200 OK`, `201 Created`, `400 Bad Request`, `404 Not Found`, `204 No Content`, `409 Conflict`, `429 Too Many Requests`
+  ```typescript
+  it('Request {METHOD} {/path} {context} → Response {outcome}', async () => {
+  ```
 
-**Examples:**
-```typescript
-it('Request GET /health → Response status 200 OK', async () => {
-it('Request GET /players → Response body players', async () => {
-it('Request GET /players/{id} existing → Response status 200 OK', async () => {
-it('Request POST /players body empty → Response status 400 Bad Request', async () => {
-it('Request PUT /players/{id} existing → Response status 204 No Content', async () => {
-it('Request DELETE /players/{id} nonexistent → Response status 404 Not Found', async () => {
-it('Request GET /players exceed rate limit → Response status 429 Too Many Requests', async () => {
-```
+  - Example: `it('Request GET /players/{id} existing → Response status 200 OK', async () => {`
+  - **Components**: Request/Response (Title Case), METHOD (ALL CAPS), /path (actual endpoint), context (lowercase), outcome (status codes in Title Case like `200 OK`, `404 Not Found`)
+- **Mocking**: Use Jest mocks for external dependencies, avoid mocking internal modules
+- **Coverage**: Maintain existing coverage levels (controllers, services, routes only)
+- **Runner**: Jest with ESM support (`ts-jest` preset), use `--watch` in development
 
-## 🏗️ Architecture at a Glance
+## Avoid
 
-```
-Route → Controller → Service → Sequelize → Database
-  ↓         ↓            ↓
-Cache   Validation   Transaction
-```
-
-- **Routes**: Express router with middleware
-- **Controllers**: Request/response handling
-- **Services**: Business logic with Sequelize ORM
-- **Models**: Sequelize models with TypeScript types
-- **Cache**: node-cache (1-hour TTL)
-
-## ✅ Copilot Should
-
-- Generate TypeScript with proper types and interfaces
-- Use ESM imports with `.js` extensions (mandatory!)
-- Follow Express async/await patterns correctly
-- Write Jest tests with proper ESM configuration
-- Apply Sequelize models and migrations correctly
-- Use Helmet and CORS for security
-- Implement proper error handling with try/catch
-
-## 🚫 Copilot Should Avoid
-
-- Using `any` type without reason
-- Missing `.js` in relative imports (ESM requirement!)
-- Mixing CommonJS (`require`) with ESM (`import`)
-- Synchronous file operations
-- Missing error handling on async operations
-- Using `console.log` instead of proper logging
-
-## ⚡ Quick Commands
-
-```bash
-# Run with hot reload
-npm run dev
-
-# Test with coverage
-npm test
-
-# Docker
-docker compose up
-
-# Swagger: http://localhost:9000/api-docs
-```
-
-## 📚 Need More Detail?
-
-**For operational procedures**: Load `#file:AGENTS.md`
-**For Docker expertise**: *(Planned)* `#file:SKILLS/docker-containerization/SKILL.md`
-**For testing patterns**: *(Planned)* `#file:SKILLS/testing-patterns/SKILL.md`
-
----
-
-💡 **Why this structure?** Copilot auto-loads this file on every chat (~500 tokens). Loading `AGENTS.md` or `SKILLS/` explicitly gives you deep context only when needed, saving 80% of your token budget!
+- Using `any` type without explicit justification
+- Missing `.js` extensions in relative imports (ESM breaks without them)
+- Mixing CommonJS (`require`/`module.exports`) with ESM (`import`/`export`)
+- Synchronous file operations (`fs.readFileSync`, `fs.writeFileSync`)
+- Missing error handling on async operations (always `try/catch`)
+- Using `console.log` instead of Pino logger
+- Creating files without interfaces when abstraction is needed
+- Ignoring TypeScript errors or using `@ts-ignore` without comments
+- Mocking Sequelize models in tests (use real test database)
