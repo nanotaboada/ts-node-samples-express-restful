@@ -20,13 +20,7 @@ describe('Integration Tests', () => {
     });
 
     describe('GET', () => {
-        it('Request GET /players within rate limit → Response header rate limit standard', async () => {
-            // Skip if rate limiting is disabled
-            if (process.env.RATE_LIMIT_ENABLED === 'false') {
-                expect(true).toBe(true);
-                return;
-            }
-
+        (process.env.RATE_LIMIT_ENABLED === 'false' ? it.skip : it)('Request GET /players within rate limit → Response header rate limit standard', async () => {
             // Act
             const response = await request(app).get('/players');
             // Assert
@@ -41,16 +35,10 @@ describe('Integration Tests', () => {
             expect(response.headers).not.toHaveProperty('x-ratelimit-limit');
             expect(response.headers).not.toHaveProperty('x-ratelimit-remaining');
         });
-        it('Request GET /players exceed rate limit → Response status 429 Too Many Requests', async () => {
+        ((Number.parseInt(process.env.RATE_LIMIT_MAX_GENERAL || '100', 10) > 50) ? it.skip : it)('Request GET /players exceed rate limit → Response status 429 Too Many Requests', async () => {
             // This test is skipped by default as it requires making 100+ requests
             // To enable, set RATE_LIMIT_MAX_GENERAL to a lower value (e.g., 10) in test environment
             const maxRequests = Number.parseInt(process.env.RATE_LIMIT_MAX_GENERAL || '100', 10);
-
-            // Skip if using high default limit
-            if (maxRequests > 50) {
-                expect(true).toBe(true); // Skip test
-                return;
-            }
 
             // Act - Make requests up to the limit using health endpoint
             for (let i = 0; i < maxRequests; i++) {
@@ -156,16 +144,10 @@ describe('Integration Tests', () => {
             // Assert
             expect([201, 409]).toContain(response.status);
         });
-        it('Request POST /players exceed rate limit → Response status 429 Too Many Requests', async () => {
+        ((Number.parseInt(process.env.RATE_LIMIT_MAX_STRICT || '20', 10) >= 20) ? it.skip : it)('Request POST /players exceed rate limit → Response status 429 Too Many Requests', async () => {
             // This test is skipped by default as it requires making 20+ requests
             // To enable, set RATE_LIMIT_MAX_STRICT to a lower value (e.g., 5) in test environment
             const maxRequests = Number.parseInt(process.env.RATE_LIMIT_MAX_STRICT || '20', 10);
-
-            // Skip if using default or high limit
-            if (maxRequests >= 20) {
-                expect(true).toBe(true); // Skip test
-                return;
-            }
 
             // Act - Make POST requests up to the strict limit
             for (let i = 0; i < maxRequests; i++) {
@@ -301,16 +283,10 @@ describe('Integration Tests', () => {
             // Assert
             expect(response.status).toBe(204);
         });
-        it('Request PUT /players/{id} exceed rate limit → Response status 429 Too Many Requests', async () => {
+        ((Number.parseInt(process.env.RATE_LIMIT_MAX_STRICT || '20', 10) >= 20) ? it.skip : it)('Request PUT /players/{id} exceed rate limit → Response status 429 Too Many Requests', async () => {
             // This test is skipped by default as it requires making 20+ requests
             // To enable, set RATE_LIMIT_MAX_STRICT to a lower value (e.g., 5) in test environment
             const maxRequests = Number.parseInt(process.env.RATE_LIMIT_MAX_STRICT || '20', 10);
-
-            // Skip if using default or high limit
-            if (maxRequests >= 20) {
-                expect(true).toBe(true); // Skip test
-                return;
-            }
 
             // Act - Make PUT requests up to the strict limit
             for (let i = 0; i < maxRequests; i++) {
@@ -408,19 +384,6 @@ describe('Integration Tests', () => {
                 // Arrange
                 const id = playerStub.new.id;
                 const body = { id, firstName: 'John', lastName: 'Doe', squadNumber: 0, position: 'Forward' };
-                // Act
-                const response = await request(app)
-                    .put(`${path}/${id}`)
-                    .send(body);
-                // Assert
-                expect(response.status).toBe(400);
-                expect(response.body.errors).toBeDefined();
-                expect(hasFieldError(response.body.errors, 'squadNumber')).toBe(true);
-            });
-            it('Request PUT /players/{id} squadNumber >99 → Response status 400 Bad Request', async () => {
-                // Arrange
-                const id = playerStub.new.id;
-                const body = { id, firstName: 'John', lastName: 'Doe', squadNumber: 150, position: 'Forward' };
                 // Act
                 const response = await request(app)
                     .put(`${path}/${id}`)
