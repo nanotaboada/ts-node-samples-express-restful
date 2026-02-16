@@ -80,6 +80,46 @@ npm test -- --watch
 
 **Coverage requirement**: Tests must maintain coverage. The CI pipeline enforces this with Jest configuration.
 
+### Test Naming Convention
+
+Integration tests use an action-oriented pattern that clearly shows request → response flow:
+
+**Pattern:**
+
+```typescript
+it('Request {METHOD} {/path} {context} → Response {outcome}', async () => {
+```
+
+**Components:**
+
+- `Request` / `Response` - Title Case keywords (structural markers)
+- `METHOD` - ALL CAPS HTTP verbs (`GET`, `POST`, `PUT`, `DELETE`)
+- `/path` - Actual endpoint path with parameters (`/players`, `/players/{id}`)
+- `context` - Lowercase descriptors (`existing`, `body empty`, `within rate limit`)
+- `→` - Arrow separator (shows cause → effect)
+- `outcome` - Assertion target (`status 200 OK`, `body players`, `header rate limit standard`)
+- Status codes - Title Case with number matching RFC 9110 (`200 OK`, `404 Not Found`, `400 Bad Request`, `201 Created`, `204 No Content`, `409 Conflict`, `429 Too Many Requests`)
+
+**Examples:**
+
+```typescript
+it('Request GET /health → Response status 200 OK', async () => {
+it('Request GET /players → Response body players', async () => {
+it('Request GET /players/{id} existing → Response status 200 OK', async () => {
+it('Request POST /players body empty → Response status 400 Bad Request', async () => {
+it('Request PUT /players/{id} existing → Response status 204 No Content', async () => {
+it('Request DELETE /players/{id} nonexistent → Response status 404 Not Found', async () => {
+it('Request GET /players exceed rate limit → Response status 429 Too Many Requests', async () => {
+```
+
+**Benefits:**
+
+- **Scannable**: 45-70 chars vs 80-120 chars (BDD style)
+- **Self-documenting**: Path + method + context tell the complete story
+- **Visual flow**: Arrow shows input → output relationship
+- **HTTP-centric**: Uses actual endpoint paths and RFC status codes
+- **Cross-repo consistent**: Matches Python FastAPI repository pattern
+
 ### Code Quality
 
 ```bash

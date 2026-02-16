@@ -24,6 +24,35 @@
   - Types: `feat`, `fix`, `chore`, `docs`, `test`, `refactor`
   - Example: `feat(api): add player search endpoint (#123)`
 
+## 🧪 Test Naming Convention
+
+Integration tests follow an action-oriented pattern with visual flow:
+
+**Pattern:**
+```typescript
+it('Request {METHOD} {/path} {context} → Response {outcome}', async () => {
+```
+
+**Components:**
+- `Request` / `Response` - Title Case structural keywords
+- `METHOD` - ALL CAPS HTTP verbs: `GET`, `POST`, `PUT`, `DELETE`
+- `/path` - Actual endpoint with parameters: `/players`, `/players/{id}`
+- `context` - Lowercase descriptors: `existing`, `body empty`, `within rate limit`
+- `→` - Arrow separator showing cause-effect flow
+- `outcome` - What's asserted: `status 200 OK`, `body players`, `header rate limit standard`
+- Status codes - Title Case with number: `200 OK`, `201 Created`, `400 Bad Request`, `404 Not Found`, `204 No Content`, `409 Conflict`, `429 Too Many Requests`
+
+**Examples:**
+```typescript
+it('Request GET /health → Response status 200 OK', async () => {
+it('Request GET /players → Response body players', async () => {
+it('Request GET /players/{id} existing → Response status 200 OK', async () => {
+it('Request POST /players body empty → Response status 400 Bad Request', async () => {
+it('Request PUT /players/{id} existing → Response status 204 No Content', async () => {
+it('Request DELETE /players/{id} nonexistent → Response status 404 Not Found', async () => {
+it('Request GET /players exceed rate limit → Response status 429 Too Many Requests', async () => {
+```
+
 ## 🏗️ Architecture at a Glance
 
 ```
