@@ -5,9 +5,9 @@ const path = '/health';
 
 describe('Integration Tests', () => {
     describe('GET', () => {
-        // GET /players --------------------------------------------------------
+        // GET /health ---------------------------------------------------------
         describe(path, () => {
-            it('Given GET, when request, then response status should be 200 (OK)', async () => {
+            it('Request GET /health → Response status 200 OK', async () => {
                 // Act
                 const response = await request(app).get(path);
                 // Assert
