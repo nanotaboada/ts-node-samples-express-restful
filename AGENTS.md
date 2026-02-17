@@ -1,480 +1,266 @@
-# AGENTS.md
+# Agent Instructions
 
-> **⚡ Token Efficiency Note**: This file contains complete operational instructions (~2,500 tokens).
-> **Auto-loaded**: NO (load explicitly with `#file:AGENTS.md` when you need detailed procedures)
-> **When to load**: Complex workflows, troubleshooting, CI/CD setup, detailed architecture questions
-> **Related files**: See `#file:.github/copilot-instructions.md` for quick context (auto-loaded, ~500 tokens)
+## Project Overview
 
----
+Proof of Concept REST API built with Node.js 24 (LTS), Express.js 5, and TypeScript in native ESM mode. Demonstrates modern REST patterns with layered architecture (Routes → Controllers → Services → Database), Sequelize ORM for SQLite, in-memory caching, Swagger documentation, and comprehensive integration testing. Part of a multi-language repository comparison project.
 
-## Quick Start
+## Structure
+
+```tree
+/src                - application code (Express app, controllers, services)
+  /controllers      - request handlers with Swagger JSDoc annotations
+  /services         - business logic with caching layer (node-cache)
+  /routes           - Express Router definitions with middleware
+  /database         - Sequelize database access (interfaces + implementations)
+  /models           - Sequelize models (Player)
+  /docs             - Swagger configuration and doc generation
+  /middlewares      - custom middleware (rate limiter, validators, CSP)
+  /utils            - logging configuration (Pino)
+/tests              - integration tests (Supertest with Jest)
+/storage            - pre-seeded SQLite database
+/scripts            - utility scripts (Docker entrypoint, healthcheck)
+/.github/workflows  - CI/CD workflows (node-ci.yml, node-cd.yml)
+```
+
+## Common Workflows
+
+### Adding a new endpoint
+
+1. **Create interface and implementation in `/src/controllers/`**
+   - Add route handler with proper TypeScript types
+   - Add Swagger JSDoc annotations for OpenAPI documentation
+   - Implement error handling with try/catch blocks
+2. **Add service logic in `/src/services/`**
+   - Create interface and implementation with dependency injection
+   - Add caching logic if needed (node-cache with 1-hour TTL)
+   - Use Sequelize models for database operations
+3. **Register route in `/src/routes/`**
+   - Add route to Express Router with appropriate middleware
+   - Apply validators, rate limiters as needed
+4. **Add integration tests in `/tests/`**
+   - Follow test naming convention: `it('Request {METHOD} {/path} {context} → Response {outcome}', ...)`
+   - Test success and error cases with Supertest
+   - Verify status codes, response bodies, headers
+5. **Update OpenAPI documentation**
+   - Run `npm run swagger:docs` to regenerate Swagger JSON
+   - Verify in Swagger UI at `http://localhost:9000/api-docs`
+
+### Modifying database schema
+
+1. **Update model in `/src/models/`**
+   - Modify Sequelize model definition with TypeScript types
+   - Update interface to match new schema
+2. **Update pre-seeded database file** (this project uses pre-seeded SQLite, not migrations)
+   - Manually update `storage/players-sqlite3.db` using SQLite CLI or GUI tool
+   - Alternative: Write a one-off script with Sequelize sync + seeding logic
+   - For Docker: Rebuild image with `docker compose build` (updated database is baked in)
+3. **Review safety considerations**
+   - SQLite with pre-seeded data is for demo/PoC purposes only
+   - No migration system - schema changes must be applied manually to the seed file
+   - Breaking the database file will require manual recreation (no auto-sync)
+4. **Add tests for schema changes**
+   - Test model validations (required fields, data types)
+   - Test service layer with new schema
+5. **Update affected services and controllers**
+   - Modify service methods to handle new fields
+   - Update controller request/response types
+   - Refresh Swagger documentation
+
+### Running tests locally
+
+```bash
+# Unit tests (currently integration tests cover most use cases)
+npm test
+
+# Integration tests with coverage (matches CI)
+npm run coverage
+
+# Watch mode for development
+npm test -- --watch
+
+# Specific test file
+npm test -- player-test.ts
+
+# Run with verbose output for debugging
+npm test -- --verbose
+```
+
+**Note**: Tests require Node.js 24.x (`nvm use` or check `.nvmrc`)
+
+### Running tests in Docker
+
+```bash
+# Build and test in container
+docker compose build
+docker compose up -d
+docker compose logs -f
+
+# Execute tests inside container
+docker compose exec app npm test
+
+# Stop and clean up
+docker compose down -v
+```
+
+### Local development setup
 
 ```bash
 # Install dependencies
 npm install
 
-# Run development server (hot reload with nodemon)
+# Start development server with hot reload
 npm run dev
-# Server starts on http://localhost:9000
+# Server: http://localhost:9000
+# Swagger UI: http://localhost:9000/api-docs
 
-# Build TypeScript to JavaScript
+# Run in production mode
 npm run build
-
-# Run production build
 npm start
 
-# View API documentation
-# Open http://localhost:9000/api-docs in browser
-```
-
-## Node.js Version
-
-This project uses **`.nvmrc` as the single source of truth** for Node.js version management.
-
-**Current version:** See `.nvmrc` — Node.js 24 (LTS/Krypton)
-
-**Philosophy:** This project tracks the latest Node.js LTS release. The specific version is always defined in `.nvmrc`.
-
-### How It Works
-
-- **Local development:** Version managers (nvm, asdf, mise) auto-activate from `.nvmrc`
-- **CI/CD pipelines:** GitHub Actions reads version using `node-version-file: '.nvmrc'`
-- **Version enforcement:** `package.json` engines field requires `>=24.11.0`
-- **Docker:** Uses `node:krypton-alpine` base image (aligned with Node.js 24)
-
-### Updating Node.js Version
-
-To update the Node.js version project-wide:
-
-1. Edit `.nvmrc` with the new version (e.g., `v24.12.0`)
-2. Update `package.json` engines field if minimum version changes
-3. Test locally and in CI/CD
-4. Commit changes
-
-**That's it!** No need to update workflow files - they automatically read from `.nvmrc`.
-
-### Benefits
-
-- **Consistency:** Same version across local dev, CI, and CD environments
-- **Maintainability:** Single file to update, no version duplication
-- **Developer experience:** Auto-activation eliminates manual version switching
-- **Enforcement:** npm warns if Node.js version requirement isn't met
-
-## Development Workflow
-
-### Running Tests
-
-```bash
-# Run all tests with Jest
-npm test
-
-# Run tests with coverage report (matches CI)
-npm run coverage
-
-# Run specific test file
-npm test -- players.test.ts
-
-# Run tests in watch mode (development)
-npm test -- --watch
-```
-
-**Coverage requirement**: Tests must maintain coverage. The CI pipeline enforces this with Jest configuration.
-
-### Test Naming Convention
-
-Integration tests use an action-oriented pattern that clearly shows request → response flow:
-
-**Pattern:**
-
-```typescript
-it('Request {METHOD} {/path} {context} → Response {outcome}', async () => {
-```
-
-**Components:**
-
-- `Request` / `Response` - Title Case keywords (structural markers)
-- `METHOD` - ALL CAPS HTTP verbs (`GET`, `POST`, `PUT`, `DELETE`)
-- `/path` - Actual endpoint path with parameters (`/players`, `/players/{id}`)
-- `context` - Lowercase descriptors (`existing`, `body empty`, `within rate limit`)
-- `→` - Arrow separator (shows cause → effect)
-- `outcome` - Assertion target (`status 200 OK`, `body players`, `header rate limit standard`)
-- Status codes - Title Case with number matching RFC 9110 (`200 OK`, `404 Not Found`, `400 Bad Request`, `201 Created`, `204 No Content`, `409 Conflict`, `429 Too Many Requests`)
-
-**Examples:**
-
-```typescript
-it('Request GET /health → Response status 200 OK', async () => {
-it('Request GET /players → Response body players', async () => {
-it('Request GET /players/{id} existing → Response status 200 OK', async () => {
-it('Request POST /players body empty → Response status 400 Bad Request', async () => {
-it('Request PUT /players/{id} existing → Response status 204 No Content', async () => {
-it('Request DELETE /players/{id} nonexistent → Response status 404 Not Found', async () => {
-it('Request GET /players exceed rate limit → Response status 429 Too Many Requests', async () => {
-```
-
-**Benefits:**
-
-- **Scannable**: 45-70 chars vs 80-120 chars (BDD style)
-- **Self-documenting**: Path + method + context tell the complete story
-- **Visual flow**: Arrow shows input → output relationship
-- **HTTP-centric**: Uses actual endpoint paths and RFC status codes
-- **Cross-repo consistent**: Matches Python FastAPI repository pattern
-
-### Code Quality
-
-```bash
-# Lint code with ESLint (must pass before committing)
+# Lint and format code
 npm run lint
-
-# Lint commit message (conventional commits)
-npm run lint:commit
-
-# Format code with Prettier (auto-fix)
 npx prettier --write .
 
-# TypeScript type checking
+# Type check without building
 npx tsc --noEmit
 ```
 
-**Pre-commit checklist**:
+### Creating a release
 
-1. Run `npm run lint` - must pass with no errors
-2. Run `npx tsc --noEmit` - must pass type checking
-3. Run `npm run coverage` - all tests must pass with coverage
+1. **Update CHANGELOG.md**
+   - Move items from `[Unreleased]` to new versioned section with format `## [X.Y.Z - termname] - YYYY-MM-DD`
+   - Use football terminology names (assist, bicyclekick, corner, etc.) as defined in CHANGELOG.md
+   - Commit and push CHANGELOG changes before tagging
 
-**Style rules**:
-
-- ESLint configuration in `eslint.config.mjs`
-- Prettier configuration in `.prettierrc`
-- TypeScript strict mode enabled in `tsconfig.json`
-- Uses ESM (ECMAScript Modules) - `"type": "module"` in package.json
-
-### Swagger Documentation
-
-```bash
-# Regenerate Swagger docs (after changing JSDoc annotations)
-npm run swagger:docs
-
-# Swagger annotations are in src/controllers/*.ts
-# Configuration in src/docs/swagger-config.ts
-```
-
-**Important**: Swagger docs are generated from JSDoc comments in controller files. Edit those, then run `swagger:docs`.
-
-### Database Management
-
-```bash
-# Database auto-initializes on first app startup
-# Pre-seeded database ships in storage/players.db
-
-# To reset database to seed state (local development)
-rm storage/players.db
-# Next app startup will recreate via Sequelize sync + seeding
-
-# Database location: storage/players.db
-```
-
-**Important**: SQLite database with Sequelize ORM. Auto-syncs schema and seeds with football player data on first run.
-
-## Docker Workflow
-
-```bash
-# Build container image
-npm run docker:build
-# or: docker compose build
-
-# Start application in container
-npm run docker:up
-# or: docker compose up
-
-# Start in detached mode (background)
-docker compose up -d
-
-# View logs
-docker compose logs -f
-
-# Stop application
-npm run docker:down
-# or: docker compose down -v
-
-# Health check (when running)
-curl http://localhost:9000/health
-```
-
-**First run behavior**: Container initializes SQLite database with seed data. Volume persists data between runs.
-
-## Release Management
-
-### CHANGELOG Maintenance
-
-**Important**: Update CHANGELOG.md continuously as you work, not just before releases.
-
-**For every meaningful commit**:
-
-1. Add your changes to the `[Unreleased]` section in CHANGELOG.md
-2. Categorize under the appropriate heading:
-   - **Added**: New features
-   - **Changed**: Changes in existing functionality
-   - **Deprecated**: Soon-to-be removed features
-   - **Removed**: Removed features
-   - **Fixed**: Bug fixes
-   - **Security**: Security vulnerability fixes
-3. Use clear, user-facing descriptions (not just commit messages)
-4. Include PR/issue numbers when relevant (#123)
-
-**Example**:
-
-```markdown
-## [Unreleased]
-
-### Added
-- User authentication with JWT tokens (#145)
-- Rate limiting middleware for API endpoints
-
-### Deprecated
-- Legacy authentication endpoint /api/v1/auth (use /api/v2/auth instead)
-
-### Fixed
-- Null reference exception in player service (#147)
-
-### Security
-- Fix SQL injection vulnerability in search endpoint (#148)
-```
-
-### Creating a Release
-
-When ready to release:
-
-1. **Update CHANGELOG.md**: Move items from `[Unreleased]` to a new versioned section:
-
-   ```markdown
-   ## [1.1.0 - bicyclekick] - YYYY-MM-DD
-   ```
-
-   Commit and push this change before creating the tag.
-
-2. **Create and push tag**:
+2. **Create and push tag**
 
    ```bash
    git tag -a v1.1.0-bicyclekick -m "Release 1.1.0 - Bicycle-kick"
    git push origin v1.1.0-bicyclekick
    ```
 
-3. **CD workflow runs automatically** to publish Docker images and create GitHub Release
+3. **CI/CD automatically handles**
+   - Runs full test suite with coverage
+   - Builds Docker image with multi-stage process
+   - Pushes to GHCR with three tags: version (`1.1.0`), term name (`bicyclekick`), `latest`
+   - Creates GitHub Release with auto-generated notes
 
-See [CHANGELOG.md](CHANGELOG.md#how-to-release) for complete release instructions and football terminology naming convention.
-
-## CI/CD Pipeline
-
-### Continuous Integration (node-ci.yml)
-
-**Trigger**: Push to `master` or PR
-
-**Jobs**:
-
-1. **Setup**: Node.js 24 installation, npm ci (clean install)
-2. **Lint**: ESLint + commitlint validation
-3. **Build**: TypeScript compilation (`npm run build`)
-4. **Test**: Jest with coverage report
-5. **Coverage**: Upload to Codecov
-
-**Note**: CI only validates code - it does NOT publish Docker images.
-
-### Continuous Deployment (node-cd.yml)
-
-**Trigger**: Version tags in format `v{MAJOR}.{MINOR}.{PATCH}-{TERM}`
-
-Example:
+**Pre-release validation**:
 
 ```bash
-git tag -a v1.0.0-assist -m "Release 1.0.0 - Assist"
-git push origin v1.0.0-assist
+npm run lint && npm run build && npm run coverage
 ```
 
-**Pipeline automatically**:
+## Autonomy Levels
 
-- Runs full test suite with coverage
-- Builds multi-stage Docker image
-- Pushes to GHCR with multiple tags (version, term name, latest)
-- Generates changelog from commits
-- Creates GitHub Release with auto-generated notes
+### Proceed freely
 
-**Football terminology convention**: Alphabetically ordered codenames (assist, bicyclekick, corner, etc.)
+- **Route handlers and controllers**
+  - Add/modify endpoint handlers
+  - Update Swagger JSDoc annotations
+  - Add request/response validation
+- **Service layer logic**
+  - Implement business logic
+  - Add caching strategies
+  - Optimize database queries
+- **Unit and integration tests**
+  - Add test cases following naming convention
+  - Improve test coverage
+  - Refactor test utilities
+- **Documentation updates**
+  - Improve code comments
+  - Update Swagger annotations
+  - Clarify inline documentation
+- **Code quality improvements**
+  - Refactor for better type safety
+  - Optimize imports and dependencies
+  - Improve error handling patterns
 
-**Local validation** (run this before pushing):
+### Ask before changing
+
+- **Database schemas**
+  - Adding/removing/modifying Sequelize model fields
+  - Changing data types or constraints
+  - Altering relationships between models
+- **Dependencies (`package.json`)**
+  - Adding new npm packages
+  - Upgrading major versions of existing packages
+  - Removing dependencies
+- **CI/CD configuration** (`.github/workflows/`)
+  - Modifying build/test/deploy pipeline steps
+  - Changing environment variables or secrets
+  - Altering trigger conditions
+- **Docker setup** (`Dockerfile`, `compose.yml`)
+  - Changing base images
+  - Modifying multi-stage build process
+  - Altering container configuration
+- **Environment variable requirements**
+  - Adding new required environment variables
+  - Changing default values
+  - Modifying validation logic
+- **Node.js version** (`.nvmrc`, `package.json` engines)
+  - Upgrading/downgrading Node.js LTS version
+  - Affects local dev, CI, CD, and Docker environments
+
+### Never modify
+
+- **`.env` files** (gitignored, user-specific)
+- **Production configurations** (not in this repository)
+- **Deployment secrets** (managed via GitHub Secrets)
+- **`storage/players-sqlite3.db`** (pre-seeded database, versioned in repo, used in Docker image)
+- **Generated files** (`dist/`, `coverage/`, `swagger.json`)
+
+## Pre-commit Checks
+
+Run these before committing (enforced by CI):
 
 ```bash
-# Matches CI exactly
-npm run lint && \
-npm run build && \
-npm run coverage
-```
+# 1. Linter must pass (ESLint)
+npm run lint
 
-## Project Architecture
-
-**Structure**: Layered architecture (Routes → Controllers → Services → Database)
-
-```
-src/
-├── app.ts              # Express app setup & middleware
-├── server.ts           # HTTP server initialization
-
-├── controllers/        # Request handlers with Swagger JSDoc
-│   └── players.controller.ts
-
-├── services/           # Business logic + caching layer
-│   └── players.service.ts
-
-├── database/           # Sequelize DB access
-│   ├── interface.database.ts       # DB interface
-│   └── implementation.database.ts  # Sequelize implementation
-
-├── models/             # Sequelize models
-│   └── player.model.ts             # Player model + schema
-
-├── routes/             # Express Router definitions
-│   └── players.routes.ts
-
-├── docs/               # Swagger configuration
-│   ├── swagger-config.ts           # OpenAPI spec
-│   └── swagger-docs.ts             # Doc generator script
-
-└── middlewares/        # Custom middleware
-    └── swagger-csp.middleware.ts   # CSP for Swagger UI
-
-tests/                  # Integration tests
-  └── players.test.ts               # Supertest endpoint tests
-```
-
-**Key patterns**:
-
-- Native ESM (not CommonJS) - uses `import/export`
-- TypeScript strict mode - full type safety
-- Sequelize ORM for database operations
-- Node-cache for in-memory caching (1-hour TTL)
-- Express middleware: Helmet (security), CORS, rate limiting
-- Swagger JSDoc annotations for API docs
-- Uses `tsx` for running TypeScript (faster than ts-node)
-
-## Environment Variables
-
-Create `.env` for local development (see `.env.test` for example):
-
-```bash
-NODE_ENV=development
-PORT=9000
-DB_PATH=./storage/players.db
-```
-
-**Note**: `.env.test` is used automatically during test runs.
-
-## Troubleshooting
-
-### Port already in use
-
-```bash
-# Kill process on port 9000
-lsof -ti:9000 | xargs kill -9
-```
-
-### Module import errors
-
-```bash
-# Clean install dependencies
-rm -rf node_modules package-lock.json
-npm install
-
-# Verify Node version
-node --version  # Should be v24.x
-```
-
-### TypeScript compilation errors
-
-```bash
-# Clean build artifacts
-rm -rf dist/
-
-# Rebuild
-npm run build
-
-# Check for type errors
+# 2. Type checking must pass
 npx tsc --noEmit
+
+# 3. All tests must pass with coverage maintained
+npm run coverage
+
+# 4. Commit message format validation (Conventional Commits)
+npm run lint:commit
+
+# Optional: Auto-format code before committing
+npx prettier --write .
 ```
 
-### Database locked errors
+**Automated checks in CI**:
 
-```bash
-# Stop all running instances
-pkill -f "node dist/server.js"
-pkill -f nodemon
+- Commitlint validates commit message format
+- ESLint enforces code style
+- TypeScript compiler checks types
+- Jest runs integration tests with coverage reports
+- Codecov uploads coverage data
 
-# Reset database
-rm storage/players.db
-```
+## Cross-repo Context
 
-### Jest test failures
+This TypeScript/Node.js/Express implementation is part of a multi-language REST API comparison project, demonstrating identical functionality across different technology stacks.
 
-```bash
-# Clear Jest cache
-npx jest --clearCache
+**Consistency requirements across implementations**:
 
-# Run with verbose output
-npm test -- --verbose
-```
+- **API Contract**: All implementations expose identical REST endpoints (`/health`, `/players/*`) with matching request/response schemas
+- **Test Naming**: Action-oriented pattern `Request {METHOD} {/path} {context} → Response {outcome}` (consistent across all stacks)
+- **HTTP Status Codes**: RFC 9110 compliant codes with Title Case descriptions (`200 OK`, `404 Not Found`, etc.)
+- **Release Naming**: Alphabetically ordered codenames using domain-specific terminology (football for this project)
+- **Project Structure**: Layered architecture pattern (routes/handlers → controllers → services → database)
+- **Documentation**: Swagger/OpenAPI specifications for all endpoints
+- **CI/CD**: Separate workflows for validation (CI) and deployment (CD)
+- **Docker**: Multi-stage builds optimized for production, published to GHCR
 
-### Docker issues
+**Key characteristics of this TypeScript/Express implementation**:
 
-```bash
-# Clean slate
-npm run docker:down
-docker compose build --no-cache
-npm run docker:up
-```
+- Native ESM with `.js` extensions in imports (not CommonJS)
+- Strict TypeScript with interface-based dependency injection
+- Constructor injection pattern for testability
+- Sequelize ORM for database abstraction
+- In-memory caching layer with node-cache
+- Pino structured logging with correlation IDs
 
-## Testing the API
-
-### Using Swagger UI (Recommended)
-
-Open <http://localhost:9000/api-docs> - Interactive documentation with "Try it out"
-
-### Using Postman
-
-Pre-configured collection available in `postman-collections/`
-
-### Using curl
-
-```bash
-# Health check
-curl http://localhost:9000/health
-
-# Get all players
-curl http://localhost:9000/players
-
-# Get player by ID
-curl http://localhost:9000/players/1
-
-# Create player
-curl -X POST http://localhost:9000/players \
-  -H "Content-Type: application/json" \
-  -d '{"firstName":"Pele","lastName":"Nascimento","club":"Santos","nationality":"Brazil","dateOfBirth":"1940-10-23","squadNumber":10}'
-
-# Update player
-curl -X PUT http://localhost:9000/players/1 \
-  -H "Content-Type: application/json" \
-  -d '{"firstName":"Diego","lastName":"Maradona","club":"Napoli","nationality":"Argentina","dateOfBirth":"1960-10-30","squadNumber":10}'
-
-# Delete player
-curl -X DELETE http://localhost:9000/players/1
-```
-
-## Important Notes
-
-- **Never commit secrets**: No API keys, tokens, or credentials in code
-- **Test coverage**: Maintain existing coverage levels (currently high)
-- **Commit messages**: Follow conventional commits (enforced by commitlint)
-- **Node version**: Must use 24.x for consistency with CI/CD
-- **ESM only**: This project uses native ES modules, not CommonJS
-- **TypeScript strict**: All type errors must be resolved
-- **Database**: SQLite is for demo/development only - not production-ready
-- **Package lock**: Always commit `package-lock.json` for reproducible builds
-- **tsx vs ts-node**: Project uses `tsx` for better performance with ESM
+**Note**: When making architectural decisions, consider alignment with other stack implementations for comparative analysis purposes.
