@@ -1,58 +1,128 @@
-# Copilot Instructions
+# GitHub Copilot Instructions
 
-## Stack
+## Overview
+
+REST API for managing football players built with Node.js and Express.js in TypeScript (native ESM). Implements CRUD operations with a layered architecture, Sequelize ORM + SQLite, in-memory caching, Swagger documentation, and Pino structured logging. Part of a cross-language comparison study (.NET, Go, Java, Python, Rust).
+
+## Tech Stack
 
 - **Runtime**: Node.js 24 LTS (Krypton)
+- **Language**: TypeScript (strict mode, native ESM)
 - **Framework**: Express.js 5
-- **Language**: TypeScript (strict mode)
-- **Database**: SQLite with Sequelize ORM
-- **Testing**: Jest 30 with Supertest
-- **Containerization**: Docker with multi-stage builds
+- **ORM**: Sequelize
+- **Database**: SQLite
+- **Caching**: node-cache (in-memory, 1-hour TTL)
+- **Logging**: Pino (structured, with request correlation IDs)
+- **Security**: Helmet, CORS, express-rate-limit
+- **Testing**: Jest 30 + Supertest
+- **Linting/Formatting**: ESLint + Prettier
+- **API Docs**: Swagger (JSDoc annotations → swagger.json)
+- **Containerization**: Docker (multi-stage builds)
 
-## Project Patterns
+## Structure
 
-- **Layered Architecture**: Routes → Controllers → Services → Database
-- **Dependency Injection**: Constructor injection with interface-based abstractions
-- **Error Handling**: Try/catch in controllers, centralized error middleware
-- **Caching**: In-memory node-cache (1-hour TTL) at service layer
-- **Logging**: Pino structured logging with request correlation IDs
-- **Security**: Helmet middleware for headers, CORS, express-rate-limit
+```text
+src/
+├── controllers/        — request handlers + Swagger JSDoc + try/catch      [HTTP layer]
+├── routes/             — Express Router definitions + middleware
+├── services/           — business logic + node-cache caching               [business layer]
+├── database/           — Sequelize interfaces + implementations            [data layer]
+├── models/             — Sequelize Player model
+├── middlewares/        — rate limiter, validators, CSP
+├── docs/               — Swagger config and doc generation
+└── utils/              — Pino logging configuration
+tests/                  — Jest + Supertest integration tests
+storage/                — pre-seeded SQLite database (versioned, used in Docker image)
+scripts/                — Docker entrypoint and healthcheck scripts
+```
 
-## Code Conventions
+**Layer rule**: `Routes → Controllers → Services → Database`. Controllers must not contain business logic. Services handle all caching and Sequelize operations.
 
-- **Module System**: Native ESM (not CommonJS) - always include `.js` in relative imports
-- **Naming**: camelCase for variables/functions, PascalCase for classes/types/interfaces
-- **File Naming**: kebab-case with suffixes (`player-service.ts`, `player-controller.ts`)
-- **Imports**: Group by external deps → internal modules → types, alphabetically sorted
-- **Type Safety**: Strict TypeScript, avoid `any` unless justified, prefer interfaces over types
-- **Async**: All I/O operations use async/await, never callbacks or synchronous calls
-- **Comments**: JSDoc for public APIs and Swagger annotations, inline comments only when necessary
-- **Formatting**: Prettier (4 spaces, single quotes, 127 width) - enforced pre-commit
-- **Commit Messages**: Conventional Commits format `type(scope): description (#issue)` (max 80 chars)
+## Coding Guidelines
 
-## Testing
+- **Module system**: Native ESM — always include `.js` extension in relative imports (omitting it breaks ESM at runtime)
+- **Naming**: camelCase (variables/functions), PascalCase (classes/types/interfaces), kebab-case (file names, e.g. `player-service.ts`)
+- **Type safety**: Strict TypeScript; never use `any`; prefer interfaces over types
+- **DI**: Constructor injection with interface-based abstractions
+- **Async**: All I/O uses async/await; never callbacks or synchronous calls
+- **Logging**: Pino only; never `console.log`
+- **Imports**: Group external deps → internal modules → types; alphabetically sorted within groups
+- **Formatting**: Prettier (4 spaces, single quotes, 127 width) — enforced pre-commit
+- **Tests**: naming `it('Request {METHOD} {/path} {context} → Response {outcome}')` — METHOD ALL CAPS, status codes Title Case (e.g. `200 OK`, `404 Not Found`); mock external deps only; use real test database (no Sequelize mocking)
+- **Avoid**: `any` without justification, missing `.js` in imports, mixing CommonJS with ESM, sync file ops, `console.log`, `@ts-ignore` without comments, mocking Sequelize models
 
-- **Structure**: Integration tests in `/tests/`, focus on controller/service/route layers
-- **Naming Convention**: Action-oriented pattern with visual flow
+## Commands
 
-  ```typescript
-  it('Request {METHOD} {/path} {context} → Response {outcome}', async () => {
-  ```
+### Quick Start
 
-  - Example: `it('Request GET /players/{id} existing → Response status 200 OK', async () => {`
-  - **Components**: Request/Response (Title Case), METHOD (ALL CAPS), /path (actual endpoint), context (lowercase), outcome (status codes in Title Case like `200 OK`, `404 Not Found`)
-- **Mocking**: Use Jest mocks for external dependencies, avoid mocking internal modules
-- **Coverage**: Maintain existing coverage levels (controllers, services, routes only)
-- **Runner**: Jest with ESM support (`ts-jest` preset), use `--watch` in development
+```bash
+npm install
+npm run dev             # http://localhost:9000
+npm run build && npm start
+npm test                # all tests
+npm run coverage        # tests + coverage
+npm run lint
+npx tsc --noEmit        # type check
+npx prettier --write .
+docker compose up
+docker compose down -v
+```
 
-## Avoid
+### Pre-commit Checks
 
-- Using `any` type without explicit justification
-- Missing `.js` extensions in relative imports (ESM breaks without them)
-- Mixing CommonJS (`require`/`module.exports`) with ESM (`import`/`export`)
-- Synchronous file operations (`fs.readFileSync`, `fs.writeFileSync`)
-- Missing error handling on async operations (always `try/catch`)
-- Using `console.log` instead of Pino logger
-- Creating files without interfaces when abstraction is needed
-- Ignoring TypeScript errors or using `@ts-ignore` without comments
-- Mocking Sequelize models in tests (use real test database)
+1. Update `CHANGELOG.md` `[Unreleased]` section (Added / Changed / Fixed / Removed)
+2. `npm run lint` — ESLint must pass
+3. `npx tsc --noEmit` — TypeScript must compile clean
+4. `npm run coverage` — all tests must pass, coverage maintained
+5. `npm run lint:commit` — Conventional Commits validation
+6. Commit message follows Conventional Commits format (enforced by commitlint)
+
+### Commits
+
+Format: `type(scope): description (#issue)` — max 80 chars
+Types: `feat` `fix` `chore` `docs` `test` `refactor` `ci` `perf`
+Example: `feat(api): add player stats endpoint (#42)`
+
+## Agent Mode
+
+### Proceed freely
+
+- Route handlers and controllers
+- Service layer logic and caching
+- Unit and integration tests
+- Documentation updates
+- Code quality and formatting improvements
+
+### Ask before changing
+
+- Database schema (Sequelize model fields)
+- Dependencies (`package.json`)
+- Node.js version (`.nvmrc`, `package.json engines`)
+- CI/CD configuration (`.github/workflows/`)
+- Docker setup
+- Environment variables
+- API contracts (breaking changes)
+
+### Never modify
+
+- `.env` files
+- `storage/players-sqlite3.db` (pre-seeded, versioned, used in Docker image)
+- Generated files (`dist/`, `coverage/`, `swagger.json`)
+- Port configuration (9000)
+- Production configurations or deployment secrets
+
+### Key workflows
+
+**Add an endpoint**: Create interface + implementation in `src/controllers/` with Swagger JSDoc + try/catch → add service logic in `src/services/` with caching + Sequelize operations → register route in `src/routes/` → add integration tests following naming convention → run `npm run swagger:docs` → run pre-commit checks.
+
+**Modify schema**: Update Sequelize model in `src/models/` → manually update `storage/players-sqlite3.db` (no migration system) → rebuild Docker image with `docker compose build` → update services, controllers, and tests → run `npm run coverage`.
+
+**Cross-repo consistency**: API contracts (endpoints, schemas, HTTP status codes), release naming (football terminology, alphabetical), and CI/CD patterns must stay consistent across all stacks.
+
+**After completing work**: Suggest a branch name (e.g. `feat/add-player-stats`) and a commit message following Conventional Commits including co-author line:
+
+```text
+feat(scope): description (#issue)
+
+Co-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>
+```
