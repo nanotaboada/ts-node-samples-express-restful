@@ -26,7 +26,7 @@ jobs:
         uses: actions/checkout@v6.0.2
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6.2.0
+        uses: actions/setup-node@v6.3.0
         with:
           node-version-file: ".nvmrc"
           cache: "npm"
@@ -101,17 +101,17 @@ jobs:
           echo "⚽ Term name: $TERM"
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3.7.0
+        uses: docker/login-action@v4.0.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3.12.0
+        uses: docker/setup-buildx-action@v4.0.0
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v6.19.2
+        uses: docker/build-push-action@v7.0.0
         with:
           context: .
           push: true
