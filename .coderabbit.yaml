@@ -218,11 +218,13 @@ reviews:
       - name: "enforce http error handling"
         instructions: |
           Audit all HTTP handler functions in the changed files.
-          Ensure errors return appropriate HTTP status codes (400 for bad input,
+          Verify that errors return appropriate HTTP status codes (400 for bad input,
           404 for not found, 500 for unexpected errors) and a consistent JSON error
           body with at least a "message" field.
-          Flag handlers that return 200 on error or swallow errors silently.
-          Use idiomatic error handling patterns for the language and framework in use.
+          Flag handlers that return 200 on error, swallow errors silently, or use
+          bare status-only responses (e.g. sendStatus(404)) without a JSON body.
+          Do not make changes; only report findings as a comment so fixes can be
+          applied consistently across the entire codebase.
 
       - name: "idiomatic review"
         instructions: |
