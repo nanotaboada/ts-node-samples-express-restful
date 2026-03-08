@@ -6,10 +6,11 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '9000:9000'
+      - "9000:9000"
     volumes:
       - storage:/storage/
     environment:
+      - NODE_ENV=production
       - STORAGE_PATH=/storage/players-sqlite3.db
     restart: unless-stopped
 
