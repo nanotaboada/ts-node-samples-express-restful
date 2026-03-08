@@ -24,4 +24,6 @@ fi
 
 echo "✔ Ready!"
 echo "🚀 Launching app..."
+echo "🔌 API endpoints | http://localhost:9000/players/"
+echo "📚 Swagger UI    | http://localhost:9000/swagger/"
 exec "$@"

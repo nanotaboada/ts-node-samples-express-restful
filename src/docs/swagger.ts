@@ -111,6 +111,10 @@ const validatedSwaggerSpecJSON = swaggerJSDoc(swaggerJSDocOptions);
 // Swagger UI Configuration
 const customSwaggerUiOptions: SwaggerUiOptions = {
     customSiteTitle: '🧪 RESTful API with Node.js and Express.js in TypeScript',
+    // swaggerUrl overrides the window.location.origin fallback in swagger-ui-init.js;
+    // without it, swagger-ui v5 uses the origin URL (which returns HTML, not JSON)
+    // when both spec and url are present, causing the petstore fallback.
+    swaggerUrl: '/swagger.json',
     swaggerOptions: {
         validatorUrl: null, // Disable external validator
         defaultModelsExpandDepth: -1, // Hide schemas by default

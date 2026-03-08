@@ -66,10 +66,12 @@ app.use(bodyParser.json());
 app.use(rateLimiter.generalLimiter);
 
 // Swagger UI Express - https://github.com/scottie1984/swagger-ui-express
-app.use('/swagger', swaggerMiddleware, swaggerUi.serve, swaggerUi.setup(swaggerSpec, swaggerUiOptions));
+// Redirect /swagger/index.html BEFORE swaggerUi.serve, otherwise the static file
+// middleware serves swagger-ui-dist's own index.html (which hardcodes the petstore URL).
 app.get('/swagger/index.html', (_, response) => {
     response.redirect(301, '/swagger');
 });
+app.use('/swagger', swaggerMiddleware, swaggerUi.serve, swaggerUi.setup(undefined, swaggerUiOptions));
 app.get('/swagger.json', (_, response) => {
     response.setHeader('Content-Type', 'application/json');
     response.send(swaggerSpec);
