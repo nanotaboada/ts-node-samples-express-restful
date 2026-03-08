@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 This project uses football/soccer terminology for release names:
 
 | Letter | Term | Definition | Tag Name |
-|--------|------|------------|----------|
+| ------ | ---- | ---------- | -------- |
 | A | Assist | Pass leading to a goal | `assist` |
 | B | Bicycle-kick | Overhead kick | `bicyclekick` |
 | C | Corner | Corner kick | `corner` |
@@ -53,6 +53,25 @@ This project uses football/soccer terminology for release names:
 ### Fixed
 
 ### Security
+
+---
+
+## [1.0.1 - bicyclekick] - 2026-03-08
+
+### Changed
+
+- Docker entrypoint now prints API and Swagger UI URLs on startup
+- Swagger UI CSP updated to include `connect-src 'self'` and `worker-src blob: 'self'`
+- Swagger UI static `/swagger/index.html` redirect now registered before static file middleware
+- `swaggerUrl` set explicitly so Swagger UI fetches spec from `/swagger.json` instead of falling back to petstore
+- Test naming convention updated to action-oriented arrow pattern
+- Unified Copilot instructions as canonical single-file format
+- Dependency updates: `pino`, `dotenv`, `qs`, `dottie`, `express-rate-limit`, `eslint`, `nodemon`, `commitlint`, `@types/*` and GitHub Actions (`docker/build-push-action`, `docker/login-action`, `docker/setup-buildx-action`, `actions/setup-node`, `actions/upload-artifact`, `actions/download-artifact`)
+
+### Fixed
+
+- Docker container crashed on startup with `unable to determine transport target for "pino-pretty"` — resolved by setting `NODE_ENV=production` in `compose.yml`
+- Swagger UI displayed petstore fallback due to missing CSP directives and static file middleware intercepting `/swagger/index.html`
 
 ---
 
