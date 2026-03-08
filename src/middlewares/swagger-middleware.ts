@@ -5,6 +5,8 @@ const SWAGGER_CSP = [
     "script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com", // Allow Swagger's JS
     "style-src 'self' 'unsafe-inline'", // Required for Swagger UI styles
     "img-src 'self' data:", // Allow embedded image data
+    "connect-src 'self'", // Allow Swagger UI to fetch the spec from the same origin
+    "worker-src blob: 'self'", // Allow Swagger UI v5 to spin up its spec-parsing web worker
 ].join('; ');
 
 /**
