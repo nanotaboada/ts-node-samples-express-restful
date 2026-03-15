@@ -11,6 +11,7 @@
 
     // Testing
     "orta.vscode-jest",                  // Jest - JavaScript testing framework
+    "humao.rest-client",                 // REST Client - Send HTTP requests from .rest files
 
     // Formatting & Language Support
     "redhat.vscode-xml",                 // XML Language Support - XML language server

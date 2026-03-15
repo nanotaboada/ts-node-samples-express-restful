@@ -44,11 +44,16 @@ This project uses football/soccer terminology for release names:
 
 ### Added
 
+- `rest/players.rest` HTTP file with health check, POST, GET (all, by ID, by squad number), PUT, and DELETE requests for VS Code REST Client (`humao.rest-client`)
+- `humao.rest-client` added to `.vscode/extensions.json` recommended extensions
+
 ### Changed
 
 ### Deprecated
 
 ### Removed
+
+- `postman-collections/` directory and Postman JSON collection replaced by `rest/players.rest`
 
 ### Fixed
 

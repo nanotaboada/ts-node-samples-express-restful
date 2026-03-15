@@ -1,0 +1,305 @@
+# REST Client for VS Code (humao.rest-client)
+# https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+
+@baseUrl = http://localhost:9000
+
+# -----------------------------------------------------------------------------
+# GET /health
+# -----------------------------------------------------------------------------
+
+### Request GET /health → Response status 200 OK
+GET {{baseUrl}}/health
+
+# -----------------------------------------------------------------------------
+# GET /players
+# -----------------------------------------------------------------------------
+
+### Request GET /players → Response status 200 OK
+GET {{baseUrl}}/players
+
+# -----------------------------------------------------------------------------
+# GET /players/:id
+# -----------------------------------------------------------------------------
+
+### Request GET /players/{id} existing → Response status 200 OK
+GET {{baseUrl}}/players/1
+
+### Request GET /players/{id} nonexistent → Response status 404 Not Found
+GET {{baseUrl}}/players/999
+
+# -----------------------------------------------------------------------------
+# GET /players/squadNumber/:squadNumber
+# -----------------------------------------------------------------------------
+
+### Request GET /players/squadNumber/{squadNumber} existing → Response status 200 OK
+GET {{baseUrl}}/players/squadNumber/10
+
+### Request GET /players/squadNumber/{squadNumber} unknown → Response status 404 Not Found
+GET {{baseUrl}}/players/squadNumber/999
+
+# -----------------------------------------------------------------------------
+# POST /players
+# -----------------------------------------------------------------------------
+
+### Request POST /players body nonexistent → Response status 201 Created
+POST {{baseUrl}}/players
+Content-Type: application/json
+
+{
+  "id": 12,
+  "firstName": "Leandro",
+  "middleName": "Daniel",
+  "lastName": "Paredes",
+  "dateOfBirth": "1994-06-29T00:00:00.000Z",
+  "squadNumber": 5,
+  "position": "Defensive Midfield",
+  "abbrPosition": "DM",
+  "team": "AS Roma",
+  "league": "Serie A",
+  "starting11": false
+}
+
+### Request POST /players body existing → Response status 409 Conflict
+POST {{baseUrl}}/players
+Content-Type: application/json
+
+{
+  "id": 1,
+  "firstName": "Damián",
+  "middleName": "Emiliano",
+  "lastName": "Martínez",
+  "dateOfBirth": "1992-09-02T00:00:00.000Z",
+  "squadNumber": 23,
+  "position": "Goalkeeper",
+  "abbrPosition": "GK",
+  "team": "Aston Villa FC",
+  "league": "Premier League",
+  "starting11": true
+}
+
+### Request POST /players body empty → Response status 400 Bad Request
+POST {{baseUrl}}/players
+Content-Type: application/json
+
+{}
+
+### Request POST /players firstName missing → Response status 400 Bad Request
+POST {{baseUrl}}/players
+Content-Type: application/json
+
+{
+  "id": 999,
+  "lastName": "Doe",
+  "squadNumber": 10,
+  "position": "Forward"
+}
+
+### Request POST /players lastName missing → Response status 400 Bad Request
+POST {{baseUrl}}/players
+Content-Type: application/json
+
+{
+  "id": 999,
+  "firstName": "John",
+  "squadNumber": 10,
+  "position": "Forward"
+}
+
+### Request POST /players squadNumber missing → Response status 400 Bad Request
+POST {{baseUrl}}/players
+Content-Type: application/json
+
+{
+  "id": 999,
+  "firstName": "John",
+  "lastName": "Doe",
+  "position": "Forward"
+}
+
+### Request POST /players position missing → Response status 400 Bad Request
+POST {{baseUrl}}/players
+Content-Type: application/json
+
+{
+  "id": 999,
+  "firstName": "John",
+  "lastName": "Doe",
+  "squadNumber": 10
+}
+
+### Request POST /players squadNumber >99 → Response status 400 Bad Request
+POST {{baseUrl}}/players
+Content-Type: application/json
+
+{
+  "id": 999,
+  "firstName": "John",
+  "lastName": "Doe",
+  "squadNumber": 100,
+  "position": "Forward"
+}
+
+### Request POST /players squadNumber <1 → Response status 400 Bad Request
+POST {{baseUrl}}/players
+Content-Type: application/json
+
+{
+  "id": 999,
+  "firstName": "John",
+  "lastName": "Doe",
+  "squadNumber": 0,
+  "position": "Forward"
+}
+
+# -----------------------------------------------------------------------------
+# PUT /players/:id
+# -----------------------------------------------------------------------------
+
+### Request PUT /players/{id} existing → Response status 204 No Content
+PUT {{baseUrl}}/players/12
+Content-Type: application/json
+
+{
+  "id": 12,
+  "firstName": "Leandro",
+  "middleName": "Daniel",
+  "lastName": "Paredes",
+  "dateOfBirth": "1994-06-29T00:00:00.000Z",
+  "squadNumber": 5,
+  "position": "Defensive Midfield",
+  "abbrPosition": "DM",
+  "team": "AS Roma",
+  "league": "Serie A",
+  "starting11": false
+}
+
+### Request PUT /players/{id} nonexistent → Response status 404 Not Found
+PUT {{baseUrl}}/players/999
+Content-Type: application/json
+
+{
+  "id": 999,
+  "firstName": "John",
+  "lastName": "Doe",
+  "squadNumber": 10,
+  "position": "Forward"
+}
+
+### Request PUT /players/{id} id missing → Response status 400 Bad Request
+PUT {{baseUrl}}/players/1
+Content-Type: application/json
+
+{
+  "firstName": "Leandro",
+  "middleName": "Daniel",
+  "lastName": "Paredes",
+  "dateOfBirth": "1994-06-29T00:00:00.000Z",
+  "squadNumber": 5,
+  "position": "Defensive Midfield",
+  "abbrPosition": "DM",
+  "team": "AS Roma",
+  "league": "Serie A",
+  "starting11": false
+}
+
+### Request PUT /players/{id} id mismatch → Response status 400 Bad Request
+PUT {{baseUrl}}/players/1
+Content-Type: application/json
+
+{
+  "id": 999,
+  "firstName": "Damián",
+  "middleName": "Emiliano",
+  "lastName": "Martínez",
+  "dateOfBirth": "1992-09-02T00:00:00.000Z",
+  "squadNumber": 23,
+  "position": "Goalkeeper",
+  "abbrPosition": "GK",
+  "team": "Aston Villa FC",
+  "league": "Premier League",
+  "starting11": true
+}
+
+### Request PUT /players/{id} body empty → Response status 400 Bad Request
+PUT {{baseUrl}}/players/12
+Content-Type: application/json
+
+{}
+
+### Request PUT /players/{id} firstName missing → Response status 400 Bad Request
+PUT {{baseUrl}}/players/12
+Content-Type: application/json
+
+{
+  "id": 12,
+  "lastName": "Doe",
+  "squadNumber": 10,
+  "position": "Forward"
+}
+
+### Request PUT /players/{id} lastName missing → Response status 400 Bad Request
+PUT {{baseUrl}}/players/12
+Content-Type: application/json
+
+{
+  "id": 12,
+  "firstName": "John",
+  "squadNumber": 10,
+  "position": "Forward"
+}
+
+### Request PUT /players/{id} squadNumber missing → Response status 400 Bad Request
+PUT {{baseUrl}}/players/12
+Content-Type: application/json
+
+{
+  "id": 12,
+  "firstName": "John",
+  "lastName": "Doe",
+  "position": "Forward"
+}
+
+### Request PUT /players/{id} position missing → Response status 400 Bad Request
+PUT {{baseUrl}}/players/12
+Content-Type: application/json
+
+{
+  "id": 12,
+  "firstName": "John",
+  "lastName": "Doe",
+  "squadNumber": 10
+}
+
+### Request PUT /players/{id} squadNumber >99 → Response status 400 Bad Request
+PUT {{baseUrl}}/players/12
+Content-Type: application/json
+
+{
+  "id": 12,
+  "firstName": "John",
+  "lastName": "Doe",
+  "squadNumber": 100,
+  "position": "Forward"
+}
+
+### Request PUT /players/{id} squadNumber <1 → Response status 400 Bad Request
+PUT {{baseUrl}}/players/12
+Content-Type: application/json
+
+{
+  "id": 12,
+  "firstName": "John",
+  "lastName": "Doe",
+  "squadNumber": 0,
+  "position": "Forward"
+}
+
+# -----------------------------------------------------------------------------
+# DELETE /players/:id
+# -----------------------------------------------------------------------------
+
+### Request DELETE /players/{id} existing → Response status 204 No Content
+DELETE {{baseUrl}}/players/12
+
+### Request DELETE /players/{id} nonexistent → Response status 404 Not Found
+DELETE {{baseUrl}}/players/999
