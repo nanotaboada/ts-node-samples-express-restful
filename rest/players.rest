@@ -2,6 +2,7 @@
 # https://marketplace.visualstudio.com/items?itemName=humao.rest-client
 
 @baseUrl = http://localhost:9000
+@playerId = 12
 
 # -----------------------------------------------------------------------------
 # GET /health
@@ -46,7 +47,7 @@ POST {{baseUrl}}/players
 Content-Type: application/json
 
 {
-  "id": 12,
+  "id": {{playerId}},
   "firstName": "Leandro",
   "middleName": "Daniel",
   "lastName": "Paredes",
@@ -156,11 +157,11 @@ Content-Type: application/json
 # -----------------------------------------------------------------------------
 
 ### Request PUT /players/{id} existing → Response status 204 No Content
-PUT {{baseUrl}}/players/12
+PUT {{baseUrl}}/players/{{playerId}}
 Content-Type: application/json
 
 {
-  "id": 12,
+  "id": {{playerId}},
   "firstName": "Leandro",
   "middleName": "Daniel",
   "lastName": "Paredes",
@@ -221,61 +222,61 @@ Content-Type: application/json
 }
 
 ### Request PUT /players/{id} body empty → Response status 400 Bad Request
-PUT {{baseUrl}}/players/12
+PUT {{baseUrl}}/players/{{playerId}}
 Content-Type: application/json
 
 {}
 
 ### Request PUT /players/{id} firstName missing → Response status 400 Bad Request
-PUT {{baseUrl}}/players/12
+PUT {{baseUrl}}/players/{{playerId}}
 Content-Type: application/json
 
 {
-  "id": 12,
+  "id": {{playerId}},
   "lastName": "Doe",
   "squadNumber": 10,
   "position": "Forward"
 }
 
 ### Request PUT /players/{id} lastName missing → Response status 400 Bad Request
-PUT {{baseUrl}}/players/12
+PUT {{baseUrl}}/players/{{playerId}}
 Content-Type: application/json
 
 {
-  "id": 12,
+  "id": {{playerId}},
   "firstName": "John",
   "squadNumber": 10,
   "position": "Forward"
 }
 
 ### Request PUT /players/{id} squadNumber missing → Response status 400 Bad Request
-PUT {{baseUrl}}/players/12
+PUT {{baseUrl}}/players/{{playerId}}
 Content-Type: application/json
 
 {
-  "id": 12,
+  "id": {{playerId}},
   "firstName": "John",
   "lastName": "Doe",
   "position": "Forward"
 }
 
 ### Request PUT /players/{id} position missing → Response status 400 Bad Request
-PUT {{baseUrl}}/players/12
+PUT {{baseUrl}}/players/{{playerId}}
 Content-Type: application/json
 
 {
-  "id": 12,
+  "id": {{playerId}},
   "firstName": "John",
   "lastName": "Doe",
   "squadNumber": 10
 }
 
 ### Request PUT /players/{id} squadNumber >99 → Response status 400 Bad Request
-PUT {{baseUrl}}/players/12
+PUT {{baseUrl}}/players/{{playerId}}
 Content-Type: application/json
 
 {
-  "id": 12,
+  "id": {{playerId}},
   "firstName": "John",
   "lastName": "Doe",
   "squadNumber": 100,
@@ -283,11 +284,11 @@ Content-Type: application/json
 }
 
 ### Request PUT /players/{id} squadNumber <1 → Response status 400 Bad Request
-PUT {{baseUrl}}/players/12
+PUT {{baseUrl}}/players/{{playerId}}
 Content-Type: application/json
 
 {
-  "id": 12,
+  "id": {{playerId}},
   "firstName": "John",
   "lastName": "Doe",
   "squadNumber": 0,
@@ -299,7 +300,7 @@ Content-Type: application/json
 # -----------------------------------------------------------------------------
 
 ### Request DELETE /players/{id} existing → Response status 204 No Content
-DELETE {{baseUrl}}/players/12
+DELETE {{baseUrl}}/players/{{playerId}}
 
 ### Request DELETE /players/{id} nonexistent → Response status 404 Not Found
 DELETE {{baseUrl}}/players/999
