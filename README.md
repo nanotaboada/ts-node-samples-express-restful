@@ -2,7 +2,7 @@
 
 [![Node.js CI](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/node-ci.yml/badge.svg)](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/node-ci.yml)
 [![Node.js CD](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/node-cd.yml/badge.svg)](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/node-cd.yml)
-[![CodeQL](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/github-code-scanning/codeql)
+[![CodeQL Advanced](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/codeql.yml/badge.svg)](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/codeql.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=nanotaboada_ts-node-samples-express-restful&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=nanotaboada_ts-node-samples-express-restful)
 [![codecov](https://codecov.io/gh/nanotaboada/ts-node-samples-express-restful/graph/badge.svg?token=VxKaWl2DfD)](https://codecov.io/gh/nanotaboada/ts-node-samples-express-restful)
 [![CodeFactor](https://www.codefactor.io/repository/github/nanotaboada/ts-node-samples-express-restful/badge)](https://www.codefactor.io/repository/github/nanotaboada/ts-node-samples-express-restful)
