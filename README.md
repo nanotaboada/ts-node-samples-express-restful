@@ -96,50 +96,59 @@ Layered architecture with dependency injection via constructors and interface-ba
     "clusterBorder": "#999"
   }
 }}%%
-graph BT
-    subgraph API[" "]
+
+graph RL
+
+    tests[tests]
+
+    subgraph Layer 1[" "]
         server[server]
         app[app]
+    end
+
+    subgraph Layer 2[" "]
         routes[routes]
         controllers[controllers]
         Express[Express]
     end
 
-    subgraph Business[" "]
+    subgraph Layer 3[" "]
         services[services]
         nodeCache[node-cache]
     end
 
-    subgraph Data[" "]
+    subgraph Layer 4[" "]
         database[database]
-        models[models]
         Sequelize[Sequelize]
     end
 
-    %% Tests (outside layers)
-    tests[tests]
+    models[models]
 
-    %% Detailed connections within layers
-    database --> services
-    models --> database
-    models --> services
-    models --> controllers
+    %% Dependencies
 
-    services --> controllers
-    controllers --> routes
-    routes --> app
     app --> server
+    routes --> app
+    controllers --> routes
+    services --> controllers
+    database --> services
 
-    %% External Dependencies
-    Sequelize --> database
-    Sequelize --> models
-    nodeCache --> services
-    Express --> controllers
     Express --> routes
-    Express --> app
+    nodeCache --> services
+    Sequelize --> database
 
-    %% Tests connection
+    Express -.-> app
+    Express -.-> controllers
+    Sequelize -.-> models
+
     app -.-> tests
+
+    models -.-> database
+    models -.-> services
+    models -.-> controllers
+
+    controllers --> app
+    services --> app
+    database --> app
 
     %% Styling
     classDef core fill:#b3d9ff,stroke:#6db1ff,stroke-width:2px,color:#555,font-family:monospace;
@@ -151,7 +160,15 @@ graph BT
     class tests test
 ```
 
-_Simplified, conceptual project structure and main application flow. Not all dependencies are shown._
+**Arrow Semantics:** Arrows point from a dependency toward its consumer. Solid arrows (`-->`) denote **strong (functional) dependencies**: the consumer actively invokes behavior — registering middleware, dispatching requests, executing queries, or managing the HTTP lifecycle. Dotted arrows (`-.->`) denote **soft (structural) dependencies**: the consumer only references types, interfaces, or function signatures without invoking runtime behavior. This distinction follows UML's `«use»` dependency notation and classical coupling theory (Myers, 1978): strong arrows approximate *control or stamp coupling*, while soft arrows approximate *data coupling*, where only shared data structures cross the boundary.
+
+**Composition Root Pattern:** The `app` module acts as the composition root — it is the sole site where dependencies are instantiated, wired, and injected via constructors. It assembles the full dependency chain, configures Express middleware, and registers all routes, providing the application to `server`, which manages the HTTP lifecycle (port binding, graceful shutdown). Unlike Go's `main` package, which is both composition root and entry point, Express projects conventionally separate these responsibilities: `app` owns wiring, `server` owns lifecycle. This pattern enables dependency injection, improves testability, and ensures no other module bears responsibility for object creation or lifecycle management.
+
+**Layered Architecture:** The codebase is organized into four conceptual layers: Initialization (`server`, `app`), HTTP (`routes`, `controllers`), Business (`services`), and Data (`database`). The `models` package is a **cross-cutting type concern** — it defines shared data structures consumed across multiple layers via soft (structural) dependencies, without containing logic or behavior of its own. Strong dependencies flow strictly downward through the layers, and all components converge at `app` as the composition root — preserving the layer rule: no layer reaches upward to invoke behavior in a layer above it.
+
+**Color Coding:** Core packages (blue) implement the application logic, external dependencies (red) are third-party frameworks and ORMs, and tests (green) ensure code quality.
+
+*Simplified, conceptual project structure and main application flow. Not all dependencies are shown.*
 
 ## API Endpoints
 
