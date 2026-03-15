@@ -29,7 +29,7 @@ Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) [LTS
 ## Features
 
 - 🏗️ **Modern TypeScript architecture** - Native ESM, strict mode, layered architecture with interface-based contracts
-- 📚 **Interactive API exploration** - Auto-generated OpenAPI docs with Swagger UI and Postman collection
+- 📚 **Interactive API exploration** - Auto-generated OpenAPI docs with Swagger UI and `.rest` HTTP file for VS Code REST Client
 - ⚡ **Performance optimizations** - In-memory caching with node-cache, Sequelize ORM, and efficient SQLite operations
 - 🧪 **Comprehensive integration tests** - Full endpoint coverage with Jest/Supertest and automated reporting to Codecov
 - 📖 **Token-efficient documentation** - AGENTS.md + auto-loaded Copilot instructions for AI-assisted development
@@ -70,6 +70,7 @@ src/
 ├── docs/               # Swagger configuration & doc generation
 └── middlewares/        # Custom middleware (swagger CSP)
 
+rest/                   # HTTP request files for VS Code REST Client
 tests/                  # Integration tests with supertest
 scripts/                # Docker entrypoint & healthcheck scripts
 storage/                # Pre-seeded SQLite database
@@ -163,6 +164,8 @@ Interactive API documentation is available via Swagger UI at `http://localhost:9
 - `GET /health` - Health check
 
 For complete endpoint documentation with request/response schemas, explore the [interactive Swagger UI](http://localhost:9000/swagger/). You can also access the OpenAPI JSON specification at `http://localhost:9000/swagger.json`.
+
+Alternatively, use [`rest/players.rest`](rest/players.rest) with the [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) extension for VS Code to send requests directly from the editor.
 
 ## Prerequisites
 

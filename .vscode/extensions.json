@@ -11,6 +11,7 @@
 
     // Testing
     "orta.vscode-jest",                  // Jest - JavaScript testing framework
+    "humao.rest-client",                 // REST Client - Send HTTP requests from .rest files
 
     // Formatting & Language Support
     "redhat.vscode-xml",                 // XML Language Support - XML language server
@@ -46,6 +47,6 @@
     "ms-azuretools.vscode-docker",       // Docker (legacy) - Use vscode-containers instead
     "docker.docker",                     // Docker DX - Use ms-azuretools.vscode-containers
     "github.copilot",                    // Copilot (base) - Unified into copilot-chat
-    "esbenp.prettier-vscode"             // Prettier (legacy) - Use prettier.prettier-vscode instead
+    "prettier.prettier-vscode"           // Prettier (deprecated publisher) - Use esbenp.prettier-vscode instead
   ]
 }
