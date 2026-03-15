@@ -2,11 +2,15 @@
 
 [![Node.js CI](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/node-ci.yml/badge.svg)](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/node-ci.yml)
 [![Node.js CD](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/node-cd.yml/badge.svg)](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/node-cd.yml)
-[![CodeQL](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/github-code-scanning/codeql)
+[![CodeQL Advanced](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/codeql.yml/badge.svg)](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/codeql.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=nanotaboada_ts-node-samples-express-restful&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=nanotaboada_ts-node-samples-express-restful)
 [![codecov](https://codecov.io/gh/nanotaboada/ts-node-samples-express-restful/graph/badge.svg?token=VxKaWl2DfD)](https://codecov.io/gh/nanotaboada/ts-node-samples-express-restful)
 [![CodeFactor](https://www.codefactor.io/repository/github/nanotaboada/ts-node-samples-express-restful/badge)](https://www.codefactor.io/repository/github/nanotaboada/ts-node-samples-express-restful)
-[![License: MIT](https://img.shields.io/badge/License-MIT-white.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-3DA639.svg)](https://opensource.org/licenses/MIT)
+![Dependabot](https://img.shields.io/badge/Dependabot-contributing-025E8C?logo=dependabot&logoColor=white&labelColor=181818)
+![GitHub Copilot](https://img.shields.io/badge/GitHub_Copilot-contributing-8662C5?logo=githubcopilot&logoColor=white&labelColor=181818)
+![Claude](https://img.shields.io/badge/Claude-Sonnet_4.6-D97757?logo=claude&logoColor=white&labelColor=181818)
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/nanotaboada/ts-node-samples-express-restful?utm_source=oss&utm_medium=github&utm_campaign=nanotaboada%2Fts-node-samples-express-restful&labelColor=181818&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
 
 Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) [LTS/Krypton (v24)](https://nodejs.org/en/blog/release/v24.11.1) and [Express.js](https://expressjs.com/) 5 in [TypeScript](https://www.typescriptlang.org/). Manage football player data with SQLite, Sequelize ORM, Swagger documentation, and in-memory caching.
 
