@@ -136,7 +136,7 @@ graph RL
     nodeCache --> services
     Sequelize --> database
 
-    Express -.-> app
+    Express --> app
     Express -.-> controllers
     Sequelize -.-> models
 
@@ -164,7 +164,7 @@ graph RL
 
 **Composition Root Pattern:** The `app` module acts as the composition root — it is the sole site where dependencies are instantiated, wired, and injected via constructors. It assembles the full dependency chain, configures Express middleware, and registers all routes, providing the application to `server`, which manages the HTTP lifecycle (port binding, graceful shutdown). Unlike Go's `main` package, which is both composition root and entry point, Express projects conventionally separate these responsibilities: `app` owns wiring, `server` owns lifecycle. This pattern enables dependency injection, improves testability, and ensures no other module bears responsibility for object creation or lifecycle management.
 
-**Layered Architecture:** The codebase is organized into four conceptual layers: Initialization (`server`, `app`), HTTP (`routes`, `controllers`), Business (`services`), and Data (`database`). The `models` package is a **cross-cutting type concern** — it defines shared data structures consumed across multiple layers via soft (structural) dependencies, without containing logic or behavior of its own. Strong dependencies flow strictly downward through the layers, and all components converge at `app` as the composition root — preserving the layer rule: no layer reaches upward to invoke behavior in a layer above it.
+**Layered Architecture:** The codebase is organized into four conceptual layers: Initialization (`server`, `app`), HTTP (`routes`, `controllers`), Business (`services`), and Data (`database`). The `models` package is a **cross-cutting type concern** — it defines shared data structures consumed across multiple layers via soft (structural) dependencies, primarily shared types with limited ORM/model behavior (Sequelize initialization and field-level accessors). Strong dependencies flow strictly downward through the layers, and all components converge at `app` as the composition root — preserving the layer rule: no layer reaches upward to invoke behavior in a layer above it.
 
 **Color Coding:** Core packages (blue) implement the application logic, external dependencies (red) are third-party frameworks and ORMs, and tests (green) ensure code quality.
 
