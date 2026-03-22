@@ -118,7 +118,7 @@ reviews:
     - path: "package.json"
       instructions: |
         - Verify "type": "module" is set (ESM)
-        - Check Node.js version matches LTS/Krypton (24.11.0)
+        - Check Node.js version matches LTS/Krypton (24.13.0)
         - Ensure scripts are correctly defined
         - Validate dependencies are up to date
         - Check that test script uses NODE_OPTIONS for experimental VM modules
@@ -167,7 +167,6 @@ reviews:
     - "!**/*.db"
     - "!**/*.db-shm"
     - "!**/*.db-wal"
-    - "!**/postman-collections/**"
     - "!**/*.log"
 
   auto_review:
