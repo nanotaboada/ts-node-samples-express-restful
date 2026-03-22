@@ -40,7 +40,7 @@ We enforce quality via CI on every push and PR:
 
 - **Commitlint** for commit‑message style
 - **Linters/Formatters**
-- **Unit tests**
+- **Integration tests**
 
 Failures must be fixed before review.
 

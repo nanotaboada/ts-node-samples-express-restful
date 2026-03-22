@@ -36,7 +36,7 @@ Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) [LTS
 - 📚 **Interactive API exploration** - Auto-generated OpenAPI docs with Swagger UI and `.rest` HTTP file for VS Code REST Client
 - ⚡ **Performance optimizations** - In-memory caching with node-cache, Sequelize ORM, and efficient SQLite operations
 - 🧪 **Comprehensive integration tests** - Full endpoint coverage with Jest/Supertest and automated reporting to Codecov
-- 📖 **Token-efficient documentation** - AGENTS.md + auto-loaded Copilot instructions for AI-assisted development
+- 📖 **Token-efficient documentation** - Auto-loaded Copilot instructions for AI-assisted development
 - 🐳 **Full containerization** - Multi-stage Docker builds with Docker Compose orchestration
 - 🔄 **Complete CI/CD pipeline** - Automated linting (ESLint/Prettier), testing, Docker publishing, and GitHub releases
 - ⚽ **Football-themed semantic versioning** - Memorable, alphabetical release names using football terminology
@@ -52,7 +52,7 @@ Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) [LTS
 | **Database**           | [SQLite3](https://github.com/sqlite/sqlite) with [Sequelize ORM](https://github.com/sequelize/sequelize)                   |
 | **Caching**            | [node-cache](https://github.com/node-cache/node-cache)                                                                      |
 | **Documentation**      | [Swagger (OpenAPI 3.0)](https://github.com/swagger-api/swagger-ui)                                                          |
-| **Security**           | [Helmet](https://github.com/helmetjs/helmet), [CORS](https://github.com/expressjs/cors)                                     |
+| **Security**           | [Helmet](https://github.com/helmetjs/helmet), [CORS](https://github.com/expressjs/cors), [express-rate-limit](https://github.com/express-rate-limit/express-rate-limit) |
 | **Testing**            | [Jest 30](https://github.com/jestjs/jest) with [Supertest](https://github.com/ladjs/supertest)                             |
 | **Containerization**   | [Docker](https://github.com/docker) with multi-stage builds                                                                 |
 | **Code Quality**       | [ESLint](https://github.com/eslint/eslint), [Prettier](https://github.com/prettier/prettier), [Commitlint](https://github.com/conventional-changelog/commitlint) |
@@ -72,7 +72,8 @@ src/
 ├── models/             # Sequelize models (Player)
 ├── routes/             # Express Router definitions
 ├── docs/               # Swagger configuration & doc generation
-└── middlewares/        # Custom middleware (swagger CSP)
+├── middlewares/        # Custom middleware (rate limiter, validators, Swagger CSP)
+└── utils/              # Pino logger configuration
 
 rest/                   # HTTP request files for VS Code REST Client
 tests/                  # Integration tests with supertest
@@ -349,6 +350,12 @@ PORT=9000
 # Database storage path (default: storage/players-sqlite3.db)
 # In Docker: /storage/players-sqlite3.db
 STORAGE_PATH=storage/players-sqlite3.db
+
+# Rate limiting (all optional — defaults shown)
+RATE_LIMIT_ENABLED=true                 # Set to 'false' to disable rate limiting entirely
+RATE_LIMIT_WINDOW_MS=60000              # Time window in milliseconds (default: 1 minute)
+RATE_LIMIT_MAX_GENERAL=100             # Max requests per window for all routes
+RATE_LIMIT_MAX_STRICT=20               # Max requests per window for POST/PUT/DELETE
 ```
 
 ## Available Scripts
