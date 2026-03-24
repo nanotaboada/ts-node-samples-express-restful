@@ -4,7 +4,7 @@
 [![Node.js CD](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/node-cd.yml/badge.svg)](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/node-cd.yml)
 [![CodeQL Advanced](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/codeql.yml/badge.svg)](https://github.com/nanotaboada/ts-node-samples-express-restful/actions/workflows/codeql.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=nanotaboada_ts-node-samples-express-restful&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=nanotaboada_ts-node-samples-express-restful)
-[![codecov](https://codecov.io/gh/nanotaboada/ts-node-samples-express-restful/graph/badge.svg?token=VxKaWl2DfD)](https://codecov.io/gh/nanotaboada/ts-node-samples-express-restful)
+[![codecov](https://codecov.io/gh/nanotaboada/ts-node-samples-express-restful/branch/master/graph/badge.svg?token=VxKaWl2DfD)](https://codecov.io/gh/nanotaboada/ts-node-samples-express-restful)
 [![CodeFactor](https://www.codefactor.io/repository/github/nanotaboada/ts-node-samples-express-restful/badge)](https://www.codefactor.io/repository/github/nanotaboada/ts-node-samples-express-restful)
 [![License: MIT](https://img.shields.io/badge/License-MIT-3DA639.svg)](https://opensource.org/licenses/MIT)
 ![Dependabot](https://img.shields.io/badge/Dependabot-contributing-025E8C?logo=dependabot&logoColor=white&labelColor=181818)
@@ -20,13 +20,14 @@ Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) [LTS
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
 - [Architecture](#architecture)
-- [API Endpoints](#api-endpoints)
+- [API Reference](#api-reference)
 - [Prerequisites](#prerequisites)
 - [Quick Start](#quick-start)
 - [Testing](#testing)
-- [Docker](#docker)
+- [Containers](#containers)
+- [Releases](#releases)
 - [Environment Variables](#environment-variables)
-- [Available Scripts](#available-scripts)
+- [Command Summary](#command-summary)
 - [Contributing](#contributing)
 - [Legal](#legal)
 
@@ -161,17 +162,27 @@ graph RL
     class tests test
 ```
 
-**Arrow Semantics:** Arrows point from a dependency toward its consumer. Solid arrows (`-->`) denote **strong (functional) dependencies**: the consumer actively invokes behavior — registering middleware, dispatching requests, executing queries, or managing the HTTP lifecycle. Dotted arrows (`-.->`) denote **soft (structural) dependencies**: the consumer only references types, interfaces, or function signatures without invoking runtime behavior. This distinction follows UML's `«use»` dependency notation and classical coupling theory (Myers, 1978): strong arrows approximate *control or stamp coupling*, while soft arrows approximate *data coupling*, where only shared data structures cross the boundary.
+### Arrow Semantics
 
-**Composition Root Pattern:** The `app` module acts as the composition root — it is the sole site where dependencies are instantiated, wired, and injected via constructors. It assembles the full dependency chain, configures Express middleware, and registers all routes, providing the application to `server`, which manages the HTTP lifecycle (port binding, graceful shutdown). Unlike Go's `main` package, which is both composition root and entry point, Express projects conventionally separate these responsibilities: `app` owns wiring, `server` owns lifecycle. This pattern enables dependency injection, improves testability, and ensures no other module bears responsibility for object creation or lifecycle management.
+Arrows follow the wiring direction: `A --> B` means A is provided to B. Solid arrows (`-->`) represent active dependencies — modules explicitly wired in `app` and invoked at runtime. Dotted arrows (`-.->`) represent structural dependencies — the consumer references types or interfaces without invoking runtime behavior.
 
-**Layered Architecture:** The codebase is organized into four conceptual layers: Initialization (`server`, `app`), HTTP (`routes`, `controllers`), Business (`services`), and Data (`database`). The `models` package is a **cross-cutting type concern** — it defines shared data structures consumed across multiple layers via soft (structural) dependencies, primarily shared types with limited ORM/model behavior (Sequelize initialization and field-level accessors). Strong dependencies flow strictly downward through the layers, and all components converge at `app` as the composition root — preserving the layer rule: no layer reaches upward to invoke behavior in a layer above it.
+### Composition Root Pattern
 
-**Color Coding:** Core packages (blue) implement the application logic, external dependencies (red) are third-party frameworks and ORMs, and tests (green) ensure code quality.
+`app` is the composition root: it instantiates all dependencies, configures Express middleware, and registers all routes. `server` is separate and owns only the HTTP lifecycle (port binding, graceful shutdown) — a conventional split in Express projects.
+
+### Layered Architecture
+
+Four layers: Initialization (`server`, `app`), HTTP (`routes`, `controllers`), Business (`services`), and Data (`database`).
+
+`models` is a cross-cutting type concern — shared types and Sequelize model definitions consumed across multiple layers, with no business logic of its own.
+
+### Color Coding
+
+Blue = core application packages, red = third-party frameworks, green = tests.
 
 *Simplified, conceptual project structure and main application flow. Not all dependencies are shown.*
 
-## API Endpoints
+## API Reference
 
 Interactive API documentation is available via Swagger UI at `http://localhost:9000/swagger/` when the server is running.
 
@@ -257,7 +268,7 @@ npm run lint:commit
 
 Tests are located in the `tests/` directory and use Supertest for integration testing. Coverage reports are generated for controllers, services, and routes only.
 
-## Docker
+## Containers
 
 This project includes full Docker support with multi-stage builds and Docker Compose for easy deployment.
 
@@ -358,7 +369,7 @@ RATE_LIMIT_MAX_GENERAL=100             # Max requests per window for all routes
 RATE_LIMIT_MAX_STRICT=20               # Max requests per window for POST/PUT/DELETE
 ```
 
-## Available Scripts
+## Command Summary
 
 | Script                 | Description                                       |
 |------------------------|---------------------------------------------------|
@@ -387,4 +398,4 @@ Key guidelines:
 
 ## Legal
 
-This project is provided for educational and demonstration purposes and may be used in production environments at your discretion. All referenced trademarks, service marks, product names, company names, and logos are the property of their respective owners and are used solely for identification or illustrative purposes.
+This project is provided for educational and demonstration purposes and may be used in production at your own discretion. All trademarks, service marks, product names, company names, and logos referenced herein are the property of their respective owners and are used solely for identification or illustrative purposes.
