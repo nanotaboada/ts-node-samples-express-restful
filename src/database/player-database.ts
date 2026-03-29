@@ -13,7 +13,7 @@ export default class PlayerDatabase implements IPlayerDatabase {
         return players.map((player) => player.toJSON());
     }
 
-    async selectByIdAsync(id: number): Promise<IPlayer | null> {
+    async selectByIdAsync(id: string): Promise<IPlayer | null> {
         const player = await PlayerModel.findByPk(id);
         return player ? player.toJSON() : null;
     }
@@ -28,13 +28,13 @@ export default class PlayerDatabase implements IPlayerDatabase {
     }
 
     async updateAsync(player: Partial<IPlayer>): Promise<void> {
-        if (player.id === undefined) {
-            throw new Error('Player id is required for update');
+        if (player.squadNumber === undefined) {
+            throw new Error('Player squadNumber is required for update');
         }
-        await PlayerModel.update(player, { where: { id: player.id } });
+        await PlayerModel.update({ ...player, id: undefined }, { where: { squadNumber: player.squadNumber } });
     }
 
-    async deleteAsync(id: number): Promise<void> {
-        await PlayerModel.destroy({ where: { id } });
+    async deleteAsync(squadNumber: number): Promise<void> {
+        await PlayerModel.destroy({ where: { squadNumber } });
     }
 }

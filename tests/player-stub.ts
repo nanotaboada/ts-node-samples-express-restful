@@ -145,7 +145,6 @@ const playerStub = {
         },
     ],
     new: {
-        id: 12,
         firstName: 'Leandro',
         middleName: 'Daniel',
         lastName: 'Paredes',

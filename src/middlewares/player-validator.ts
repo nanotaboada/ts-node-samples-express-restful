@@ -13,7 +13,6 @@ export default class PlayerValidator implements IPlayerValidator {
      * Validates optional fields: id, middleName, dateOfBirth, abbrPosition, team, league, starting11
      */
     public validationChain: ValidationChain[] = [
-        body('id').optional({ checkFalsy: false }).isInt({ min: 1 }).withMessage('ID must be a positive integer'),
         body('firstName')
             .trim()
             .notEmpty()

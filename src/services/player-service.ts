@@ -32,7 +32,7 @@ export default class PlayerService implements IPlayerService {
         return players;
     }
 
-    async retrieveByIdAsync(id: number): Promise<IPlayer | undefined> {
+    async retrieveByIdAsync(id: string): Promise<IPlayer | undefined> {
         const cacheKey = `player_${id}`;
         let player = this.cache.get<IPlayer>(cacheKey);
         if (player) {
@@ -74,8 +74,8 @@ export default class PlayerService implements IPlayerService {
         this.cache.flushAll();
     }
 
-    async deleteAsync(id: number): Promise<void> {
-        await this.playerDatabase.deleteAsync(id);
+    async deleteAsync(squadNumber: number): Promise<void> {
+        await this.playerDatabase.deleteAsync(squadNumber);
         this.cache.flushAll();
     }
 }
