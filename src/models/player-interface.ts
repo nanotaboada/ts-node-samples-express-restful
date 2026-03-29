@@ -3,7 +3,7 @@
  * Decouples business logic from ORM implementation.
  *
  * @interface IPlayer
- * @property {number} id - The unique identifier for the Player.
+ * @property {string} id - The unique identifier for the Player (UUID, surrogate key).
  * @property {string} firstName - The first name of the Player.
  * @property {string} [middleName] - The middle name of the Player. (Optional)
  * @property {string} lastName - The last name of the Player.
@@ -15,8 +15,10 @@
  * @property {string} [league] - The league where the team plays. (Optional)
  * @property {boolean} [starting11] - Indicates if the Player is in the starting 11. (Optional)
  */
+export type IPlayerInput = Omit<IPlayer, 'id'>;
+
 export interface IPlayer {
-    id: number;
+    id: string;
     firstName: string;
     middleName?: string;
     lastName: string;

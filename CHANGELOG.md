@@ -49,6 +49,13 @@ This project uses football/soccer terminology for release names:
 
 ### Changed
 
+- `id` field in `Player` model migrated from `INTEGER` to `UUID` (`DataTypes.UUIDV4`, auto-generated on insert) — surrogate key, admin use only
+- `PUT /players/:id` route replaced by `PUT /players/squadNumber/:squadNumber` — natural key is now the domain identifier for mutations
+- `DELETE /players/:id` route replaced by `DELETE /players/squadNumber/:squadNumber` — natural key is now the domain identifier for mutations
+- `POST /players` conflict detection switched from `id`-based to `squadNumber`-based lookup
+- `IPlayer.id` type changed from `number` to `string` to reflect UUID
+- `updateAsync` and `deleteAsync` in service and database layers refactored to operate on `squadNumber`
+
 ### Deprecated
 
 ### Removed

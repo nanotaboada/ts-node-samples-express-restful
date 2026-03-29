@@ -1,4 +1,4 @@
-import { body, ValidationChain, validationResult } from 'express-validator';
+import { body, param, ValidationChain, validationResult } from 'express-validator';
 import { Request, Response, NextFunction } from 'express';
 import { IPlayerValidator } from './player-validator-interface.js';
 import logger from '../utils/logger.js';
@@ -13,7 +13,10 @@ export default class PlayerValidator implements IPlayerValidator {
      * Validates optional fields: id, middleName, dateOfBirth, abbrPosition, team, league, starting11
      */
     public validationChain: ValidationChain[] = [
-        body('id').optional({ checkFalsy: false }).isInt({ min: 1 }).withMessage('ID must be a positive integer'),
+        param('squadNumber')
+            .optional()
+            .isInt({ min: 1, max: 99 })
+            .withMessage('Squad number parameter must be an integer between 1 and 99'),
         body('firstName')
             .trim()
             .notEmpty()

@@ -2,7 +2,8 @@
 # https://marketplace.visualstudio.com/items?itemName=humao.rest-client
 
 @baseUrl = http://localhost:9000
-@playerId = 12
+@newSquadNumber = 5
+@existingSquadNumber = 5
 
 # -----------------------------------------------------------------------------
 # GET /health
@@ -19,14 +20,14 @@ GET {{baseUrl}}/health
 GET {{baseUrl}}/players
 
 # -----------------------------------------------------------------------------
-# GET /players/:id
+# GET /players/:id (replace with a real UUID from GET /players)
 # -----------------------------------------------------------------------------
 
 ### Request GET /players/{id} existing → Response status 200 OK
-GET {{baseUrl}}/players/1
+GET {{baseUrl}}/players/00000000-0000-0000-0000-000000000000
 
 ### Request GET /players/{id} nonexistent → Response status 404 Not Found
-GET {{baseUrl}}/players/999
+GET {{baseUrl}}/players/00000000-0000-0000-0000-000000000001
 
 # -----------------------------------------------------------------------------
 # GET /players/squadNumber/:squadNumber
@@ -47,7 +48,6 @@ POST {{baseUrl}}/players
 Content-Type: application/json
 
 {
-  "id": {{playerId}},
   "firstName": "Leandro",
   "middleName": "Daniel",
   "lastName": "Paredes",
@@ -65,7 +65,6 @@ POST {{baseUrl}}/players
 Content-Type: application/json
 
 {
-  "id": 1,
   "firstName": "Damián",
   "middleName": "Emiliano",
   "lastName": "Martínez",
@@ -89,7 +88,6 @@ POST {{baseUrl}}/players
 Content-Type: application/json
 
 {
-  "id": 999,
   "lastName": "Doe",
   "squadNumber": 10,
   "position": "Forward"
@@ -100,7 +98,6 @@ POST {{baseUrl}}/players
 Content-Type: application/json
 
 {
-  "id": 999,
   "firstName": "John",
   "squadNumber": 10,
   "position": "Forward"
@@ -111,7 +108,6 @@ POST {{baseUrl}}/players
 Content-Type: application/json
 
 {
-  "id": 999,
   "firstName": "John",
   "lastName": "Doe",
   "position": "Forward"
@@ -122,7 +118,6 @@ POST {{baseUrl}}/players
 Content-Type: application/json
 
 {
-  "id": 999,
   "firstName": "John",
   "lastName": "Doe",
   "squadNumber": 10
@@ -133,7 +128,6 @@ POST {{baseUrl}}/players
 Content-Type: application/json
 
 {
-  "id": 999,
   "firstName": "John",
   "lastName": "Doe",
   "squadNumber": 100,
@@ -145,7 +139,6 @@ POST {{baseUrl}}/players
 Content-Type: application/json
 
 {
-  "id": 999,
   "firstName": "John",
   "lastName": "Doe",
   "squadNumber": 0,
@@ -153,15 +146,14 @@ Content-Type: application/json
 }
 
 # -----------------------------------------------------------------------------
-# PUT /players/:id
+# PUT /players/squadNumber/:squadNumber
 # -----------------------------------------------------------------------------
 
-### Request PUT /players/{id} existing → Response status 204 No Content
-PUT {{baseUrl}}/players/{{playerId}}
+### Request PUT /players/squadNumber/{squadNumber} existing → Response status 204 No Content
+PUT {{baseUrl}}/players/squadNumber/{{existingSquadNumber}}
 Content-Type: application/json
 
 {
-  "id": {{playerId}},
   "firstName": "Leandro",
   "middleName": "Daniel",
   "lastName": "Paredes",
@@ -174,121 +166,79 @@ Content-Type: application/json
   "starting11": false
 }
 
-### Request PUT /players/{id} nonexistent → Response status 404 Not Found
-PUT {{baseUrl}}/players/999
+### Request PUT /players/squadNumber/{squadNumber} nonexistent → Response status 404 Not Found
+PUT {{baseUrl}}/players/squadNumber/99
 Content-Type: application/json
 
 {
-  "id": 999,
   "firstName": "John",
   "lastName": "Doe",
-  "squadNumber": 10,
+  "squadNumber": 99,
   "position": "Forward"
 }
 
-### Request PUT /players/{id} id missing → Response status 400 Bad Request
-PUT {{baseUrl}}/players/1
-Content-Type: application/json
-
-{
-  "firstName": "Leandro",
-  "middleName": "Daniel",
-  "lastName": "Paredes",
-  "dateOfBirth": "1994-06-29T00:00:00.000Z",
-  "squadNumber": 5,
-  "position": "Defensive Midfield",
-  "abbrPosition": "DM",
-  "team": "AS Roma",
-  "league": "Serie A",
-  "starting11": false
-}
-
-### Request PUT /players/{id} id mismatch → Response status 400 Bad Request
-PUT {{baseUrl}}/players/1
-Content-Type: application/json
-
-{
-  "id": 999,
-  "firstName": "Damián",
-  "middleName": "Emiliano",
-  "lastName": "Martínez",
-  "dateOfBirth": "1992-09-02T00:00:00.000Z",
-  "squadNumber": 23,
-  "position": "Goalkeeper",
-  "abbrPosition": "GK",
-  "team": "Aston Villa FC",
-  "league": "Premier League",
-  "starting11": true
-}
-
-### Request PUT /players/{id} body empty → Response status 400 Bad Request
-PUT {{baseUrl}}/players/{{playerId}}
+### Request PUT /players/squadNumber/{squadNumber} body empty → Response status 400 Bad Request
+PUT {{baseUrl}}/players/squadNumber/{{existingSquadNumber}}
 Content-Type: application/json
 
 {}
 
-### Request PUT /players/{id} firstName missing → Response status 400 Bad Request
-PUT {{baseUrl}}/players/{{playerId}}
+### Request PUT /players/squadNumber/{squadNumber} firstName missing → Response status 400 Bad Request
+PUT {{baseUrl}}/players/squadNumber/{{existingSquadNumber}}
 Content-Type: application/json
 
 {
-  "id": {{playerId}},
   "lastName": "Doe",
   "squadNumber": 10,
   "position": "Forward"
 }
 
-### Request PUT /players/{id} lastName missing → Response status 400 Bad Request
-PUT {{baseUrl}}/players/{{playerId}}
+### Request PUT /players/squadNumber/{squadNumber} lastName missing → Response status 400 Bad Request
+PUT {{baseUrl}}/players/squadNumber/{{existingSquadNumber}}
 Content-Type: application/json
 
 {
-  "id": {{playerId}},
   "firstName": "John",
   "squadNumber": 10,
   "position": "Forward"
 }
 
-### Request PUT /players/{id} squadNumber missing → Response status 400 Bad Request
-PUT {{baseUrl}}/players/{{playerId}}
+### Request PUT /players/squadNumber/{squadNumber} squadNumber missing → Response status 400 Bad Request
+PUT {{baseUrl}}/players/squadNumber/{{existingSquadNumber}}
 Content-Type: application/json
 
 {
-  "id": {{playerId}},
   "firstName": "John",
   "lastName": "Doe",
   "position": "Forward"
 }
 
-### Request PUT /players/{id} position missing → Response status 400 Bad Request
-PUT {{baseUrl}}/players/{{playerId}}
+### Request PUT /players/squadNumber/{squadNumber} position missing → Response status 400 Bad Request
+PUT {{baseUrl}}/players/squadNumber/{{existingSquadNumber}}
 Content-Type: application/json
 
 {
-  "id": {{playerId}},
   "firstName": "John",
   "lastName": "Doe",
   "squadNumber": 10
 }
 
-### Request PUT /players/{id} squadNumber >99 → Response status 400 Bad Request
-PUT {{baseUrl}}/players/{{playerId}}
+### Request PUT /players/squadNumber/{squadNumber} squadNumber >99 → Response status 400 Bad Request
+PUT {{baseUrl}}/players/squadNumber/{{existingSquadNumber}}
 Content-Type: application/json
 
 {
-  "id": {{playerId}},
   "firstName": "John",
   "lastName": "Doe",
   "squadNumber": 100,
   "position": "Forward"
 }
 
-### Request PUT /players/{id} squadNumber <1 → Response status 400 Bad Request
-PUT {{baseUrl}}/players/{{playerId}}
+### Request PUT /players/squadNumber/{squadNumber} squadNumber <1 → Response status 400 Bad Request
+PUT {{baseUrl}}/players/squadNumber/{{existingSquadNumber}}
 Content-Type: application/json
 
 {
-  "id": {{playerId}},
   "firstName": "John",
   "lastName": "Doe",
   "squadNumber": 0,
@@ -296,11 +246,11 @@ Content-Type: application/json
 }
 
 # -----------------------------------------------------------------------------
-# DELETE /players/:id
+# DELETE /players/squadNumber/:squadNumber
 # -----------------------------------------------------------------------------
 
-### Request DELETE /players/{id} existing → Response status 204 No Content
-DELETE {{baseUrl}}/players/{{playerId}}
+### Request DELETE /players/squadNumber/{squadNumber} existing → Response status 204 No Content
+DELETE {{baseUrl}}/players/squadNumber/{{existingSquadNumber}}
 
-### Request DELETE /players/{id} nonexistent → Response status 404 Not Found
-DELETE {{baseUrl}}/players/999
+### Request DELETE /players/squadNumber/{squadNumber} nonexistent → Response status 404 Not Found
+DELETE {{baseUrl}}/players/squadNumber/99

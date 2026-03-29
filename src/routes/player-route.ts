@@ -33,11 +33,11 @@ export default class PlayerRoute implements IPlayerRoute {
             this.playerController.postAsync.bind(this.playerController),
         );
         this.router.put(
-            '/players/:id',
+            '/players/squadNumber/:squadNumber',
             this.playerValidator.validationChain,
             this.playerValidator.validate.bind(this.playerValidator),
             this.playerController.putAsync.bind(this.playerController),
         );
-        this.router.delete('/players/:id', this.playerController.deleteAsync.bind(this.playerController));
+        this.router.delete('/players/squadNumber/:squadNumber', this.playerController.deleteAsync.bind(this.playerController));
     }
 }

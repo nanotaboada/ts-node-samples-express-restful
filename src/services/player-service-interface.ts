@@ -1,4 +1,4 @@
-import { IPlayer } from '../models/player-interface.js';
+import { IPlayer, IPlayerInput } from '../models/player-interface.js';
 
 /**
  * Interface that defines service operations for a Player.
@@ -12,11 +12,11 @@ export interface IPlayerService {
     retrieveAllAsync(): Promise<IPlayer[]>;
 
     /**
-     * Retrieves a Player by their ID, using cache if available.
-     * @param {number} id - The ID of the Player to retrieve.
+     * Retrieves a Player by their ID (UUID), using cache if available.
+     * @param {string} id - The UUID of the Player to retrieve.
      * @returns {Promise<IPlayer | undefined>} A promise that resolves to the Player entity if found, otherwise undefined.
      */
-    retrieveByIdAsync(id: number): Promise<IPlayer | undefined>;
+    retrieveByIdAsync(id: string): Promise<IPlayer | undefined>;
 
     /**
      * Retrieves a Player by their Squad Number, using cache if available.
@@ -30,19 +30,19 @@ export interface IPlayerService {
      * @param {IPlayer} player - The Player to create.
      * @returns {Promise<void>} A promise that resolves when the creation is complete.
      */
-    createAsync(player: IPlayer): Promise<void>;
+    createAsync(player: IPlayerInput): Promise<void>;
 
     /**
      * Updates an existing Player and clears the cache.
-     * @param {IPlayer} player - The Player to update.
+     * @param {IPlayerInput} player - The Player to update.
      * @returns {Promise<void>} A promise that resolves when the update is complete.
      */
-    updateAsync(player: IPlayer): Promise<void>;
+    updateAsync(player: IPlayerInput): Promise<void>;
 
     /**
-     * Deletes an existing Player by their ID and clears the cache.
-     * @param {number} id - The ID of the Player to delete.
+     * Deletes an existing Player by their Squad Number and clears the cache.
+     * @param {number} squadNumber - The Squad Number of the Player to delete.
      * @returns {Promise<void>} A promise that resolves when the deletion is complete.
      */
-    deleteAsync(id: number): Promise<void>;
+    deleteAsync(squadNumber: number): Promise<void>;
 }
