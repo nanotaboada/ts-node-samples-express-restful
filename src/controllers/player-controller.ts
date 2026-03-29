@@ -55,7 +55,7 @@ export default class PlayerController implements IPlayerController {
      *           type: string
      *           format: uuid
      *         required: true
-     *         description: Player.id (UUID, admin use only)
+     *         description: Player.id (UUID)
      *     responses:
      *       200:
      *         description: OK

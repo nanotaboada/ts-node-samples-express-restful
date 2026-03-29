@@ -12,7 +12,7 @@ export interface IPlayerService {
     retrieveAllAsync(): Promise<IPlayer[]>;
 
     /**
-     * Retrieves a Player by their ID (UUID, admin use only), using cache if available.
+     * Retrieves a Player by their ID (UUID), using cache if available.
      * @param {string} id - The UUID of the Player to retrieve.
      * @returns {Promise<IPlayer | undefined>} A promise that resolves to the Player entity if found, otherwise undefined.
      */

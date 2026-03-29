@@ -2,7 +2,8 @@
 # https://marketplace.visualstudio.com/items?itemName=humao.rest-client
 
 @baseUrl = http://localhost:9000
-@squadNumber = 5
+@newSquadNumber = 5
+@existingSquadNumber = 5
 
 # -----------------------------------------------------------------------------
 # GET /health
@@ -19,7 +20,7 @@ GET {{baseUrl}}/health
 GET {{baseUrl}}/players
 
 # -----------------------------------------------------------------------------
-# GET /players/:id (admin — replace with a real UUID from GET /players)
+# GET /players/:id (replace with a real UUID from GET /players)
 # -----------------------------------------------------------------------------
 
 ### Request GET /players/{id} existing → Response status 200 OK
@@ -149,7 +150,7 @@ Content-Type: application/json
 # -----------------------------------------------------------------------------
 
 ### Request PUT /players/squadNumber/{squadNumber} existing → Response status 204 No Content
-PUT {{baseUrl}}/players/squadNumber/{{squadNumber}}
+PUT {{baseUrl}}/players/squadNumber/{{existingSquadNumber}}
 Content-Type: application/json
 
 {
@@ -166,24 +167,24 @@ Content-Type: application/json
 }
 
 ### Request PUT /players/squadNumber/{squadNumber} nonexistent → Response status 404 Not Found
-PUT {{baseUrl}}/players/squadNumber/999
+PUT {{baseUrl}}/players/squadNumber/99
 Content-Type: application/json
 
 {
   "firstName": "John",
   "lastName": "Doe",
-  "squadNumber": 999,
+  "squadNumber": 99,
   "position": "Forward"
 }
 
 ### Request PUT /players/squadNumber/{squadNumber} body empty → Response status 400 Bad Request
-PUT {{baseUrl}}/players/squadNumber/{{squadNumber}}
+PUT {{baseUrl}}/players/squadNumber/{{existingSquadNumber}}
 Content-Type: application/json
 
 {}
 
 ### Request PUT /players/squadNumber/{squadNumber} firstName missing → Response status 400 Bad Request
-PUT {{baseUrl}}/players/squadNumber/{{squadNumber}}
+PUT {{baseUrl}}/players/squadNumber/{{existingSquadNumber}}
 Content-Type: application/json
 
 {
@@ -193,7 +194,7 @@ Content-Type: application/json
 }
 
 ### Request PUT /players/squadNumber/{squadNumber} lastName missing → Response status 400 Bad Request
-PUT {{baseUrl}}/players/squadNumber/{{squadNumber}}
+PUT {{baseUrl}}/players/squadNumber/{{existingSquadNumber}}
 Content-Type: application/json
 
 {
@@ -203,7 +204,7 @@ Content-Type: application/json
 }
 
 ### Request PUT /players/squadNumber/{squadNumber} squadNumber missing → Response status 400 Bad Request
-PUT {{baseUrl}}/players/squadNumber/{{squadNumber}}
+PUT {{baseUrl}}/players/squadNumber/{{existingSquadNumber}}
 Content-Type: application/json
 
 {
@@ -213,7 +214,7 @@ Content-Type: application/json
 }
 
 ### Request PUT /players/squadNumber/{squadNumber} position missing → Response status 400 Bad Request
-PUT {{baseUrl}}/players/squadNumber/{{squadNumber}}
+PUT {{baseUrl}}/players/squadNumber/{{existingSquadNumber}}
 Content-Type: application/json
 
 {
@@ -223,7 +224,7 @@ Content-Type: application/json
 }
 
 ### Request PUT /players/squadNumber/{squadNumber} squadNumber >99 → Response status 400 Bad Request
-PUT {{baseUrl}}/players/squadNumber/{{squadNumber}}
+PUT {{baseUrl}}/players/squadNumber/{{existingSquadNumber}}
 Content-Type: application/json
 
 {
@@ -234,7 +235,7 @@ Content-Type: application/json
 }
 
 ### Request PUT /players/squadNumber/{squadNumber} squadNumber <1 → Response status 400 Bad Request
-PUT {{baseUrl}}/players/squadNumber/{{squadNumber}}
+PUT {{baseUrl}}/players/squadNumber/{{existingSquadNumber}}
 Content-Type: application/json
 
 {
@@ -249,7 +250,7 @@ Content-Type: application/json
 # -----------------------------------------------------------------------------
 
 ### Request DELETE /players/squadNumber/{squadNumber} existing → Response status 204 No Content
-DELETE {{baseUrl}}/players/squadNumber/{{squadNumber}}
+DELETE {{baseUrl}}/players/squadNumber/{{existingSquadNumber}}
 
 ### Request DELETE /players/squadNumber/{squadNumber} nonexistent → Response status 404 Not Found
-DELETE {{baseUrl}}/players/squadNumber/999
+DELETE {{baseUrl}}/players/squadNumber/99

@@ -12,7 +12,7 @@ export interface IPlayerDatabase {
     selectAllAsync(): Promise<IPlayer[]>;
 
     /**
-     * Selects a Player by their ID (UUID, admin use only).
+     * Selects a Player by their ID (UUID).
      * @param {string} id - The UUID of the Player to select.
      * @returns {Promise<IPlayer | null>} A promise that resolves to the selected Player if found, otherwise null.
      */
