@@ -206,6 +206,7 @@ Before you begin, ensure you have the following installed:
 
 - Node.js (see `.nvmrc` for required version)
 - npm (comes with Node.js)
+- [direnv](https://direnv.net/) (optional, but recommended — auto-loads the correct Node.js version via `.nvmrc` on directory entry)
 - Docker and Docker Compose (optional, for containerized setup)
 
 ## Quick Start
