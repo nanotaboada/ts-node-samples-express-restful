@@ -423,7 +423,7 @@ describe('Integration Tests', () => {
         describe('/players/squadNumber/:squadNumber', () => {
             it('Request DELETE /players/squadNumber/{squadNumber} nonexistent → Response status 404 Not Found', async () => {
                 // Arrange
-                const squadNumber = 999;
+                const squadNumber = 99; // valid range (1–99) but not in DB
                 // Act
                 const response = await request(app)
                     .delete(`${path}/squadNumber/${squadNumber}`)
