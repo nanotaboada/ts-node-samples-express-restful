@@ -1,5 +1,5 @@
 import NodeCache from 'node-cache';
-import { IPlayer } from '../models/player-interface.js';
+import { IPlayer, IPlayerInput } from '../models/player-interface.js';
 import { IPlayerService } from '../services/player-service-interface.js';
 import { IPlayerDatabase } from '../database/player-database-interface.js';
 import logger from '../utils/logger.js';
@@ -64,12 +64,12 @@ export default class PlayerService implements IPlayerService {
         return player;
     }
 
-    async createAsync(player: IPlayer): Promise<void> {
+    async createAsync(player: IPlayerInput): Promise<void> {
         await this.playerDatabase.insertAsync(player);
         this.cache.flushAll();
     }
 
-    async updateAsync(player: IPlayer): Promise<void> {
+    async updateAsync(player: IPlayerInput): Promise<void> {
         await this.playerDatabase.updateAsync(player);
         this.cache.flushAll();
     }

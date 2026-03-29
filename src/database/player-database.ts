@@ -1,5 +1,5 @@
 import PlayerModel from '../models/player-model.js';
-import { IPlayer } from '../models/player-interface.js';
+import { IPlayer, IPlayerInput } from '../models/player-interface.js';
 import { IPlayerDatabase } from './player-database-interface.js';
 
 /**
@@ -23,15 +23,12 @@ export default class PlayerDatabase implements IPlayerDatabase {
         return player ? player.toJSON() : null;
     }
 
-    async insertAsync(player: Partial<IPlayer>): Promise<void> {
+    async insertAsync(player: IPlayerInput): Promise<void> {
         await PlayerModel.create(player);
     }
 
-    async updateAsync(player: Partial<IPlayer>): Promise<void> {
-        if (player.squadNumber === undefined) {
-            throw new Error('Player squadNumber is required for update');
-        }
-        await PlayerModel.update({ ...player, id: undefined }, { where: { squadNumber: player.squadNumber } });
+    async updateAsync(player: IPlayerInput): Promise<void> {
+        await PlayerModel.update({ ...player }, { where: { squadNumber: player.squadNumber } });
     }
 
     async deleteAsync(squadNumber: number): Promise<void> {

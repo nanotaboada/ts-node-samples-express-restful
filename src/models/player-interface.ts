@@ -15,6 +15,8 @@
  * @property {string} [league] - The league where the team plays. (Optional)
  * @property {boolean} [starting11] - Indicates if the Player is in the starting 11. (Optional)
  */
+export type IPlayerInput = Omit<IPlayer, 'id'>;
+
 export interface IPlayer {
     id: string;
     firstName: string;

@@ -1,4 +1,4 @@
-import { IPlayer } from '../models/player-interface.js';
+import { IPlayer, IPlayerInput } from '../models/player-interface.js';
 
 /**
  * Interface that defines database operations for a Player.
@@ -30,14 +30,14 @@ export interface IPlayerDatabase {
      * @param {Partial<IPlayer>} player - The Player to insert.
      * @returns {Promise<void>} A promise that resolves when the insertion is complete.
      */
-    insertAsync(player: Partial<IPlayer>): Promise<void>;
+    insertAsync(player: IPlayerInput): Promise<void>;
 
     /**
      * Updates an existing Player in the database.
-     * @param {Partial<IPlayer>} player - The Player to update.
+     * @param {IPlayerInput} player - The Player to update.
      * @returns {Promise<void>} A promise that resolves when the update is complete.
      */
-    updateAsync(player: Partial<IPlayer>): Promise<void>;
+    updateAsync(player: IPlayerInput): Promise<void>;
 
     /**
      * Deletes an existing Player by their Squad Number.

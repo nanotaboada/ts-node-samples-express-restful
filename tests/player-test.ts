@@ -61,20 +61,14 @@ describe('Integration Tests', () => {
                 expect(response.status).toBe(200);
             });
             it('Request GET /players → Response body players', async () => {
-                // Arrange
-                const players = playerStub.all;
                 // Act
                 const response = await request(app)
                     .get(path);
                 // Assert
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                const bodyWithoutIds = response.body.map(({ id: _id, ...rest }: any) => rest);
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                const stubWithoutIds = players.map(({ id: _id, ...rest }: any) => rest);
-                expect(bodyWithoutIds).toEqual(stubWithoutIds);
+                expect(response.body).toEqual(playerStub.all);
             });
         });
-        // GET /players/:id (admin) --------------------------------------------
+        // GET /players/:id ----------------------------------------------------
         describe('/players/:id', () => {
             it('Request GET /players/{id} nonexistent → Response status 404 Not Found', async () => {
                 // Arrange
@@ -86,9 +80,8 @@ describe('Integration Tests', () => {
                 expect(response.status).toBe(404);
             });
             it('Request GET /players/{id} existing → Response status 200 OK', async () => {
-                // Arrange — resolve UUID via natural key
-                const squadResponse = await request(app).get(`${path}/squadNumber/10`);
-                const id = squadResponse.body.id;
+                // Arrange
+                const { id } = playerStub.findBySquadNumber(10);
                 // Act
                 const response = await request(app)
                     .get(`${path}/${id}`);
@@ -96,16 +89,13 @@ describe('Integration Tests', () => {
                 expect(response.status).toBe(200);
             });
             it('Request GET /players/{id} existing → Response body player match', async () => {
-                // Arrange — resolve UUID via natural key
-                const squadNumber = 10;
-                const squadResponse = await request(app).get(`${path}/squadNumber/${squadNumber}`);
-                const id = squadResponse.body.id;
+                // Arrange
+                const expected = playerStub.findBySquadNumber(10);
                 // Act
                 const response = await request(app)
-                    .get(`${path}/${id}`);
+                    .get(`${path}/${expected.id}`);
                 // Assert
-                expect(response.body.id).toBe(id);
-                expect(response.body.squadNumber).toBe(squadNumber);
+                expect(response.body).toEqual(expected);
             });
         });
         // GET /players/squadNumber/:squadNumber -------------------------------
@@ -131,15 +121,12 @@ describe('Integration Tests', () => {
             it('Request GET /players/squadNumber/{squadNumber} existing → Response body player match', async () => {
                 // Arrange
                 const squadNumber = 10;
-                const player = playerStub.findBySquadNumber(squadNumber);
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                const { id: _id, ...playerWithoutId } = player;
+                const expected = playerStub.findBySquadNumber(squadNumber);
                 // Act
                 const response = await request(app)
                     .get(`${path}/squadNumber/${squadNumber}`);
                 // Assert
-                expect(response.body.squadNumber).toBe(squadNumber);
-                expect(response.body).toMatchObject(playerWithoutId);
+                expect(response.body).toEqual(expected);
             });
         });
     });

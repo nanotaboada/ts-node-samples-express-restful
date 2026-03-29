@@ -1,4 +1,4 @@
-import { IPlayer } from '../models/player-interface.js';
+import { IPlayerInput } from '../models/player-interface.js';
 import { IPlayerController } from './player-controller-interface.js';
 import { IPlayerService } from '../services/player-service-interface.js';
 import { Request, Response } from 'express';
@@ -136,7 +136,7 @@ export default class PlayerController implements IPlayerController {
      *         description: Conflict
      */
     async postAsync(request: Request, response: Response): Promise<void> {
-        const create: IPlayer = request.body;
+        const create: IPlayerInput = request.body;
         logger.info({ squadNumber: create.squadNumber, action: 'createPlayer' }, 'Creating new player');
         const player = await this.playerService.retrieveBySquadNumberAsync(create.squadNumber);
         if (player) {
@@ -178,7 +178,7 @@ export default class PlayerController implements IPlayerController {
      */
     async putAsync(request: Request, response: Response): Promise<void> {
         const squadNumber = Number.parseInt(request.params.squadNumber);
-        const update: IPlayer = request.body;
+        const update: IPlayerInput = request.body;
         logger.info({ squadNumber, action: 'updatePlayer' }, 'Updating player');
         const player = await this.playerService.retrieveBySquadNumberAsync(squadNumber);
         if (player) {

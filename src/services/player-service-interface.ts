@@ -1,4 +1,4 @@
-import { IPlayer } from '../models/player-interface.js';
+import { IPlayer, IPlayerInput } from '../models/player-interface.js';
 
 /**
  * Interface that defines service operations for a Player.
@@ -30,14 +30,14 @@ export interface IPlayerService {
      * @param {IPlayer} player - The Player to create.
      * @returns {Promise<void>} A promise that resolves when the creation is complete.
      */
-    createAsync(player: IPlayer): Promise<void>;
+    createAsync(player: IPlayerInput): Promise<void>;
 
     /**
      * Updates an existing Player and clears the cache.
-     * @param {IPlayer} player - The Player to update.
+     * @param {IPlayerInput} player - The Player to update.
      * @returns {Promise<void>} A promise that resolves when the update is complete.
      */
-    updateAsync(player: IPlayer): Promise<void>;
+    updateAsync(player: IPlayerInput): Promise<void>;
 
     /**
      * Deletes an existing Player by their Squad Number and clears the cache.
