@@ -12,11 +12,11 @@ export interface IPlayerService {
     retrieveAllAsync(): Promise<IPlayer[]>;
 
     /**
-     * Retrieves a Player by their ID, using cache if available.
-     * @param {number} id - The ID of the Player to retrieve.
+     * Retrieves a Player by their ID (UUID, admin use only), using cache if available.
+     * @param {string} id - The UUID of the Player to retrieve.
      * @returns {Promise<IPlayer | undefined>} A promise that resolves to the Player entity if found, otherwise undefined.
      */
-    retrieveByIdAsync(id: number): Promise<IPlayer | undefined>;
+    retrieveByIdAsync(id: string): Promise<IPlayer | undefined>;
 
     /**
      * Retrieves a Player by their Squad Number, using cache if available.
@@ -40,9 +40,9 @@ export interface IPlayerService {
     updateAsync(player: IPlayer): Promise<void>;
 
     /**
-     * Deletes an existing Player by their ID and clears the cache.
-     * @param {number} id - The ID of the Player to delete.
+     * Deletes an existing Player by their Squad Number and clears the cache.
+     * @param {number} squadNumber - The Squad Number of the Player to delete.
      * @returns {Promise<void>} A promise that resolves when the deletion is complete.
      */
-    deleteAsync(id: number): Promise<void>;
+    deleteAsync(squadNumber: number): Promise<void>;
 }

@@ -52,9 +52,10 @@ export default class PlayerController implements IPlayerController {
      *       - in: path
      *         name: id
      *         schema:
-     *           type: integer
+     *           type: string
+     *           format: uuid
      *         required: true
-     *         description: Player.id
+     *         description: Player.id (UUID, admin use only)
      *     responses:
      *       200:
      *         description: OK
@@ -66,7 +67,7 @@ export default class PlayerController implements IPlayerController {
      *         description: Not Found
      */
     async getByIdAsync(request: Request, response: Response): Promise<void> {
-        const id = Number.parseInt(request.params.id);
+        const id = request.params.id;
         logger.info({ playerId: id, action: 'retrieveById' }, 'Retrieving player by ID');
         const player = await this.playerService.retrieveByIdAsync(id);
         if (player) {
@@ -135,33 +136,32 @@ export default class PlayerController implements IPlayerController {
      *         description: Conflict
      */
     async postAsync(request: Request, response: Response): Promise<void> {
-        const id = Number.parseInt(request.body.id);
         const create: IPlayer = request.body;
-        logger.info({ playerId: id, action: 'createPlayer' }, 'Creating new player');
-        const player = await this.playerService.retrieveByIdAsync(id);
+        logger.info({ squadNumber: create.squadNumber, action: 'createPlayer' }, 'Creating new player');
+        const player = await this.playerService.retrieveBySquadNumberAsync(create.squadNumber);
         if (player) {
-            logger.warn({ playerId: id, status: 'conflict' }, 'Player already exists');
+            logger.warn({ squadNumber: create.squadNumber, status: 'conflict' }, 'Player already exists');
             response.sendStatus(409);
         } else {
             await this.playerService.createAsync(create);
-            logger.info({ playerId: id, status: 'created' }, 'Player created successfully');
+            logger.info({ squadNumber: create.squadNumber, status: 'created' }, 'Player created successfully');
             response.sendStatus(201);
         }
     }
 
     /**
      * @openapi
-     * /players/{id}:
+     * /players/squadNumber/{squadNumber}:
      *   put:
-     *     summary: Updates (entirely) a Player by its ID
+     *     summary: Updates (entirely) a Player by its Squad Number
      *     tags: [Players]
      *     parameters:
      *       - in: path
-     *         name: id
+     *         name: squadNumber
      *         schema:
      *           type: integer
      *         required: true
-     *         description: Player.id
+     *         description: Player.squadNumber
      *     requestBody:
      *       required: true
      *       content:
@@ -177,49 +177,33 @@ export default class PlayerController implements IPlayerController {
      *         description: Not Found
      */
     async putAsync(request: Request, response: Response): Promise<void> {
-        const id = Number.parseInt(request.params.id);
+        const squadNumber = Number.parseInt(request.params.squadNumber);
         const update: IPlayer = request.body;
-
-        if (!update.id) {
-            logger.warn({ playerId: id, status: 'bad_request' }, 'Update request missing id in body');
-            response.sendStatus(400);
-            return;
-        }
-
-        if (id !== update.id) {
-            logger.warn(
-                { paramsId: id, bodyId: update.id, status: 'bad_request' },
-                'Mismatched IDs: params.id does not match body.id',
-            );
-            response.sendStatus(400);
-            return;
-        }
-
-        logger.info({ playerId: id, action: 'updatePlayer' }, 'Updating player');
-        const player = await this.playerService.retrieveByIdAsync(id);
+        logger.info({ squadNumber, action: 'updatePlayer' }, 'Updating player');
+        const player = await this.playerService.retrieveBySquadNumberAsync(squadNumber);
         if (player) {
-            await this.playerService.updateAsync(update);
-            logger.info({ playerId: id, status: 'updated' }, 'Player updated successfully');
+            await this.playerService.updateAsync({ ...update, squadNumber });
+            logger.info({ squadNumber, status: 'updated' }, 'Player updated successfully');
             response.sendStatus(204);
         } else {
-            logger.warn({ playerId: id, status: 'not_found' }, 'Player not found for update');
+            logger.warn({ squadNumber, status: 'not_found' }, 'Player not found for update');
             response.sendStatus(404);
         }
     }
 
     /**
      * @openapi
-     * /players/{id}:
+     * /players/squadNumber/{squadNumber}:
      *   delete:
-     *     summary: Deletes a Player by its ID
+     *     summary: Deletes a Player by its Squad Number
      *     tags: [Players]
      *     parameters:
      *       - in: path
-     *         name: id
+     *         name: squadNumber
      *         schema:
      *           type: integer
      *         required: true
-     *         description: Player.id
+     *         description: Player.squadNumber
      *     responses:
      *       204:
      *         description: No Content
@@ -227,15 +211,15 @@ export default class PlayerController implements IPlayerController {
      *         description: Not Found
      */
     async deleteAsync(request: Request, response: Response): Promise<void> {
-        const id = Number.parseInt(request.params.id);
-        logger.info({ playerId: id, action: 'deletePlayer' }, 'Deleting player');
-        const player = await this.playerService.retrieveByIdAsync(id);
+        const squadNumber = Number.parseInt(request.params.squadNumber);
+        logger.info({ squadNumber, action: 'deletePlayer' }, 'Deleting player');
+        const player = await this.playerService.retrieveBySquadNumberAsync(squadNumber);
         if (player) {
-            await this.playerService.deleteAsync(id);
-            logger.info({ playerId: id, status: 'deleted' }, 'Player deleted successfully');
+            await this.playerService.deleteAsync(squadNumber);
+            logger.info({ squadNumber, status: 'deleted' }, 'Player deleted successfully');
             response.sendStatus(204);
         } else {
-            logger.warn({ playerId: id, status: 'not_found' }, 'Player not found for deletion');
+            logger.warn({ squadNumber, status: 'not_found' }, 'Player not found for deletion');
             response.sendStatus(404);
         }
     }
