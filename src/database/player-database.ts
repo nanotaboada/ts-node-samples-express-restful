@@ -1,5 +1,5 @@
 import PlayerModel from '../models/player-model.js';
-import { IPlayer } from '../models/player-interface.js';
+import { IPlayer, IPlayerInput } from '../models/player-interface.js';
 import { IPlayerDatabase } from './player-database-interface.js';
 
 /**
@@ -13,7 +13,7 @@ export default class PlayerDatabase implements IPlayerDatabase {
         return players.map((player) => player.toJSON());
     }
 
-    async selectByIdAsync(id: number): Promise<IPlayer | null> {
+    async selectByIdAsync(id: string): Promise<IPlayer | null> {
         const player = await PlayerModel.findByPk(id);
         return player ? player.toJSON() : null;
     }
@@ -23,18 +23,15 @@ export default class PlayerDatabase implements IPlayerDatabase {
         return player ? player.toJSON() : null;
     }
 
-    async insertAsync(player: Partial<IPlayer>): Promise<void> {
+    async insertAsync(player: IPlayerInput): Promise<void> {
         await PlayerModel.create(player);
     }
 
-    async updateAsync(player: Partial<IPlayer>): Promise<void> {
-        if (player.id === undefined) {
-            throw new Error('Player id is required for update');
-        }
-        await PlayerModel.update(player, { where: { id: player.id } });
+    async updateAsync(player: IPlayerInput): Promise<void> {
+        await PlayerModel.update({ ...player }, { where: { squadNumber: player.squadNumber } });
     }
 
-    async deleteAsync(id: number): Promise<void> {
-        await PlayerModel.destroy({ where: { id } });
+    async deleteAsync(squadNumber: number): Promise<void> {
+        await PlayerModel.destroy({ where: { squadNumber } });
     }
 }

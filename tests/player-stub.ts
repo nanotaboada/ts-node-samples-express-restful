@@ -1,7 +1,7 @@
 const playerStub = {
     all: [
         {
-            id: 1,
+            id: 'ccffacd3-04bb-47fc-b296-3626cc9830e4',
             firstName: 'Damián',
             middleName: 'Emiliano',
             lastName: 'Martínez',
@@ -14,7 +14,7 @@ const playerStub = {
             starting11: true,
         },
         {
-            id: 2,
+            id: 'e2631558-c4a9-4bfe-a256-20c012e3058e',
             firstName: 'Nahuel',
             middleName: null,
             lastName: 'Molina',
@@ -27,7 +27,7 @@ const playerStub = {
             starting11: true,
         },
         {
-            id: 3,
+            id: '15d270eb-f2f3-48b0-929c-4118bb83deab',
             firstName: 'Cristian',
             middleName: 'Gabriel',
             lastName: 'Romero',
@@ -40,7 +40,7 @@ const playerStub = {
             starting11: true,
         },
         {
-            id: 4,
+            id: 'e917c225-62ca-4104-ab11-97c285c1fab7',
             firstName: 'Nicolás',
             middleName: 'Hernán Gonzalo',
             lastName: 'Otamendi',
@@ -53,7 +53,7 @@ const playerStub = {
             starting11: true,
         },
         {
-            id: 5,
+            id: '2a720525-5fa0-4ba3-91ca-29e57ef9f617',
             firstName: 'Nicolás',
             middleName: 'Alejandro',
             lastName: 'Tagliafico',
@@ -66,7 +66,7 @@ const playerStub = {
             starting11: true,
         },
         {
-            id: 6,
+            id: '35a047e2-8e66-4d0b-997e-655e044e0f4c',
             firstName: 'Ángel',
             middleName: 'Fabián',
             lastName: 'Di María',
@@ -79,7 +79,7 @@ const playerStub = {
             starting11: true,
         },
         {
-            id: 7,
+            id: 'e459624c-c0bb-4109-a8f8-ced2d94211b7',
             firstName: 'Rodrigo',
             middleName: 'Javier',
             lastName: 'de Paul',
@@ -92,7 +92,7 @@ const playerStub = {
             starting11: true,
         },
         {
-            id: 8,
+            id: 'c8973352-48c1-4c48-b389-746ff9c3a157',
             firstName: 'Enzo',
             middleName: 'Jeremías',
             lastName: 'Fernández',
@@ -105,7 +105,7 @@ const playerStub = {
             starting11: true,
         },
         {
-            id: 9,
+            id: '92ad0ed8-f7ac-4c69-93a1-fe5149b913ab',
             firstName: 'Alexis',
             middleName: null,
             lastName: 'Mac Allister',
@@ -118,7 +118,7 @@ const playerStub = {
             starting11: true,
         },
         {
-            id: 10,
+            id: '4293d9c7-8561-42c3-9ec3-f04e6691ff76',
             firstName: 'Lionel',
             middleName: 'Andrés',
             lastName: 'Messi',
@@ -131,7 +131,7 @@ const playerStub = {
             starting11: true,
         },
         {
-            id: 11,
+            id: 'b704a5ce-b08a-4ef9-bba4-fbab1e7a8e03',
             firstName: 'Julián',
             middleName: null,
             lastName: 'Álvarez',
@@ -145,7 +145,6 @@ const playerStub = {
         },
     ],
     new: {
-        id: 12,
         firstName: 'Leandro',
         middleName: 'Daniel',
         lastName: 'Paredes',
@@ -156,34 +155,6 @@ const playerStub = {
         team: 'AS Roma',
         league: 'Serie A',
         starting11: false,
-    },
-    updateWithoutId: {
-        firstName: 'Leandro',
-        middleName: 'Daniel',
-        lastName: 'Paredes',
-        dateOfBirth: '1994-06-29T00:00:00.000Z',
-        squadNumber: 5,
-        position: 'Defensive Midfield',
-        abbrPosition: 'DM',
-        team: 'AS Roma',
-        league: 'Serie A',
-        starting11: false,
-    },
-    updateWithMismatchedId: {
-        id: 999,
-        firstName: 'Damián',
-        middleName: 'Emiliano',
-        lastName: 'Martínez',
-        dateOfBirth: '1992-09-02T00:00:00.000Z',
-        squadNumber: 23,
-        position: 'Goalkeeper',
-        abbrPosition: 'GK',
-        team: 'Aston Villa FC',
-        league: 'Premier League',
-        starting11: true,
-    },
-    findById(id: number): any | null {
-        return this.all.find((player: { id: number }) => player.id === id) || null;
     },
     findBySquadNumber(squadNumber: number): any | null {
         return this.all.find((player: { squadNumber: number }) => player.squadNumber === squadNumber) || null;

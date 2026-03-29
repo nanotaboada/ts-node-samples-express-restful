@@ -8,7 +8,7 @@ import { IPlayer } from './player-interface.js';
  * @extends Model
  * @implements {IPlayer}
  *
- * @property {number} id - The unique identifier for the Player (Primary Key).
+ * @property {string} id - The unique identifier for the Player (Primary Key, UUID).
  * @property {string} firstName - The first name of the Player.
  * @property {string} [middleName] - The middle name of the Player. (Optional)
  * @property {string} lastName - The last name of the Player.
@@ -21,7 +21,7 @@ import { IPlayer } from './player-interface.js';
  * @property {boolean} [starting11] - Indicates if the Player is in the starting 11. (Optional)
  */
 export default class PlayerModel extends Model implements IPlayer {
-    declare id: number;
+    declare id: string;
     declare firstName: string;
     declare middleName?: string;
     declare lastName: string;
@@ -36,7 +36,7 @@ export default class PlayerModel extends Model implements IPlayer {
 
 PlayerModel.init(
     {
-        id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+        id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true },
         firstName: { type: DataTypes.STRING, allowNull: false },
         middleName: { type: DataTypes.STRING, allowNull: true },
         lastName: { type: DataTypes.STRING, allowNull: false },
