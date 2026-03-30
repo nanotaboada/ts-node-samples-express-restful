@@ -2,8 +2,8 @@
 # https://marketplace.visualstudio.com/items?itemName=humao.rest-client
 
 @baseUrl = http://localhost:9000
-@newSquadNumber = 5
-@existingSquadNumber = 5
+@newSquadNumber = 27
+@existingSquadNumber = 23
 
 # -----------------------------------------------------------------------------
 # GET /health
@@ -48,15 +48,14 @@ POST {{baseUrl}}/players
 Content-Type: application/json
 
 {
-  "firstName": "Leandro",
-  "middleName": "Daniel",
-  "lastName": "Paredes",
-  "dateOfBirth": "1994-06-29T00:00:00.000Z",
-  "squadNumber": 5,
-  "position": "Defensive Midfield",
-  "abbrPosition": "DM",
-  "team": "AS Roma",
-  "league": "Serie A",
+  "firstName": "Giovani",
+  "lastName": "Lo Celso",
+  "dateOfBirth": "1996-04-09T00:00:00.000Z",
+  "squadNumber": 27,
+  "position": "Central Midfield",
+  "abbrPosition": "CM",
+  "team": "Villarreal CF",
+  "league": "La Liga",
   "starting11": false
 }
 
@@ -154,16 +153,15 @@ PUT {{baseUrl}}/players/squadNumber/{{existingSquadNumber}}
 Content-Type: application/json
 
 {
-  "firstName": "Leandro",
-  "middleName": "Daniel",
-  "lastName": "Paredes",
-  "dateOfBirth": "1994-06-29T00:00:00.000Z",
-  "squadNumber": 5,
-  "position": "Defensive Midfield",
-  "abbrPosition": "DM",
-  "team": "AS Roma",
-  "league": "Serie A",
-  "starting11": false
+  "firstName": "Emiliano",
+  "lastName": "Martínez",
+  "dateOfBirth": "1992-09-02T00:00:00.000Z",
+  "squadNumber": 23,
+  "position": "Goalkeeper",
+  "abbrPosition": "GK",
+  "team": "Aston Villa FC",
+  "league": "Premier League",
+  "starting11": true
 }
 
 ### Request PUT /players/squadNumber/{squadNumber} nonexistent → Response status 404 Not Found
@@ -250,7 +248,7 @@ Content-Type: application/json
 # -----------------------------------------------------------------------------
 
 ### Request DELETE /players/squadNumber/{squadNumber} existing → Response status 204 No Content
-DELETE {{baseUrl}}/players/squadNumber/{{existingSquadNumber}}
+DELETE {{baseUrl}}/players/squadNumber/{{newSquadNumber}}
 
 ### Request DELETE /players/squadNumber/{squadNumber} nonexistent → Response status 404 Not Found
 DELETE {{baseUrl}}/players/squadNumber/99

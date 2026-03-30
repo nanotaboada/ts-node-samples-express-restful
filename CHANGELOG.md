@@ -48,6 +48,22 @@ This project uses football/soccer terminology for release names:
 
 ### Deprecated
 
+## [2.1.0-dribble] - 2026-03-30
+
+### Added
+
+- 15 substitute players seeded in `storage/players-sqlite3.db`
+
+### Changed
+
+- Player dataset normalised to November 2022 World Cup snapshot: Enzo Fernández (SL Benfica / Liga Portugal), Mac Allister (Brighton & Hove Albion), Messi (Paris Saint-Germain / Ligue 1), Di María `abbrPosition` → `RW`
+- Player UUIDs replaced with deterministic UUID v5 values (namespace `f201b13e-c670-473d-885d-e2be219f74c8`, formula `{firstName}-{lastName}`)
+- Test fixture for Create/Delete replaced: Paredes (squad 5) → Lo Celso (squad 27)
+- Test fixture for Update added: Emiliano Martínez (squad 23) — `firstName` `'Damián'` → `'Emiliano'`, `middleName` cleared
+- `playerStub.all` expanded to 26 players; `playerStub.update` added
+- `PUT describe` in tests: removed `beforeEach`, added `afterEach` to restore Martínez; all tests retargeted to squad 23
+- `rest/players.rest` variables updated: `@newSquadNumber = 27`, `@existingSquadNumber = 23`
+
 ### Removed
 
 ### Fixed
