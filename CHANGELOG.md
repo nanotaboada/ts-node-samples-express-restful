@@ -44,6 +44,22 @@ This project uses football/soccer terminology for release names:
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+---
+
+## [2.0.0 - corner] - 2026-03-29
+
+### Added
+
 - `.envrc` for [direnv](https://direnv.net/) to automatically switch to the required Node.js version via `.nvmrc` on directory entry
 - `rest/players.rest` HTTP file with health check, POST, GET (all, by ID, by squad number), PUT, and DELETE requests for VS Code REST Client (`humao.rest-client`)
 - `humao.rest-client` added to `.vscode/extensions.json` recommended extensions
@@ -57,15 +73,9 @@ This project uses football/soccer terminology for release names:
 - `IPlayer.id` type changed from `number` to `string` to reflect UUID
 - `updateAsync` and `deleteAsync` in service and database layers refactored to operate on `squadNumber`
 
-### Deprecated
-
 ### Removed
 
 - `postman-collections/` directory and Postman JSON collection replaced by `rest/players.rest`
-
-### Fixed
-
-### Security
 
 ---
 
