@@ -320,21 +320,69 @@ Releases follow the pattern: `v{SEMVER}-{TERM}` (e.g., `v1.0.0-assist`)
 - **Semantic Version**: Standard versioning (MAJOR.MINOR.PATCH)
 - **Term Name**: Alphabetically ordered codename from the [football terminology list](CHANGELOG.md#football-terminology-names-️)
 
-### Creating a Release
+### Create a Release
 
-💡 **Important**: Update [CHANGELOG.md](CHANGELOG.md) continuously as you work, not just before releases!
+To create a new release, follow this workflow:
 
-1. **Update CHANGELOG.md**: Move items from `[Unreleased]` to new version section
-2. **Create and push tag**:
+#### 1. Create a Release Branch
 
-   ```bash
-   git tag -a v1.1.0-bicyclekick -m "Release 1.1.0 - Bicycle-kick"
-   git push origin v1.1.0-bicyclekick
-   ```
+Branch protection prevents direct pushes to `master`, so all release prep goes through a PR:
 
-3. **CD pipeline runs automatically** to build and publish
+```bash
+git checkout master && git pull
+git checkout -b release/vX.Y.Z-term
+```
 
-See [CHANGELOG.md](CHANGELOG.md#how-to-release) for complete release workflow.
+#### 2. Update CHANGELOG.md
+
+Move items from `[Unreleased]` to a new release section in [CHANGELOG.md](CHANGELOG.md), then commit and push the branch:
+
+```bash
+# Move items from [Unreleased] to new release section
+# Example: [2.0.0 - corner] - 2026-03-29
+git add CHANGELOG.md
+git commit -m "chore(release): vX.Y.Z-term"
+git push origin release/vX.Y.Z-term
+```
+
+#### 3. Merge the Release PR
+
+Open a pull request from `release/vX.Y.Z-term` into `master` and merge it. The tag must be created **after** the merge so it points to the correct commit on `master`.
+
+#### 4. Create and Push Tag
+
+After the PR is merged, pull `master` and create the annotated tag:
+
+```bash
+git checkout master && git pull
+git tag -a vX.Y.Z-term -m "Release X.Y.Z - Term"
+git push origin vX.Y.Z-term
+```
+
+Example:
+
+```bash
+git tag -a v2.0.0-corner -m "Release 2.0.0 - Corner"
+git push origin v2.0.0-corner
+```
+
+#### 5. Automated CD Workflow
+
+Pushing the tag triggers the CD pipeline which automatically:
+
+1. Builds and tests the project
+2. Publishes Docker images to GitHub Container Registry
+3. Creates a GitHub Release with auto-generated changelog from commits
+
+#### Pre-Release Checklist
+
+- [ ] Release branch created from `master`
+- [ ] `CHANGELOG.md` updated with release notes
+- [ ] Changes committed and pushed on the release branch
+- [ ] Release PR merged into `master`
+- [ ] Tag created with correct format: `vX.Y.Z-term`
+- [ ] Term is valid (A-Z from the [football terminology list](CHANGELOG.md#football-terminology-names-️))
+- [ ] Tag pushed to trigger CD workflow
 
 ### Pull Docker Images
 
