@@ -138,13 +138,13 @@ describe('Integration Tests', () => {
         });
     });
     describe('POST', () => {
-        it('Request POST /players within rate limit → Response processed', async () => {
+        it('Request POST /players within rate limit → Response status 201 Created', async () => {
             // Arrange
             const body = playerStub.nonexistent;
             // Act
             const response = await request(app).post('/players').send(body);
             // Assert
-            expect([201, 409]).toContain(response.status);
+            expect(response.status).toBe(201);
         });
         ((Number.parseInt(process.env.RATE_LIMIT_MAX_STRICT || '20', 10) >= 20) ? it.skip : it)('Request POST /players exceed rate limit → Response status 429 Too Many Requests', async () => {
             // This test is skipped by default as it requires making 20+ requests
@@ -273,9 +273,12 @@ describe('Integration Tests', () => {
     });
     describe('PUT', () => {
         afterEach(async () => {
-            await request(app)
+            const response = await request(app)
                 .put(`${path}/squadNumber/${playerStub.existing.squadNumber}`)
                 .send(playerStub.findBySquadNumber(playerStub.existing.squadNumber)); // restores original seeded data
+            if (response.status !== 204) {
+                throw new Error(`Restore failed with status ${response.status}`);
+            }
         });
 
         it('Request PUT /players/squadNumber/{squadNumber} within rate limit → Response status 204 No Content', async () => {

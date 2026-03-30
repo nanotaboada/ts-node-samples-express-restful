@@ -154,6 +154,7 @@ Content-Type: application/json
 
 {
   "firstName": "Emiliano",
+  "middleName": null,
   "lastName": "Martínez",
   "dateOfBirth": "1992-09-02T00:00:00.000Z",
   "squadNumber": 23,
