@@ -110,40 +110,57 @@ Initial release. See [README.md](README.md) for complete feature list and docume
 
 ### Pre-Release Checklist
 
-Before creating any release:
-
-1. ✅ **Update CHANGELOG.md first**: Move all items from `[Unreleased]` to a new versioned section with today's date
-2. ✅ **Verify tests pass**: Run `npm run coverage` - all tests must pass
-3. ✅ **Build successfully**: Run `npm run build` - TypeScript must compile without errors
-4. ✅ **Lint passes**: Run `npm run lint` - ESLint must pass with no warnings
-5. ✅ **Update Swagger docs**: Run `npm run swagger:docs` if API endpoints changed
-6. ✅ **Commit CHANGELOG**: Push the CHANGELOG update before tagging
+- [ ] Release branch created from `master`
+- [ ] `CHANGELOG.md` updated with release notes
+- [ ] Changes committed and pushed on the release branch
+- [ ] Release PR merged into `master`
+- [ ] Tag created with correct format: `vX.Y.Z-term`
+- [ ] Term is valid (A-Z from the football terminology list above)
+- [ ] Tag pushed to trigger CD workflow
 
 ### Creating a Release
 
-1. **Update CHANGELOG.md**
+1. **Create a release branch**
+
+   ```bash
+   git checkout master && git pull
+   git checkout -b release/vX.Y.Z-term
+   ```
+
+2. **Update CHANGELOG.md**
 
    Move items from `[Unreleased]` to a new version section:
 
    ```markdown
-   ## [1.1.0 - bicyclekick] - YYYY-MM-DD
+   ## [X.Y.Z - term] - YYYY-MM-DD
    ```
 
-   Commit and push this change.
-
-2. **Create and push tag**
+   Commit and push:
 
    ```bash
-   git tag -a v1.1.0-bicyclekick -m "Release 1.1.0 - Bicycle-kick"
-   git push origin v1.1.0-bicyclekick
+   git add CHANGELOG.md
+   git commit -m "chore(release): vX.Y.Z-term"
+   git push origin release/vX.Y.Z-term
    ```
 
-3. **CD pipeline runs automatically**
+3. **Merge the release PR**
+
+   Open a pull request from `release/vX.Y.Z-term` into `master` and merge it. The tag must be created **after** the merge so it points to the correct commit on `master`.
+
+4. **Create and push tag**
+
+   ```bash
+   git checkout master && git pull
+   git tag -a vX.Y.Z-term -m "Release X.Y.Z - Term"
+   git push origin vX.Y.Z-term
+   ```
+
+5. **CD pipeline runs automatically**
 
    GitHub Actions will:
    - Run full test suite with coverage
    - Build Docker image
-   - Publish to GHCR with tags: `:1.1.0`, `:bicyclekick`, `:latest`
+   - Publish to GHCR with tags: `:X.Y.Z`, `:term`, `:latest`
    - Create GitHub Release with auto-generated notes
 
 ### Release Naming Convention
