@@ -46,6 +46,8 @@ This project uses football/soccer terminology for release names:
 
 ### Changed
 
+- Tests switched to in-memory SQLite (`STORAGE_PATH=:memory:`) — seeded via `beforeAll`, production DB never touched during test runs
+
 ### Deprecated
 
 ## [2.1.0-dribble] - 2026-03-30

@@ -1,5 +1,7 @@
 import request from 'supertest';
 import app from '../src/app.js';
+import sequelize from '../src/database/sequelize.js';
+import PlayerModel from '../src/models/player-model.js';
 import playerStub from './player-stub.js';
 
 const path = '/players';
@@ -12,6 +14,11 @@ const hasFieldError = (errors: any[], fieldName: string): boolean => {
 };
 
 describe('Integration Tests', () => {
+    beforeAll(async () => {
+        await sequelize.sync();
+        await PlayerModel.bulkCreate(playerStub.all);
+    });
+
     afterEach(async () => {
         const response = await request(app).delete(`${path}/squadNumber/${playerStub.nonexistent.squadNumber}`);
         if (response.status !== 204 && response.status !== 404) {
