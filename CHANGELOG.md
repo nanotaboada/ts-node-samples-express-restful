@@ -44,6 +44,7 @@ This project uses football/soccer terminology for release names:
 
 ### Added
 
+- `.envrc` for [direnv](https://direnv.net/) to automatically switch to the required Node.js version via `.nvmrc` on directory entry
 - `rest/players.rest` HTTP file with health check, POST, GET (all, by ID, by squad number), PUT, and DELETE requests for VS Code REST Client (`humao.rest-client`)
 - `humao.rest-client` added to `.vscode/extensions.json` recommended extensions
 
