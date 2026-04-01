@@ -46,7 +46,9 @@ This project uses football/soccer terminology for release names:
 
 ### Changed
 
-### Deprecated
+### Fixed
+
+### Removed
 
 ## [2.1.0-dribble] - 2026-03-31
 
