@@ -46,11 +46,11 @@ This project uses football/soccer terminology for release names:
 
 ### Changed
 
-- Tests switched to in-memory SQLite (`STORAGE_PATH=:memory:`) — seeded via `beforeAll`, production DB never touched during test runs
+### Fixed
 
-### Deprecated
+### Removed
 
-## [2.1.0-dribble] - 2026-03-30
+## [2.1.0-dribble] - 2026-03-31
 
 ### Added
 
@@ -64,6 +64,7 @@ This project uses football/soccer terminology for release names:
 - `playerStub.all` expanded to 26 players
 - `PUT describe` in tests: removed `beforeEach`, added `afterEach` to restore Martínez; all tests retargeted to squad 23
 - `rest/players.rest` variables updated: `@newSquadNumber = 27`, `@existingSquadNumber = 23`
+- Tests switched to in-memory SQLite (`STORAGE_PATH=:memory:`) — seeded via `beforeAll`, production DB never touched during test runs
 - Docker: run `docker compose down -v` before `docker compose up` to pick up the rebuilt seeded DB from `storage/players-sqlite3.db` (see #551)
 
 ### Removed
