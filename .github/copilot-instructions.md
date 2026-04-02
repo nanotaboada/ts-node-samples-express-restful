@@ -119,6 +119,10 @@ Format: `type(scope): description (#issue)` — max 80 chars
 Types: `feat` `fix` `chore` `docs` `test` `refactor` `ci` `perf`
 Example: `feat(api): add player stats endpoint (#42)`
 
+## Architecture Decision Records
+
+Significant architectural decisions are documented in [`docs/adr/`](docs/adr/). Consult the ADRs when you encounter an unfamiliar constraint or convention — they explain the **why** behind the key decisions in this project. When proposing a change that alters an accepted decision, create a new ADR rather than editing the existing one.
+
 ## Agent Mode
 
 ### Proceed freely

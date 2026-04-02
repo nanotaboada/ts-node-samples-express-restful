@@ -20,6 +20,7 @@ Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) [LTS
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
 - [Architecture](#architecture)
+- [Architecture Decisions](#architecture-decisions)
 - [API Reference](#api-reference)
 - [Prerequisites](#prerequisites)
 - [Quick Start](#quick-start)
@@ -181,6 +182,24 @@ Four layers: Initialization (`server`, `app`), HTTP (`routes`, `controllers`), B
 Blue = core application packages, red = third-party frameworks, green = tests.
 
 *Simplified, conceptual project structure and main application flow. Not all dependencies are shown.*
+
+## Architecture Decisions
+
+Significant architectural choices — why they were made, what tradeoffs they carry — are documented as Architecture Decision Records (ADRs) in [`docs/adr/`](docs/adr/).
+
+| ADR | Decision |
+|-----|----------|
+| [001](docs/adr/001-interface-based-architecture.md) | Interface-based architecture with constructor injection |
+| [002](docs/adr/002-uuid-primary-key-and-squad-number-mutation-key.md) | UUID as primary key, squadNumber as mutation key |
+| [003](docs/adr/003-use-native-esm.md) | Native ESM instead of CommonJS |
+| [004](docs/adr/004-use-express-5.md) | Express 5 |
+| [005](docs/adr/005-use-sqlite-sequelize.md) | SQLite with Sequelize ORM |
+| [006](docs/adr/006-integration-first-testing-strategy.md) | Integration-first testing (real DB, no mocks) |
+| [007](docs/adr/007-node-cache-strategy.md) | node-cache with 1-hour TTL |
+| [008](docs/adr/008-use-pino-structured-logging.md) | Pino for structured logging |
+| [009](docs/adr/009-docker-and-compose-strategy.md) | Multi-stage Docker builds + Compose |
+| [010](docs/adr/010-use-tsx-over-ts-node.md) | tsx instead of ts-node |
+| [011](docs/adr/011-football-semantic-versioning.md) | Football-themed semantic versioning |
 
 ## API Reference
 
