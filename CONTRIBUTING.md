@@ -29,7 +29,17 @@ We value **incremental, detail‑first contributions** over big rewrites or abst
   - Title uses Conventional Commits style.
   - Description explains _what_ and _why_—keep context minimal.
 
-## 4. Issue Reporting
+## 4. Architecture Decision Records
+
+When making a significant architectural decision, document it as an ADR in [`docs/adr/`](docs/adr/).
+
+- Copy [`docs/adr/template.md`](docs/adr/template.md) to `docs/adr/NNN-short-title.md`
+- Fill in Context (value-neutral facts), Decision (active voice), and Consequences (positive and negative)
+- Set status to `Proposed` in the PR, then `Accepted` once merged
+- Add a row to the index in [`docs/adr/README.md`](docs/adr/README.md)
+- ADRs are immutable once accepted — create a new one to supersede an existing decision
+
+## 5. Issue Reporting
 
 - Search existing issues first.
 - Provide a minimal reproducible example and clear steps.

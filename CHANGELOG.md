@@ -44,6 +44,11 @@ This project uses football/soccer terminology for release names:
 
 ### Added
 
+- Architecture Decision Records (ADRs) in `docs/adr/` documenting 11 key decisions (#479)
+- Architecture Decisions section in `README.md` linking to the ADR index
+- ADR guidelines in `CONTRIBUTING.md` (section 4)
+- ADR reference in `.github/copilot-instructions.md`
+
 ### Changed
 
 ### Fixed
