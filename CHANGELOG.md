@@ -46,6 +46,9 @@ This project uses football/soccer terminology for release names:
 
 - Architecture Decision Records (ADRs) in `docs/adr/` documenting 11 key decisions (#479)
 - Architecture Decisions section in `README.md` linking to the ADR index
+- Runtime verification step in CD workflow to confirm tag commit is reachable from master before build/publish (#556)
+- Jest globals (`globals.jest`) to ESLint flat config for test files, fixing `no-undef` on Jest APIs
+- Clarifying comments to test lifecycle hooks explaining hook execution order and DB isolation strategy
 - ADR guidelines in `CONTRIBUTING.md` (section 4)
 - ADR reference in `.github/copilot-instructions.md`
 
