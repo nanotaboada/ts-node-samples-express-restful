@@ -14,11 +14,16 @@ const hasFieldError = (errors: any[], fieldName: string): boolean => {
 };
 
 describe('Integration Tests', () => {
+    // Uses an in-memory SQLite DB (STORAGE_PATH=:memory: in .env.test) — the seeded
+    // storage/players-sqlite3.db file on disk is never touched by the test suite.
     beforeAll(async () => {
         await sequelize.sync();
         await PlayerModel.bulkCreate(playerStub.all);
     });
 
+    // Runs after every test in the suite (outer hook, fires after any inner afterEach).
+    // Removes playerStub.nonexistent if it was left in the DB by a POST or DELETE beforeEach.
+    // 404 is accepted: PUT tests never create it, and DELETE "existing" already removed it.
     afterEach(async () => {
         const response = await request(app).delete(`${path}/squadNumber/${playerStub.nonexistent.squadNumber}`);
         if (response.status !== 204 && response.status !== 404) {
@@ -272,10 +277,13 @@ describe('Integration Tests', () => {
         });
     });
     describe('PUT', () => {
+        // Runs after every PUT test (inner hook, fires before the top-level afterEach).
+        // Restores playerStub.existing to its original seeded values so later tests
+        // see a consistent DB state regardless of what each PUT test wrote.
         afterEach(async () => {
             const response = await request(app)
                 .put(`${path}/squadNumber/${playerStub.existing.squadNumber}`)
-                .send(playerStub.findBySquadNumber(playerStub.existing.squadNumber)); // restores original seeded data
+                .send(playerStub.findBySquadNumber(playerStub.existing.squadNumber));
             if (response.status !== 204) {
                 throw new Error(`Restore failed with status ${response.status}`);
             }
@@ -427,6 +435,9 @@ describe('Integration Tests', () => {
         });
     });
     describe('DELETE', () => {
+        // Seeds playerStub.nonexistent before each DELETE test so there is always
+        // a known player to target. The top-level afterEach handles removal in case
+        // a test does not consume it (e.g. the "nonexistent squadNumber" 404 test).
         beforeEach(async () => {
             await request(app).post(path).send(playerStub.nonexistent);
         });
