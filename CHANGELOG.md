@@ -44,6 +44,11 @@ This project uses football/soccer terminology for release names:
 
 ### Added
 
+- `.sonarcloud.properties`: SonarCloud Automatic Analysis configuration —
+  sources, tests, coverage exclusions aligned with `codecov.yml` (#561)
+- `.dockerignore`: added `.claude/`, `CLAUDE.md`, `.coderabbit.yaml`,
+  `.sonarcloud.properties`, `CHANGELOG.md`, `README.md`; removed stale
+  `.codeclimate.yml` entry (#561)
 - Architecture Decision Records (ADRs) in `docs/adr/` documenting 11 key decisions (#479)
 - Architecture Decisions section in `README.md` linking to the ADR index
 - Runtime verification step in CD workflow to confirm tag commit is reachable from master before build/publish (#556)
