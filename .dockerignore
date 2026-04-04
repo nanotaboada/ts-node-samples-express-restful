@@ -5,7 +5,9 @@ dist/
 node_modules/
 rest/
 tests/
-.codeclimate.yml
+.claude/
+CLAUDE.md
+.coderabbit.yaml
 .env
 .eslintrc.json
 .gitignore
@@ -19,3 +21,5 @@ CONTRIBUTING.md
 jest.config.ts
 LICENSE
 nodemon.json
+CHANGELOG.md
+.sonarcloud.properties
