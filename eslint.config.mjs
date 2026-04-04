@@ -32,5 +32,13 @@ export default [
             '@typescript-eslint/no-unsafe-return': 'off',
         },
     },
+    {
+        files: ['tests/**/*.ts'],
+        languageOptions: {
+            globals: {
+                ...globals.jest,
+            },
+        },
+    },
     eslintConfigPrettier,
 ];
