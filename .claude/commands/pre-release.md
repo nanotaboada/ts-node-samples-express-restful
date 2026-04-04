@@ -12,12 +12,19 @@ proceeding. Never create a branch, commit, tag, or push without approval.
 2. Run `git tag --sort=-v:refname` to list existing tags. Identify the most
    recent tag matching `v*.*.*-*` and extract its football term codename.
 
-3. Read the A–Z football terminology table from `CHANGELOG.md` to find the
-   term that follows the last used codename alphabetically. That is the next term.
+3. Read the A–Z football terminology table from `CHANGELOG.md` to find the next term:
+   - **No tags yet**: start at `A` (first term in the table).
+   - **Normal case**: use the term that follows the last used codename
+     alphabetically. If letters were skipped, pick the next after the
+     highest existing codename — do not backfill gaps.
+   - **Last codename is `Z`** (Zonedefense): the list is finite. Stop and flag
+     that the naming convention needs to be revisited before proceeding.
 
 4. Read the `[Unreleased]` section of `CHANGELOG.md` and infer the version
    bump using these rules (applied in order — first match wins):
-   - Any entry contains the word **BREAKING** → **major** bump
+   - Any entry contains the word **BREAKING** (case-insensitive), a
+     `BREAKING CHANGE:` token in a commit footer, or a `!` suffix after
+     the commit type/scope (e.g. `feat!:` or `feat(scope)!:`) → **major** bump
    - Any `### Added` subsection has entries → **minor** bump
    - Otherwise (only `### Changed`, `### Fixed`, `### Removed`) → **patch** bump
 
@@ -53,15 +60,16 @@ proceeding. Never create a branch, commit, tag, or push without approval.
 
 3. Show the full diff of `CHANGELOG.md` and propose this commit message:
 
-   ```
+   ```text
    docs(changelog): prepare release notes for vX.Y.Z-{term} (#issue)
    ```
 
    **Wait for explicit approval before committing.**
 
-4. Run `/pre-commit`, skipping step 1 — CHANGELOG was already updated above.
-   Open with: "Skip step 1 — CHANGELOG was already updated as part of this
-   release branch."
+4. Run `/pre-commit`, manually skipping step 1 — do not re-run or re-attempt
+   the CHANGELOG update; it was already completed above. Open with: "Skip
+   step 1 — CHANGELOG was already updated as part of this release branch."
+   Proceed directly with steps 2–7.
 
 5. Propose opening a PR from `release/vX.Y.Z-{term}` into `master`.
    **Wait for explicit approval before opening.**
@@ -86,7 +94,7 @@ proceeding. Never create a branch, commit, tag, or push without approval.
 
 3. Propose the annotated tag:
    ```bash
-   git tag -a vX.Y.Z-{term} -m "Release vX.Y.Z - Term"
+   git tag -a vX.Y.Z-{term} -m "Release X.Y.Z - Term"
    ```
 
    **Wait for explicit approval before creating the tag.**
