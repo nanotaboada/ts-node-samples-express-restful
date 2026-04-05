@@ -1,6 +1,6 @@
 # Releases
 
-Releases follow the pattern `v{SEMVER}-{TERM}` (e.g., `v1.0.0-assist`). Codenames are drawn alphabetically from the [football terminology list](CHANGELOG.md#football-terminology-names-️).
+Releases follow the pattern `v{SEMVER}-{TERM}` (e.g., `v1.0.0-assist`). Codenames are drawn alphabetically from the [football terminology list](CHANGELOG.md).
 
 ## Workflow
 
@@ -37,7 +37,7 @@ Before creating the tag, verify all of the following:
 - [ ] Release PR is merged into `master`
 - [ ] `npm run build` passes
 - [ ] `npm test` passes
-- [ ] Term name is valid and follows alphabetical order (see [football terminology list](CHANGELOG.md#football-terminology-names-️))
+- [ ] Term name is valid and follows alphabetical order (see [football terminology list](CHANGELOG.md))
 - [ ] All CI checks on `master` are green
 
 ### 4. Create and Push Tag
