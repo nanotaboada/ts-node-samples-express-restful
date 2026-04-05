@@ -12,36 +12,16 @@
 ![Claude](https://img.shields.io/badge/Claude-contributing-D97757?logo=claude&logoColor=white&labelColor=181818)
 ![CodeRabbit](https://img.shields.io/badge/CodeRabbit-reviewing-FF570A?logo=coderabbit&logoColor=white&labelColor=181818)
 
-Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) [LTS/Krypton (v24)](https://nodejs.org/en/blog/release/v24.11.1) and [Express.js](https://expressjs.com/) 5 in [TypeScript](https://www.typescriptlang.org/). Manage football player data with SQLite, Sequelize ORM, Swagger documentation, and in-memory caching.
-
-## Table of Contents
-
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Architecture](#architecture)
-- [Architecture Decisions](#architecture-decisions)
-- [API Reference](#api-reference)
-- [Prerequisites](#prerequisites)
-- [Quick Start](#quick-start)
-- [Testing](#testing)
-- [Containers](#containers)
-- [Releases](#releases)
-- [Environment Variables](#environment-variables)
-- [Command Summary](#command-summary)
-- [Contributing](#contributing)
-- [Legal](#legal)
+Proof of Concept for a RESTful Web Service built with **Express.js 5** and **TypeScript** targeting **Node.js 24 LTS**. This project demonstrates best practices for building a layered, testable, and maintainable API implementing CRUD operations for a Players resource (Argentina 2022 FIFA World Cup squad).
 
 ## Features
 
-- 🏗️ **Modern TypeScript architecture** - Native ESM, strict mode, layered architecture with interface-based contracts
-- 📚 **Interactive API exploration** - Auto-generated OpenAPI docs with Swagger UI and `.rest` HTTP file for VS Code REST Client
-- ⚡ **Performance optimizations** - In-memory caching with node-cache, Sequelize ORM, and efficient SQLite operations
-- 🧪 **Comprehensive integration tests** - Full endpoint coverage with Jest/Supertest and automated reporting to Codecov
-- 📖 **Token-efficient documentation** - Auto-loaded Copilot instructions for AI-assisted development
-- 🐳 **Full containerization** - Multi-stage Docker builds with Docker Compose orchestration
-- 🔄 **Complete CI/CD pipeline** - Automated linting (ESLint/Prettier), testing, Docker publishing, and GitHub releases
-- ⚽ **Football-themed semantic versioning** - Memorable, alphabetical release names using football terminology
+- 🏗️ **Layered Architecture** - Interface-based design with constructor injection and strict TypeScript
+- 📚 **Interactive Documentation** - Live API exploration with Swagger UI and VS Code REST Client support
+- ⚡ **Performance Caching** - In-memory caching with node-cache and Sequelize ORM
+- 🔒 **Security Middleware** - Rate limiting, CORS, and Helmet headers
+- 🐳 **Containerized Deployment** - Multi-stage Docker builds with pre-seeded database
+- 🔄 **Automated Pipeline** - Continuous integration with ESLint, Prettier, and automated testing
 
 ## Tech Stack
 
@@ -61,27 +41,6 @@ Proof of Concept for a RESTful API made with [Node.js](https://nodejs.org/) [LTS
 | **Dev Tools**          | [tsx](https://github.com/privatenumber/tsx) (TypeScript executor), [nodemon](https://github.com/remy/nodemon)              |
 
 > 💡 **Note:** While the repository name references `ts-node` (the original implementation), the project now uses [tsx](https://github.com/privatenumber/tsx) for faster, cleaner TypeScript execution without experimental flags.
-
-## Project Structure
-
-```text
-src/
-├── app.ts              # Express app setup & middleware configuration
-├── server.ts           # HTTP server initialization & lifecycle
-├── controllers/        # Request handlers with Swagger annotations
-├── services/           # Business logic + caching layer
-├── database/           # Sequelize DB access (interfaces + implementations)
-├── models/             # Sequelize models (Player)
-├── routes/             # Express Router definitions
-├── docs/               # Swagger configuration & doc generation
-├── middlewares/        # Custom middleware (rate limiter, validators, Swagger CSP)
-└── utils/              # Pino logger configuration
-
-rest/                   # HTTP request files for VS Code REST Client
-tests/                  # Integration tests with supertest
-scripts/                # Docker entrypoint & healthcheck scripts
-storage/                # Pre-seeded SQLite database
-```
 
 ## Architecture
 
@@ -163,57 +122,25 @@ graph RL
     class tests test
 ```
 
-### Arrow Semantics
+> *Arrows follow the injection direction (A → B means A is injected into B). Solid = runtime dependency, dotted = structural. Blue = core domain, red = third-party, green = tests.*
 
-Arrows follow the wiring direction: `A --> B` means A is provided to B. Solid arrows (`-->`) represent active dependencies — modules explicitly wired in `app` and invoked at runtime. Dotted arrows (`-.->`) represent structural dependencies — the consumer references types or interfaces without invoking runtime behavior.
-
-### Composition Root Pattern
-
-`app` is the composition root: it instantiates all dependencies, configures Express middleware, and registers all routes. `server` is separate and owns only the HTTP lifecycle (port binding, graceful shutdown) — a conventional split in Express projects.
-
-### Layered Architecture
-
-Four layers: Initialization (`server`, `app`), HTTP (`routes`, `controllers`), Business (`services`), and Data (`database`).
-
-`models` is a cross-cutting type concern — shared types and Sequelize model definitions consumed across multiple layers, with no business logic of its own.
-
-### Color Coding
-
-Blue = core application packages, red = third-party frameworks, green = tests.
-
-*Simplified, conceptual project structure and main application flow. Not all dependencies are shown.*
-
-## Architecture Decisions
-
-Significant architectural choices — why they were made, what tradeoffs they carry — are documented as Architecture Decision Records (ADRs) in [`docs/adr/`](docs/adr/).
-
-| ADR | Decision |
-|-----|----------|
-| [001](docs/adr/001-interface-based-architecture.md) | Interface-based architecture with constructor injection |
-| [002](docs/adr/002-uuid-primary-key-and-squad-number-mutation-key.md) | UUID as primary key, squadNumber as mutation key |
-| [003](docs/adr/003-use-native-esm.md) | Native ESM instead of CommonJS |
-| [004](docs/adr/004-use-express-5.md) | Express 5 |
-| [005](docs/adr/005-use-sqlite-sequelize.md) | SQLite with Sequelize ORM |
-| [006](docs/adr/006-integration-first-testing-strategy.md) | Integration-first testing (real DB, no mocks) |
-| [007](docs/adr/007-node-cache-strategy.md) | node-cache with 1-hour TTL |
-| [008](docs/adr/008-use-pino-structured-logging.md) | Pino for structured logging |
-| [009](docs/adr/009-docker-and-compose-strategy.md) | Multi-stage Docker builds + Compose |
-| [010](docs/adr/010-use-tsx-over-ts-node.md) | tsx instead of ts-node |
-| [011](docs/adr/011-football-semantic-versioning.md) | Football-themed semantic versioning |
+Significant architectural decisions are documented in [`docs/adr/`](docs/adr/).
 
 ## API Reference
 
 Interactive API documentation is available via Swagger UI at `http://localhost:9000/swagger/` when the server is running.
 
-**Quick Reference:**
+| Method | Endpoint | Description | Status |
+| ------ | -------- | ----------- | ------ |
+| `GET` | `/players` | List all players | `200 OK` |
+| `GET` | `/players/:id` | Get player by ID | `200 OK` |
+| `GET` | `/players/squadNumber/:squadNumber` | Get player by squad number | `200 OK` |
+| `POST` | `/players` | Create new player | `201 Created` |
+| `PUT` | `/players/squadNumber/:squadNumber` | Update player by squad number | `204 No Content` |
+| `DELETE` | `/players/squadNumber/:squadNumber` | Remove player by squad number | `204 No Content` |
+| `GET` | `/health` | Health check | `200 OK` |
 
-- `GET /players` - List all players
-- `GET /players/:id` - Get player by ID
-- `GET /players/squadNumber/:squadNumber` - Get player by squad number
-- `POST /players` - Create new player
-- `PUT /players/:id` - Update player
-- `DELETE /players/:id` - Remove player
-- `GET /health` - Health check
+Error codes: `400 Bad Request` (validation failed) · `404 Not Found` (player not found) · `409 Conflict` (duplicate squad number on `POST`)
 
 For complete endpoint documentation with request/response schemas, explore the [interactive Swagger UI](http://localhost:9000/swagger/). You can also access the OpenAPI JSON specification at `http://localhost:9000/swagger.json`.
 
@@ -230,20 +157,20 @@ Before you begin, ensure you have the following installed:
 
 ## Quick Start
 
-### Clone the repository
+### Clone
 
 ```bash
 git clone https://github.com/nanotaboada/ts-node-samples-express-restful.git
 cd ts-node-samples-express-restful
 ```
 
-### Install dependencies
+### Install
 
 ```bash
 npm install
 ```
 
-### Start the development server
+### Run
 
 ```bash
 npm run dev
@@ -262,45 +189,17 @@ The server will start on `http://localhost:9000` with the following output:
 🚀 Running at http://localhost:9000
 ```
 
-### Access the application
+### Access
 
-- API: `http://localhost:9000`
-- Swagger Documentation: `http://localhost:9000/swagger/`
-- Health Check: `http://localhost:9000/health`
+Once the application is running, you can access:
 
-## Testing
-
-Run the test suite with Jest:
-
-```bash
-# Run all tests
-npm test
-
-# Run tests with coverage report
-npm run coverage
-
-# Run linter
-npm run lint
-
-# Validate commit message format
-npm run lint:commit
-```
-
-Tests are located in the `tests/` directory and use Supertest for integration testing. Coverage reports are generated for controllers, services, and routes only.
+- **API Server**: `http://localhost:9000`
+- **Swagger UI**: `http://localhost:9000/swagger/`
+- **Health Check**: `http://localhost:9000/health`
 
 ## Containers
 
-This project includes full Docker support with multi-stage builds and Docker Compose for easy deployment.
-
-### Build the Docker image
-
-```bash
-npm run docker:build
-# or
-docker compose build
-```
-
-### Start the application
+### Build and Start
 
 ```bash
 npm run docker:up
@@ -310,7 +209,7 @@ docker compose up
 
 > 💡 **Note:** On first run, the container copies a pre-seeded SQLite database into a persistent volume. On subsequent runs, that volume is reused and the data is preserved.
 
-### Stop the application
+### Stop
 
 ```bash
 npm run docker:down
@@ -318,7 +217,7 @@ npm run docker:down
 docker compose down
 ```
 
-### Reset the database
+### Reset Database
 
 To remove the volume and reinitialize the database from the built-in seed file:
 
@@ -326,95 +225,18 @@ To remove the volume and reinitialize the database from the built-in seed file:
 docker compose down -v
 ```
 
-The containerized application runs on port 9000 and includes health checks that monitor the `/health` endpoint every 30 seconds.
-
-## Releases
-
-This project uses football terminology as release names ⚽
-
-### Release Naming Convention
-
-Releases follow the pattern: `v{SEMVER}-{TERM}` (e.g., `v1.0.0-assist`)
-
-- **Semantic Version**: Standard versioning (MAJOR.MINOR.PATCH)
-- **Term Name**: Alphabetically ordered codename from the [football terminology list](CHANGELOG.md#football-terminology-names-️)
-
-### Create a Release
-
-To create a new release, follow this workflow:
-
-#### 1. Create a Release Branch
-
-Branch protection prevents direct pushes to `master`, so all release prep goes through a PR:
-
-```bash
-git checkout master && git pull
-git checkout -b release/vX.Y.Z-term
-```
-
-#### 2. Update CHANGELOG.md
-
-Move items from `[Unreleased]` to a new release section in [CHANGELOG.md](CHANGELOG.md), then commit and push the branch:
-
-```bash
-# Move items from [Unreleased] to new release section
-# Example: [2.0.0 - corner] - 2026-03-29
-git add CHANGELOG.md
-git commit -m "chore(release): vX.Y.Z-term"
-git push origin release/vX.Y.Z-term
-```
-
-#### 3. Merge the Release PR
-
-Open a pull request from `release/vX.Y.Z-term` into `master` and merge it. The tag must be created **after** the merge so it points to the correct commit on `master`.
-
-#### 4. Create and Push Tag
-
-After the PR is merged, pull `master` and create the annotated tag:
-
-```bash
-git checkout master && git pull
-git tag -a vX.Y.Z-term -m "Release X.Y.Z - Term"
-git push origin vX.Y.Z-term
-```
-
-Example:
-
-```bash
-git tag -a v2.0.0-corner -m "Release 2.0.0 - Corner"
-git push origin v2.0.0-corner
-```
-
-#### 5. Automated CD Workflow
-
-Pushing the tag triggers the CD pipeline which automatically:
-
-1. Builds and tests the project
-2. Publishes Docker images to GitHub Container Registry
-3. Creates a GitHub Release with auto-generated changelog from commits
-
-#### Pre-Release Checklist
-
-- [ ] Release branch created from `master`
-- [ ] `CHANGELOG.md` updated with release notes
-- [ ] Changes committed and pushed on the release branch
-- [ ] Release PR merged into `master`
-- [ ] Tag created with correct format: `vX.Y.Z-term`
-- [ ] Term is valid (A-Z from the [football terminology list](CHANGELOG.md#football-terminology-names-️))
-- [ ] Tag pushed to trigger CD workflow
-
 ### Pull Docker Images
 
-Each release publishes three Docker tags:
+Each release publishes multiple tags for flexibility:
 
 ```bash
 # By semantic version (recommended for production)
 docker pull ghcr.io/nanotaboada/ts-node-samples-express-restful:1.0.0
 
-# By term name (memorable, useful for staging)
+# By term name (memorable alternative)
 docker pull ghcr.io/nanotaboada/ts-node-samples-express-restful:assist
 
-# Latest (development/testing only)
+# Latest release
 docker pull ghcr.io/nanotaboada/ts-node-samples-express-restful:latest
 ```
 
@@ -427,42 +249,62 @@ Create a `.env` file in the root directory to customize configuration:
 PORT=9000
 
 # Database storage path (default: storage/players-sqlite3.db)
-# In Docker: /storage/players-sqlite3.db
 STORAGE_PATH=storage/players-sqlite3.db
 
 # Rate limiting (all optional — defaults shown)
-RATE_LIMIT_ENABLED=true                 # Set to 'false' to disable rate limiting entirely
-RATE_LIMIT_WINDOW_MS=60000              # Time window in milliseconds (default: 1 minute)
-RATE_LIMIT_MAX_GENERAL=100             # Max requests per window for all routes
-RATE_LIMIT_MAX_STRICT=20               # Max requests per window for POST/PUT/DELETE
+RATE_LIMIT_ENABLED=true
+RATE_LIMIT_WINDOW_MS=60000
+RATE_LIMIT_MAX_GENERAL=100
+RATE_LIMIT_MAX_STRICT=20
 ```
-
-## Command Summary
-
-| Script                 | Description                                       |
-|------------------------|---------------------------------------------------|
-| `npm run dev`          | Start development server with hot reload          |
-| `npm start`            | Run compiled application from `dist/`             |
-| `npm run build`        | Compile TypeScript to JavaScript                  |
-| `npm test`             | Run Jest tests with --detectOpenHandles flag      |
-| `npm run coverage`     | Generate test coverage report                     |
-| `npm run lint`         | Run ESLint on all files                           |
-| `npm run lint:commit`  | Validate last commit message format               |
-| `npm run swagger:docs` | Generate swagger.json from JSDoc annotations      |
-| `npm run docker:build` | Build Docker image                                |
-| `npm run docker:up`    | Start Docker container                            |
-| `npm run docker:down`  | Stop and remove Docker volume                     |
 
 ## Contributing
 
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on the code of conduct and the process for submitting pull requests.
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on:
 
-Key guidelines:
+- Code of Conduct
+- Development workflow and best practices
+- Commit message conventions (Conventional Commits)
+- Pull request process and requirements
+
+**Key guidelines:**
 
 - Follow [Conventional Commits](https://www.conventionalcommits.org/) for commit messages
 - Ensure all tests pass (`npm test`)
 - Run linter before committing (`npm run lint`)
 - Keep changes small and focused
+- Review `.github/copilot-instructions.md` for architectural patterns
+
+**Testing:**
+
+Run the test suite with Jest + Supertest:
+
+```bash
+# Run all tests
+npm test
+
+# Run tests with coverage report
+npm run coverage
+```
+
+## Command Summary
+
+| Command | Description |
+| ------- | ----------- |
+| `npm run dev` | Start development server with hot reload |
+| `npm start` | Run compiled application from `dist/` |
+| `npm run build` | Compile TypeScript to JavaScript |
+| `npm test` | Run Jest tests |
+| `npm run coverage` | Generate test coverage report |
+| `npm run lint` | Run ESLint on all files |
+| `npm run lint:commit` | Validate last commit message format |
+| `npm run swagger:docs` | Generate swagger.json from JSDoc annotations |
+| `npm run docker:build` | Build Docker image |
+| `npm run docker:up` | Start Docker container |
+| `npm run docker:down` | Stop and remove Docker volume |
+| **AI Commands** | |
+| `/pre-commit` | Runs linting, tests, and quality checks before committing |
+| `/pre-release` | Runs pre-release validation workflow |
 
 ## Legal
 
