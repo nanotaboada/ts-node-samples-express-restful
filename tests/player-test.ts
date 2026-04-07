@@ -82,9 +82,9 @@ describe('Integration Tests', () => {
         });
         // GET /players/:id ----------------------------------------------------
         describe('/players/:id', () => {
-            it('Request GET /players/{id} nonexistent → Response status 404 Not Found', async () => {
+            it('Request GET /players/{id} unknown → Response status 404 Not Found', async () => {
                 // Arrange
-                const id = '00000000-0000-0000-0000-000000000000';
+                const id = playerStub.unknown.id;
                 // Act
                 const response = await request(app)
                     .get(`${path}/${id}`);
@@ -410,10 +410,10 @@ describe('Integration Tests', () => {
                 expect(response.body.errors).toBeDefined();
                 expect(hasFieldError(response.body.errors, 'squadNumber')).toBe(true);
             });
-            it('Request PUT /players/squadNumber/{squadNumber} nonexistent → Response status 404 Not Found', async () => {
+            it('Request PUT /players/squadNumber/{squadNumber} unknown → Response status 404 Not Found', async () => {
                 // Arrange
-                const squadNumber = 99; // valid range (1–99) but not in DB
-                const body = { firstName: 'John', lastName: 'Doe', squadNumber: 99, position: 'Forward' };
+                const squadNumber = playerStub.unknown.squadNumber; // valid range (1–99) but not in DB
+                const body = { firstName: 'John', lastName: 'Doe', squadNumber, position: 'Forward' };
                 // Act
                 const response = await request(app)
                     .put(`${path}/squadNumber/${squadNumber}`)
@@ -444,9 +444,9 @@ describe('Integration Tests', () => {
 
         // DELETE /players/squadNumber/:squadNumber ----------------------------
         describe('/players/squadNumber/:squadNumber', () => {
-            it('Request DELETE /players/squadNumber/{squadNumber} nonexistent → Response status 404 Not Found', async () => {
+            it('Request DELETE /players/squadNumber/{squadNumber} unknown → Response status 404 Not Found', async () => {
                 // Arrange
-                const squadNumber = 99; // valid range (1–99) but not in DB
+                const squadNumber = playerStub.unknown.squadNumber; // valid range (1–99) but not in DB
                 // Act
                 const response = await request(app)
                     .delete(`${path}/squadNumber/${squadNumber}`)

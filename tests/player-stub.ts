@@ -1,3 +1,10 @@
+/**
+ * Test data stubs for football player integration tests.
+ *
+ * - `existing`    — player is present in the database
+ * - `nonexistent` — player is absent, valid shape for creation (POST scenarios)
+ * - `unknown`     — valid ID format, absent from database (404-by-lookup scenarios)
+ */
 const playerStub = {
     all: [
         {
@@ -339,6 +346,10 @@ const playerStub = {
             starting11: false,
         },
     ],
+    unknown: {
+        id: '00000000-0000-0000-0000-000000000000',
+        squadNumber: 99,
+    },
     nonexistent: {
         firstName: 'Giovani',
         middleName: null,
