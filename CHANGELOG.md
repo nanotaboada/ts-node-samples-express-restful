@@ -59,6 +59,12 @@ This project uses football/soccer terminology for release names:
 
 ### Changed
 
+- `tests/player-stub.ts`: added JSDoc comment documenting the three-term data-state
+  vocabulary (`existing`, `nonexistent`, `unknown`) and added `unknown` property
+  (id + squadNumber) for 404-by-lookup test scenarios (#574)
+- `tests/player-test.ts`: renamed three test descriptions from `nonexistent` to
+  `unknown` and updated their bodies to reference `playerStub.unknown` (#574)
+
 ### Fixed
 
 ### Removed
