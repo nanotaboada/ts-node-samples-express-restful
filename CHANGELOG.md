@@ -44,6 +44,9 @@ This project uses football/soccer terminology for release names:
 
 ### Added
 
+- `lint` job to CI workflow as the first gate, running commitlint and ESLint before
+  `build`; all downstream jobs (`build → test → coverage`) now depend on it (#577)
+
 - Sequelize CLI migration infrastructure to replace the pre-seeded SQLite database
   file with version-controlled, reversible migrations (#107):
   - `.sequelizerc`: CLI config pointing to `config/database.cjs` and `database/migrations/`
