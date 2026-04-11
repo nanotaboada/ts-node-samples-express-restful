@@ -4,7 +4,7 @@ const { Op } = require('sequelize');
 
 // Extracted so the down() rollback can target exactly these rows by primary key
 // rather than using a broad predicate that could delete user-created data.
-const STARTING_11_IDS = [
+const starting11Ids = [
     '2f6f90a0-9b9d-5023-96d2-a2aaf03143a6',
     '0293b282-1da8-562e-998e-83849b417a42',
     '38bae91d-8519-55a2-b30a-b9fe38849bfb',
@@ -169,6 +169,6 @@ module.exports = {
     },
 
     async down(queryInterface) {
-        await queryInterface.bulkDelete('players', { id: { [Op.in]: STARTING_11_IDS } });
+        await queryInterface.bulkDelete('players', { id: { [Op.in]: starting11Ids } });
     },
 };
