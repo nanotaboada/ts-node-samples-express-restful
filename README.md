@@ -20,7 +20,7 @@ Proof of Concept for a RESTful Web Service built with **Express.js 5** and **Typ
 - 📚 **Interactive Documentation** - Live API exploration with Swagger UI and VS Code REST Client support
 - ⚡ **Performance Caching** - In-memory caching with node-cache and Sequelize ORM
 - 🔒 **Security Middleware** - Rate limiting, CORS, and Helmet headers
-- 🐳 **Containerized Deployment** - Multi-stage Docker builds with pre-seeded database
+- 🐳 **Containerized Deployment** - Multi-stage Docker builds with migration-based database initialization
 - 🔄 **Automated Pipeline** - Continuous integration with ESLint, Prettier, and automated testing
 
 ## Tech Stack
@@ -207,7 +207,7 @@ npm run docker:up
 docker compose up
 ```
 
-> 💡 **Note:** On first run, the container copies a pre-seeded SQLite database into a persistent volume. On subsequent runs, that volume is reused and the data is preserved.
+> 💡 **Note:** On first run, the container runs all Sequelize migrations to create and seed the database into the persistent volume. On subsequent runs, the volume is reused and only pending migrations are applied.
 
 ### Stop
 
@@ -219,7 +219,7 @@ docker compose down
 
 ### Reset Database
 
-To remove the volume and reinitialize the database from the built-in seed file:
+To remove the volume and reinitialize the database from scratch:
 
 ```bash
 docker compose down -v
@@ -239,6 +239,32 @@ docker pull ghcr.io/nanotaboada/ts-node-samples-express-restful:assist
 # Latest release
 docker pull ghcr.io/nanotaboada/ts-node-samples-express-restful:latest
 ```
+
+## Database Migrations
+
+Schema and seed data are managed as three sequential Sequelize CLI migrations:
+
+| # | File | Type | Description |
+|---|------|------|-------------|
+| 1 | `20260101000001-create-players-table.js` | DDL | Creates the `players` table |
+| 2 | `20260101000002-seed-starting-11.js` | DML | Seeds the 11 starting players |
+| 3 | `20260101000003-seed-substitute-players.js` | DML | Seeds the 15 substitute players |
+
+```bash
+# Apply all pending migrations
+npm run db:migrate
+
+# Undo the most recent migration (removes substitutes)
+npm run db:migrate:undo
+
+# Undo all migrations (drops the table)
+npm run db:migrate:undo:all
+
+# Full reset: undo all, then re-apply from scratch
+npm run db:reset
+```
+
+Sequelize tracks applied migrations in a `SequelizeMeta` table within the database. The split between DDL and DML migrations means each concern can be rolled back independently.
 
 ## Environment Variables
 
@@ -299,6 +325,10 @@ npm run coverage
 | `npm run lint` | Run ESLint on all files |
 | `npm run lint:commit` | Validate last commit message format |
 | `npm run swagger:docs` | Generate swagger.json from JSDoc annotations |
+| `npm run db:migrate` | Apply all pending migrations |
+| `npm run db:migrate:undo` | Undo the most recent migration |
+| `npm run db:migrate:undo:all` | Undo all migrations |
+| `npm run db:reset` | Undo all migrations and re-apply from scratch |
 | `npm run docker:build` | Build Docker image |
 | `npm run docker:up` | Start Docker container |
 | `npm run docker:down` | Stop and remove Docker volume |

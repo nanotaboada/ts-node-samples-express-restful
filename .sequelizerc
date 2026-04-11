@@ -1,0 +1,13 @@
+// .sequelizerc intentionally uses CommonJS syntax (require / module.exports).
+// Although the project declares "type": "module" in package.json (making .js
+// files ESM by default), Node.js does NOT apply that rule to files without a
+// .js extension. The sequelize-cli loads this file with require(), which treats
+// extension-less files as CommonJS regardless of the package type field.
+const path = require('path');
+
+module.exports = {
+    config: path.resolve('config', 'database.cjs'),
+    'models-path': path.resolve('src', 'models'),
+    'seeders-path': path.resolve('database', 'seeders'),
+    'migrations-path': path.resolve('database', 'migrations'),
+};
