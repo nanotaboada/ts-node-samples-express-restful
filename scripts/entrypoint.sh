@@ -22,8 +22,13 @@ fi
 # Unlike Diesel/Alembic/Flyway/EF Core, Sequelize CLI does not auto-run on app
 # startup, so migrations are applied explicitly here. The CLI checks SequelizeMeta
 # and only runs pending migrations, making this call safe to run on every start.
+#
+# NODE_ENV is forced to "development" (SQLite) regardless of the container env.
+# compose.yml sets NODE_ENV=production, which would select the PostgreSQL config
+# and fail because the pg package is not installed yet. PostgreSQL support will
+# be wired up in issue #549 — at that point this line should use NODE_ENV=production.
 log "🗄️ Applying Sequelize migrations (pending only)..."
-NODE_ENV="${NODE_ENV:-development}" ./dist/node_modules/.bin/sequelize-cli db:migrate
+NODE_ENV=development ./dist/node_modules/.bin/sequelize-cli db:migrate
 log "✔ Migrations complete."
 
 log "✔ Ready!"
