@@ -15,7 +15,6 @@ env:
 
 jobs:
   test:
-    name: Test before deployment
     runs-on: ubuntu-latest
 
     permissions:
@@ -42,13 +41,14 @@ jobs:
         run: npm run coverage
 
   release:
-    name: Build and publish Docker image
     needs: test
     runs-on: ubuntu-latest
 
     permissions:
       contents: write
       packages: write
+      id-token: write
+      attestations: write
 
     steps:
       - name: Checkout repository
@@ -66,7 +66,7 @@ jobs:
           echo "Verified: tag commit ${{ github.sha }} is reachable from master."
 
       - name: Extract version and term name from tag
-        id: extract_tag
+        id: version
         run: |
           # Tag format: v1.0.0-assist
           TAG_NAME=${GITHUB_REF#refs/tags/}
@@ -120,18 +120,26 @@ jobs:
         uses: docker/setup-buildx-action@v4.0.0
 
       - name: Build and push Docker image
+        id: push
         uses: docker/build-push-action@v7.0.0
         with:
           context: .
           push: true
-          platforms: linux/amd64
-          provenance: false
+          platforms: linux/amd64,linux/arm64
+          provenance: mode=max
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.extract_tag.outputs.semver }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.extract_tag.outputs.term }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.semver }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.term }}
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v4.1.0
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
 
       - name: Generate changelog
         id: changelog
@@ -143,18 +151,14 @@ jobs:
             echo "📝 First release - no previous tag found"
             CHANGELOG="Initial release"
           else
-            echo "📝 Generating changelog from $PREVIOUS_TAG to ${{ steps.extract_tag.outputs.tag_name }}"
-            CHANGELOG=$(git log --pretty=format:"- %s (%h)" ${PREVIOUS_TAG}..${{ steps.extract_tag.outputs.tag_name }})
+            echo "📝 Generating changelog from $PREVIOUS_TAG to ${{ steps.version.outputs.tag_name }}"
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" --no-merges ${PREVIOUS_TAG}..${{ steps.version.outputs.tag_name }})
 
             # Guard against empty changelog (e.g., re-tagging same commit)
             if [ -z "$CHANGELOG" ]; then
               CHANGELOG="No new changes since $PREVIOUS_TAG"
             fi
           fi
-
-          # Write changelog to file
-          echo "$CHANGELOG" > changelog.txt
-          cat changelog.txt
 
           # Set output for use in release body
           {
@@ -166,10 +170,10 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2.6.1
         with:
-          name: "v${{ steps.extract_tag.outputs.semver }} - ${{ steps.extract_tag.outputs.term }} ⚽"
-          tag_name: ${{ steps.extract_tag.outputs.tag_name }}
+          name: "v${{ steps.version.outputs.semver }} - ${{ steps.version.outputs.term }} ⚽"
+          tag_name: ${{ steps.version.outputs.tag_name }}
           body: |
-            # Release ${{ steps.extract_tag.outputs.semver }} - ${{ steps.extract_tag.outputs.term }} ⚽
+            # Release ${{ steps.version.outputs.semver }} - ${{ steps.version.outputs.term }} ⚽
 
             ## Docker Images
 
@@ -177,22 +181,14 @@ jobs:
 
             ```bash
             # By semantic version (recommended)
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.extract_tag.outputs.semver }}
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.semver }}
 
             # By term name
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.extract_tag.outputs.term }}
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.term }}
 
             # Latest
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
             ```
-
-            ## Quick Start
-
-            ```bash
-            docker run -p 9000:9000 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.extract_tag.outputs.semver }}
-            ```
-
-            Visit http://localhost:9000/swagger/ for API documentation.
 
             ## Changelog
 
