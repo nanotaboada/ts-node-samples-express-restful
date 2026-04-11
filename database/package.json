@@ -1,0 +1,4 @@
+{
+    "_comment": "Overrides the root 'type': 'module' so that migration .js files in this directory are loaded as CommonJS by Node.js and require()'d correctly by sequelize-cli.",
+    "type": "commonjs"
+}

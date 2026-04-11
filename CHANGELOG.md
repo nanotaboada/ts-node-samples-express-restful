@@ -44,6 +44,57 @@ This project uses football/soccer terminology for release names:
 
 ### Added
 
+- Sequelize CLI migration infrastructure to replace the pre-seeded SQLite database
+  file with version-controlled, reversible migrations (#107):
+  - `.sequelizerc`: CLI config pointing to `config/database.cjs` and `database/migrations/`
+  - `config/database.cjs`: environment config for `development` (SQLite via `STORAGE_PATH`),
+    `test` (in-memory SQLite), and `production` (PostgreSQL, stubbed for #549)
+  - `database/package.json`: sets `"type": "commonjs"` so migration files load as CJS
+    in the ESM package
+  - `database/migrations/20260101000001-create-players-table.js`: DDL — creates
+    the `players` table with UUID primary key
+  - `database/migrations/20260101000002-seed-starting-11.js`: DML — seeds 11
+    starting players
+  - `database/migrations/20260101000003-seed-substitute-players.js`: DML — seeds
+    15 substitute players
+  - `db:migrate`, `db:migrate:undo`, `db:migrate:undo:all`, `db:reset` npm scripts
+  - Database Migrations section in `README.md`
+- `sequelize-cli` to `dependencies` (runtime dependency — required by Docker
+  entrypoint to apply migrations on startup) (#107)
+- `predev` npm lifecycle hook runs `db:migrate` automatically before `npm run dev`,
+  ensuring the local database is initialized before the app starts (#107)
+
+### Changed
+
+- `scripts/entrypoint.sh`: replaced pre-seeded database copy logic with
+  `sequelize-cli db:migrate` (idempotent via `SequelizeMeta`); added `log()`
+  helper with timestamps matching the cross-project entrypoint pattern (#107)
+- `Dockerfile`: replaced `COPY storage/ ./hold/` with `COPY database/`,
+  `COPY config/`, `COPY .sequelizerc` to include migration files in the runtime
+  image (#107)
+- `.gitignore`: replaced `players-sqlite3.db-shm` / `players-sqlite3.db-wal`
+  with `*.db` (#107)
+- `README.md`: updated Containerized Deployment feature description and
+  Containers section to reflect migration-based initialization; updated Command
+  Summary table with migration commands (#107)
+
+### Fixed
+
+- `dateOfBirth` values now round-trip correctly at runtime: Sequelize's SQLite
+  `DATE` parser appends the timezone offset only when the stored string lacks
+  `+`, turning `'...T...Z'` into `'...Z+00:00'` (invalid). Seed migrations now
+  store dates in Sequelize's own `_stringify` format (`'YYYY-MM-DD HH:mm:ss.SSS
+  +00:00'`), which satisfies the parser's `+` check. `PlayerModel.create` /
+  `PlayerModel.update` are unaffected — they go through the type pipeline and
+  store the correct format automatically. Local storage path is resolved via
+  `STORAGE_PATH` in `config/database.cjs`; Docker initialization runs through
+  `scripts/entrypoint.sh` (#107)
+
+### Removed
+
+- `storage/players-sqlite3.db`: pre-seeded binary database file removed from
+  version control; database is now initialized at runtime via migrations (#107)
+
 - `.sonarcloud.properties`: SonarCloud Automatic Analysis configuration —
   sources, tests, coverage exclusions aligned with `codecov.yml` (#561)
 - `.dockerignore`: added `.claude/`, `CLAUDE.md`, `.coderabbit.yaml`,

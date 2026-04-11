@@ -1,29 +1,38 @@
 #!/bin/sh
 set -e
 
-echo "✔ Executing entrypoint script..."
+# Helper function for formatted logging
+log() {
+    echo "[ENTRYPOINT] $(date '+%Y/%m/%d - %H:%M:%S') | $1"
+    return 0
+}
 
-IMAGE_STORAGE_PATH="/app/hold/players-sqlite3.db"
-VOLUME_STORAGE_PATH="/storage/players-sqlite3.db"
+log "✔ Starting container..."
 
-echo "✔ Starting container..."
+STORAGE_PATH="${STORAGE_PATH:-storage/players-sqlite3.db}"
 
-if [ ! -f "$VOLUME_STORAGE_PATH" ]; then
-  echo "⚠️ No existing database file found in volume."
-  if [ -f "$IMAGE_STORAGE_PATH" ]; then
-    echo "Copying database file to writable volume..."
-    cp "$IMAGE_STORAGE_PATH" "$VOLUME_STORAGE_PATH"
-    echo "✔ Database initialized at $VOLUME_STORAGE_PATH"
-  else
-    echo "⚠️ Database file missing at $IMAGE_STORAGE_PATH"
-    exit 1
-  fi
+mkdir -p "$(dirname "$STORAGE_PATH")"
+
+if [ ! -f "$STORAGE_PATH" ]; then
+    log "⚠️ No existing database file found at $STORAGE_PATH."
 else
-  echo "✔ Existing database file found. Skipping seed copy."
+    log "✔ Existing database file found at $STORAGE_PATH."
 fi
 
-echo "✔ Ready!"
-echo "🚀 Launching app..."
-echo "🔌 API endpoints | http://localhost:9000/players/"
-echo "📚 Swagger UI    | http://localhost:9000/swagger/"
+# Unlike Diesel/Alembic/Flyway/EF Core, Sequelize CLI does not auto-run on app
+# startup, so migrations are applied explicitly here. The CLI checks SequelizeMeta
+# and only runs pending migrations, making this call safe to run on every start.
+#
+# NODE_ENV is forced to "development" (SQLite) regardless of the container env.
+# compose.yml sets NODE_ENV=production, which would select the PostgreSQL config
+# and fail because the pg package is not installed yet. PostgreSQL support will
+# be wired up in issue #549 — at that point this line should use NODE_ENV=production.
+log "🗄️ Applying Sequelize migrations (pending only)..."
+NODE_ENV=development ./dist/node_modules/.bin/sequelize-cli db:migrate
+log "✔ Migrations complete."
+
+log "✔ Ready!"
+log "🚀 Launching app..."
+log "🔌 API endpoints   | http://localhost:9000/players/"
+log "📚 Swagger UI      | http://localhost:9000/swagger/"
 exec "$@"
