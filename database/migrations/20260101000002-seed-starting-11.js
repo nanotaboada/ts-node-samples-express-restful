@@ -1,5 +1,23 @@
 'use strict';
 
+const { Op } = require('sequelize');
+
+// Extracted so the down() rollback can target exactly these rows by primary key
+// rather than using a broad predicate that could delete user-created data.
+const STARTING_11_IDS = [
+    '2f6f90a0-9b9d-5023-96d2-a2aaf03143a6',
+    '0293b282-1da8-562e-998e-83849b417a42',
+    '38bae91d-8519-55a2-b30a-b9fe38849bfb',
+    'acc433bf-d505-51fe-831e-45eb44c4d43c',
+    'b5b46e79-929e-5ed2-949d-0d167109c022',
+    'c096c69e-762b-5281-9290-bb9c167a24a0',
+    'd5f7dd7a-1dcb-5960-ba27-e34865b63358',
+    '9613cae9-16ab-5b54-937e-3135123b9e0d',
+    '01772c59-43f0-5d85-b913-c78e4e281452',
+    'd3ba552a-dac3-588a-b961-1ea7224017fd',
+    'da31293b-4c7e-5e0f-a168-469ee29ecbc4',
+];
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface) {
@@ -151,6 +169,6 @@ module.exports = {
     },
 
     async down(queryInterface) {
-        await queryInterface.bulkDelete('players', { starting11: true });
+        await queryInterface.bulkDelete('players', { id: { [Op.in]: STARTING_11_IDS } });
     },
 };

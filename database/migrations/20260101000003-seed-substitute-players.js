@@ -1,5 +1,27 @@
 'use strict';
 
+const { Op } = require('sequelize');
+
+// Extracted so the down() rollback can target exactly these rows by primary key
+// rather than using a broad predicate that could delete user-created data.
+const SUBSTITUTE_IDS = [
+    '5a9cd988-95e6-54c1-bc34-9aa08acca8d0',
+    '5fdb10e8-38c0-5084-9a3f-b369a960b9c2',
+    'bbd441f7-fcfb-5834-8468-2a9004b64c8c',
+    '9d140400-196f-55d8-86e1-e0b96a375c83',
+    'd8bfea25-f189-5d5e-b3a5-ed89329b9f7c',
+    'dca343a8-12e5-53d6-89a8-916b120a5ee4',
+    'c62f2ac1-41e8-5d34-b073-2ba0913d0e31',
+    'd3b0e8e8-2c34-531a-b608-b24fed0ef986',
+    'b1306b7b-a3a4-5f7c-90fd-dd5bdbed57ba',
+    'ecec27e8-487b-5622-b116-0855020477ed',
+    '7cc8d527-56a2-58bd-9528-2618fc139d30',
+    '191c82af-0c51-526a-b903-c3600b61b506',
+    '7941cd7c-4df1-5952-97e8-1e7f5d08e8aa',
+    '79c96f29-c59f-5f98-96b8-3a5946246624',
+    '98306555-a466-5d18-804e-dc82175e697b',
+];
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface) {
@@ -203,6 +225,6 @@ module.exports = {
     },
 
     async down(queryInterface) {
-        await queryInterface.bulkDelete('players', { starting11: false });
+        await queryInterface.bulkDelete('players', { id: { [Op.in]: SUBSTITUTE_IDS } });
     },
 };

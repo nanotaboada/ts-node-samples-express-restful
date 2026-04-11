@@ -78,6 +78,18 @@ This project uses football/soccer terminology for release names:
   Containers section to reflect migration-based initialization; updated Command
   Summary table with migration commands (#107)
 
+### Fixed
+
+- `dateOfBirth` values now round-trip correctly at runtime: Sequelize's SQLite
+  `DATE` parser appends the timezone offset only when the stored string lacks
+  `+`, turning `'...T...Z'` into `'...Z+00:00'` (invalid). Seed migrations now
+  store dates in Sequelize's own `_stringify` format (`'YYYY-MM-DD HH:mm:ss.SSS
+  +00:00'`), which satisfies the parser's `+` check. `PlayerModel.create` /
+  `PlayerModel.update` are unaffected — they go through the type pipeline and
+  store the correct format automatically. Local storage path is resolved via
+  `STORAGE_PATH` in `config/database.cjs`; Docker initialization runs through
+  `scripts/entrypoint.sh` (#107)
+
 ### Removed
 
 - `storage/players-sqlite3.db`: pre-seeded binary database file removed from

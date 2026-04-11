@@ -176,9 +176,18 @@ npm install
 npm run dev
 ```
 
-The server will start on `http://localhost:9000` with the following output:
+The `predev` hook runs `db:migrate` first, then nodemon starts. On first run the database is created and seeded; on subsequent runs no pending migrations will be found and nodemon starts immediately:
 
 ```console
+> ts-node-samples-express-restful@1.0.0 predev
+> npm run db:migrate
+
+Sequelize CLI [Node: 24.x.x, CLI: 6.x.x, ORM: 6.x.x]
+Using environment "development".
+== 20260101000001-create-players-table: migrated (0.007s)
+== 20260101000002-seed-starting-11: migrated (0.004s)
+== 20260101000003-seed-substitute-players: migrated (0.004s)
+
 > ts-node-samples-express-restful@1.0.0 dev
 > nodemon
 
