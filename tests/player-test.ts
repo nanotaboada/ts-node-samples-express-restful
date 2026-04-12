@@ -2,7 +2,13 @@ import request from 'supertest';
 import app from '../src/app.js';
 import sequelize from '../src/database/sequelize.js';
 import PlayerModel from '../src/models/player-model.js';
-import playerStub from './player-stub.js';
+import {
+    makeAllPlayers,
+    makeExistingPlayer,
+    makeNonexistentPlayer,
+    makePlayerBySquadNumber,
+    makeUnknownPlayer,
+} from './player-fake.js';
 
 const path = '/players';
 
@@ -17,15 +23,17 @@ describe('Integration Tests', () => {
     // Uses an in-memory SQLite DB (STORAGE_PATH=:memory: in .env.test) — the seeded
     // storage/players-sqlite3.db file on disk is never touched by the test suite.
     beforeAll(async () => {
+        const players = makeAllPlayers();
         await sequelize.sync();
-        await PlayerModel.bulkCreate(playerStub.all);
+        await PlayerModel.bulkCreate(players);
     });
 
     // Runs after every test in the suite (outer hook, fires after any inner afterEach).
-    // Removes playerStub.nonexistent if it was left in the DB by a POST or DELETE beforeEach.
+    // Removes the nonexistent player if it was left in the DB by a POST or DELETE beforeEach.
     // 404 is accepted: PUT tests never create it, and DELETE "existing" already removed it.
     afterEach(async () => {
-        const response = await request(app).delete(`${path}/squadNumber/${playerStub.nonexistent.squadNumber}`);
+        const player = makeNonexistentPlayer();
+        const response = await request(app).delete(`${path}/squadNumber/${player.squadNumber}`);
         if (response.status !== 204 && response.status !== 404) {
             throw new Error(`Cleanup failed with status ${response.status}`);
         }
@@ -73,36 +81,38 @@ describe('Integration Tests', () => {
                 expect(response.status).toBe(200);
             });
             it('Request GET /players → Response body players', async () => {
+                // Arrange
+                const players = makeAllPlayers();
                 // Act
                 const response = await request(app)
                     .get(path);
                 // Assert
-                expect(response.body).toEqual(playerStub.all);
+                expect(response.body).toEqual(players);
             });
         });
         // GET /players/:id ----------------------------------------------------
         describe('/players/:id', () => {
             it('Request GET /players/{id} unknown → Response status 404 Not Found', async () => {
                 // Arrange
-                const id = playerStub.unknown.id;
+                const player = makeUnknownPlayer();
                 // Act
                 const response = await request(app)
-                    .get(`${path}/${id}`);
+                    .get(`${path}/${player.id}`);
                 // Assert
                 expect(response.status).toBe(404);
             });
             it('Request GET /players/{id} existing → Response status 200 OK', async () => {
                 // Arrange
-                const { id } = playerStub.findBySquadNumber(10);
+                const player = makePlayerBySquadNumber(10);
                 // Act
                 const response = await request(app)
-                    .get(`${path}/${id}`);
+                    .get(`${path}/${player.id}`);
                 // Assert
                 expect(response.status).toBe(200);
             });
             it('Request GET /players/{id} existing → Response body player match', async () => {
                 // Arrange
-                const expected = playerStub.findBySquadNumber(10);
+                const expected = makePlayerBySquadNumber(10);
                 // Act
                 const response = await request(app)
                     .get(`${path}/${expected.id}`);
@@ -133,7 +143,7 @@ describe('Integration Tests', () => {
             it('Request GET /players/squadNumber/{squadNumber} existing → Response body player match', async () => {
                 // Arrange
                 const squadNumber = 10;
-                const expected = playerStub.findBySquadNumber(squadNumber);
+                const expected = makePlayerBySquadNumber(squadNumber);
                 // Act
                 const response = await request(app)
                     .get(`${path}/squadNumber/${squadNumber}`);
@@ -145,9 +155,9 @@ describe('Integration Tests', () => {
     describe('POST', () => {
         it('Request POST /players within rate limit → Response status 201 Created', async () => {
             // Arrange
-            const body = playerStub.nonexistent;
+            const player = makeNonexistentPlayer();
             // Act
-            const response = await request(app).post('/players').send(body);
+            const response = await request(app).post('/players').send(player);
             // Assert
             expect(response.status).toBe(201);
         });
@@ -155,16 +165,17 @@ describe('Integration Tests', () => {
             // This test is skipped by default as it requires making 20+ requests
             // To enable, set RATE_LIMIT_MAX_STRICT to a lower value (e.g., 5) in test environment
             const maxRequests = Number.parseInt(process.env.RATE_LIMIT_MAX_STRICT || '20', 10);
+            const player = makeNonexistentPlayer();
 
             // Act - Make POST requests up to the strict limit
             for (let i = 0; i < maxRequests; i++) {
                 await request(app)
                     .post('/players')
-                    .send(playerStub.nonexistent);
+                    .send(player);
             }
 
             // Assert - The next POST request should be rate limited
-            const response = await request(app).post('/players').send(playerStub.nonexistent);
+            const response = await request(app).post('/players').send(player);
             expect(response.status).toBe(429);
             expect(response.body).toHaveProperty('error');
             expect(response.body.error).toContain('Too many write requests');
@@ -256,21 +267,21 @@ describe('Integration Tests', () => {
             });
             it('Request POST /players body existing → Response status 409 Conflict', async () => {
                 // Arrange
-                const body = playerStub.existing;
+                const player = makeExistingPlayer();
                 // Act
                 const response = await request(app)
                     .post(path)
-                    .send(body);
+                    .send(player);
                 // Assert
                 expect(response.status).toBe(409);
             });
             it('Request POST /players body nonexistent → Response status 201 Created', async () => {
                 // Arrange
-                const body = playerStub.nonexistent;
+                const player = makeNonexistentPlayer();
                 // Act
                 const response = await request(app)
                     .post(path)
-                    .send(body);
+                    .send(player);
                 // Assert
                 expect(response.status).toBe(201);
             });
@@ -278,12 +289,14 @@ describe('Integration Tests', () => {
     });
     describe('PUT', () => {
         // Runs after every PUT test (inner hook, fires before the top-level afterEach).
-        // Restores playerStub.existing to its original seeded values so later tests
+        // Restores the existing player to its original seeded values so later tests
         // see a consistent DB state regardless of what each PUT test wrote.
         afterEach(async () => {
+            const player = makeExistingPlayer();
+            const original = makePlayerBySquadNumber(player.squadNumber);
             const response = await request(app)
-                .put(`${path}/squadNumber/${playerStub.existing.squadNumber}`)
-                .send(playerStub.findBySquadNumber(playerStub.existing.squadNumber));
+                .put(`${path}/squadNumber/${player.squadNumber}`)
+                .send(original);
             if (response.status !== 204) {
                 throw new Error(`Restore failed with status ${response.status}`);
             }
@@ -291,10 +304,9 @@ describe('Integration Tests', () => {
 
         it('Request PUT /players/squadNumber/{squadNumber} within rate limit → Response status 204 No Content', async () => {
             // Arrange
-            const squadNumber = playerStub.existing.squadNumber;
-            const body = playerStub.existing;
+            const player = makeExistingPlayer();
             // Act
-            const response = await request(app).put(`/players/squadNumber/${squadNumber}`).send(body);
+            const response = await request(app).put(`/players/squadNumber/${player.squadNumber}`).send(player);
             // Assert
             expect(response.status).toBe(204);
         });
@@ -302,18 +314,19 @@ describe('Integration Tests', () => {
             // This test is skipped by default as it requires making 20+ requests
             // To enable, set RATE_LIMIT_MAX_STRICT to a lower value (e.g., 5) in test environment
             const maxRequests = Number.parseInt(process.env.RATE_LIMIT_MAX_STRICT || '20', 10);
+            const player = makeExistingPlayer();
 
             // Act - Make PUT requests up to the strict limit
             for (let i = 0; i < maxRequests; i++) {
                 await request(app)
-                    .put(`/players/squadNumber/${playerStub.existing.squadNumber}`)
-                    .send(playerStub.existing);
+                    .put(`/players/squadNumber/${player.squadNumber}`)
+                    .send(player);
             }
 
             // Assert - The next PUT request should be rate limited
             const response = await request(app)
-                .put(`/players/squadNumber/${playerStub.existing.squadNumber}`)
-                .send(playerStub.existing);
+                .put(`/players/squadNumber/${player.squadNumber}`)
+                .send(player);
             expect(response.status).toBe(429);
             expect(response.body).toHaveProperty('error');
             expect(response.body.error).toContain('Too many write requests');
@@ -322,11 +335,11 @@ describe('Integration Tests', () => {
         describe('/players/squadNumber/:squadNumber', () => {
             it('Request PUT /players/squadNumber/{squadNumber} body empty → Response status 400 Bad Request', async () => {
                 // Arrange
-                const squadNumber = playerStub.existing.squadNumber;
+                const player = makeExistingPlayer();
                 const body: Record<string, any> = {};
                 // Act
                 const response = await request(app)
-                    .put(`${path}/squadNumber/${squadNumber}`)
+                    .put(`${path}/squadNumber/${player.squadNumber}`)
                     .send(body);
                 // Assert
                 expect(response.status).toBe(400);
@@ -334,11 +347,11 @@ describe('Integration Tests', () => {
             });
             it('Request PUT /players/squadNumber/{squadNumber} firstName missing → Response status 400 Bad Request', async () => {
                 // Arrange
-                const squadNumber = playerStub.existing.squadNumber;
-                const body = { lastName: 'Doe', squadNumber, position: 'Forward' };
+                const player = makeExistingPlayer();
+                const body = { lastName: 'Doe', squadNumber: player.squadNumber, position: 'Forward' };
                 // Act
                 const response = await request(app)
-                    .put(`${path}/squadNumber/${squadNumber}`)
+                    .put(`${path}/squadNumber/${player.squadNumber}`)
                     .send(body);
                 // Assert
                 expect(response.status).toBe(400);
@@ -347,11 +360,11 @@ describe('Integration Tests', () => {
             });
             it('Request PUT /players/squadNumber/{squadNumber} lastName missing → Response status 400 Bad Request', async () => {
                 // Arrange
-                const squadNumber = playerStub.existing.squadNumber;
-                const body = { firstName: 'John', squadNumber, position: 'Forward' };
+                const player = makeExistingPlayer();
+                const body = { firstName: 'John', squadNumber: player.squadNumber, position: 'Forward' };
                 // Act
                 const response = await request(app)
-                    .put(`${path}/squadNumber/${squadNumber}`)
+                    .put(`${path}/squadNumber/${player.squadNumber}`)
                     .send(body);
                 // Assert
                 expect(response.status).toBe(400);
@@ -360,11 +373,11 @@ describe('Integration Tests', () => {
             });
             it('Request PUT /players/squadNumber/{squadNumber} squadNumber missing → Response status 400 Bad Request', async () => {
                 // Arrange
-                const squadNumber = playerStub.existing.squadNumber;
+                const player = makeExistingPlayer();
                 const body = { firstName: 'John', lastName: 'Doe', position: 'Forward' };
                 // Act
                 const response = await request(app)
-                    .put(`${path}/squadNumber/${squadNumber}`)
+                    .put(`${path}/squadNumber/${player.squadNumber}`)
                     .send(body);
                 // Assert
                 expect(response.status).toBe(400);
@@ -373,11 +386,11 @@ describe('Integration Tests', () => {
             });
             it('Request PUT /players/squadNumber/{squadNumber} position missing → Response status 400 Bad Request', async () => {
                 // Arrange
-                const squadNumber = playerStub.existing.squadNumber;
-                const body = { firstName: 'John', lastName: 'Doe', squadNumber };
+                const player = makeExistingPlayer();
+                const body = { firstName: 'John', lastName: 'Doe', squadNumber: player.squadNumber };
                 // Act
                 const response = await request(app)
-                    .put(`${path}/squadNumber/${squadNumber}`)
+                    .put(`${path}/squadNumber/${player.squadNumber}`)
                     .send(body);
                 // Assert
                 expect(response.status).toBe(400);
@@ -386,11 +399,11 @@ describe('Integration Tests', () => {
             });
             it('Request PUT /players/squadNumber/{squadNumber} squadNumber >99 → Response status 400 Bad Request', async () => {
                 // Arrange
-                const squadNumber = playerStub.existing.squadNumber;
+                const player = makeExistingPlayer();
                 const body = { firstName: 'John', lastName: 'Doe', squadNumber: 100, position: 'Forward' };
                 // Act
                 const response = await request(app)
-                    .put(`${path}/squadNumber/${squadNumber}`)
+                    .put(`${path}/squadNumber/${player.squadNumber}`)
                     .send(body);
                 // Assert
                 expect(response.status).toBe(400);
@@ -399,11 +412,11 @@ describe('Integration Tests', () => {
             });
             it('Request PUT /players/squadNumber/{squadNumber} squadNumber <1 → Response status 400 Bad Request', async () => {
                 // Arrange
-                const squadNumber = playerStub.existing.squadNumber;
+                const player = makeExistingPlayer();
                 const body = { firstName: 'John', lastName: 'Doe', squadNumber: 0, position: 'Forward' };
                 // Act
                 const response = await request(app)
-                    .put(`${path}/squadNumber/${squadNumber}`)
+                    .put(`${path}/squadNumber/${player.squadNumber}`)
                     .send(body);
                 // Assert
                 expect(response.status).toBe(400);
@@ -412,53 +425,53 @@ describe('Integration Tests', () => {
             });
             it('Request PUT /players/squadNumber/{squadNumber} unknown → Response status 404 Not Found', async () => {
                 // Arrange
-                const squadNumber = playerStub.unknown.squadNumber; // valid range (1–99) but not in DB
-                const body = { firstName: 'John', lastName: 'Doe', squadNumber, position: 'Forward' };
+                const player = makeUnknownPlayer(); // valid range (1–99) but not in DB
+                const body = { firstName: 'John', lastName: 'Doe', squadNumber: player.squadNumber, position: 'Forward' };
                 // Act
                 const response = await request(app)
-                    .put(`${path}/squadNumber/${squadNumber}`)
+                    .put(`${path}/squadNumber/${player.squadNumber}`)
                     .send(body);
                 // Assert
                 expect(response.status).toBe(404);
             });
             it('Request PUT /players/squadNumber/{squadNumber} existing → Response status 204 No Content', async () => {
                 // Arrange
-                const squadNumber = playerStub.existing.squadNumber;
-                const body = playerStub.existing;
+                const player = makeExistingPlayer();
                 // Act
                 const response = await request(app)
-                    .put(`${path}/squadNumber/${squadNumber}`)
-                    .send(body);
+                    .put(`${path}/squadNumber/${player.squadNumber}`)
+                    .send(player);
                 // Assert
                 expect(response.status).toBe(204);
             });
         });
     });
     describe('DELETE', () => {
-        // Seeds playerStub.nonexistent before each DELETE test so there is always
+        // Seeds the nonexistent player before each DELETE test so there is always
         // a known player to target. The top-level afterEach handles removal in case
         // a test does not consume it (e.g. the "nonexistent squadNumber" 404 test).
         beforeEach(async () => {
-            await request(app).post(path).send(playerStub.nonexistent);
+            const player = makeNonexistentPlayer();
+            await request(app).post(path).send(player);
         });
 
         // DELETE /players/squadNumber/:squadNumber ----------------------------
         describe('/players/squadNumber/:squadNumber', () => {
             it('Request DELETE /players/squadNumber/{squadNumber} unknown → Response status 404 Not Found', async () => {
                 // Arrange
-                const squadNumber = playerStub.unknown.squadNumber; // valid range (1–99) but not in DB
+                const player = makeUnknownPlayer(); // valid range (1–99) but not in DB
                 // Act
                 const response = await request(app)
-                    .delete(`${path}/squadNumber/${squadNumber}`)
+                    .delete(`${path}/squadNumber/${player.squadNumber}`)
                 // Assert
                 expect(response.status).toBe(404);
             });
             it('Request DELETE /players/squadNumber/{squadNumber} existing → Response status 204 No Content', async () => {
                 // Arrange
-                const squadNumber = playerStub.nonexistent.squadNumber; // posted in beforeEach
+                const player = makeNonexistentPlayer(); // posted in beforeEach
                 // Act
                 const response = await request(app)
-                    .delete(`${path}/squadNumber/${squadNumber}`)
+                    .delete(`${path}/squadNumber/${player.squadNumber}`)
                 // Assert
                 expect(response.status).toBe(204);
             });

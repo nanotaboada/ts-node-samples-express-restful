@@ -69,6 +69,15 @@ This project uses football/soccer terminology for release names:
 
 ### Changed
 
+- Replaced `tests/player-stub.ts` property bag with `tests/player-fake.ts` factory
+  functions (`makeAllPlayers`, `makeExistingPlayer`, `makeNonexistentPlayer`,
+  `makeUnknownPlayer`, `makePlayerBySquadNumber`); all call sites in `player-test.ts`
+  updated to assign factory results to named `const` variables before use (#576)
+- `tests/tsconfig.json`: added test-specific TypeScript config extending the root,
+  with `"types": ["jest", "node"]` and `"noEmit": true`, so VS Code resolves Jest
+  globals for files in `tests/`
+- `jest.config.ts`: pointed ts-jest transform at `tests/tsconfig.json`
+
 - `scripts/entrypoint.sh`: replaced pre-seeded database copy logic with
   `sequelize-cli db:migrate` (idempotent via `SequelizeMeta`); added `log()`
   helper with timestamps matching the cross-project entrypoint pattern (#107)
