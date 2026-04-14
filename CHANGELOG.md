@@ -52,7 +52,7 @@ This project uses football/soccer terminology for release names:
 
 ---
 
-## [2.1.1 - Equalizer] - 2026-04-13
+## [2.1.1 - Equalizer] - 2026-04-14
 
 ### Added
 
@@ -78,6 +78,13 @@ This project uses football/soccer terminology for release names:
   entrypoint to apply migrations on startup) (#107)
 - `predev` npm lifecycle hook runs `db:migrate` automatically before `npm run dev`,
   ensuring the local database is initialized before the app starts (#107)
+- Architecture Decision Records (ADRs) in `docs/adr/` documenting 11 key decisions (#479)
+- Architecture Decisions section in `README.md` linking to the ADR index
+- Runtime verification step in CD workflow to confirm tag commit is reachable from master before build/publish (#556)
+- Jest globals (`globals.jest`) to ESLint flat config for test files, fixing `no-undef` on Jest APIs
+- Clarifying comments to test lifecycle hooks explaining hook execution order and DB isolation strategy
+- ADR guidelines in `CONTRIBUTING.md` (section 4)
+- ADR reference in `.github/copilot-instructions.md`
 
 ### Changed
 
@@ -127,13 +134,6 @@ This project uses football/soccer terminology for release names:
 - `.dockerignore`: added `.claude/`, `CLAUDE.md`, `.coderabbit.yaml`,
   `.sonarcloud.properties`, `CHANGELOG.md`, `README.md`; removed stale
   `.codeclimate.yml` entry (#561)
-- Architecture Decision Records (ADRs) in `docs/adr/` documenting 11 key decisions (#479)
-- Architecture Decisions section in `README.md` linking to the ADR index
-- Runtime verification step in CD workflow to confirm tag commit is reachable from master before build/publish (#556)
-- Jest globals (`globals.jest`) to ESLint flat config for test files, fixing `no-undef` on Jest APIs
-- Clarifying comments to test lifecycle hooks explaining hook execution order and DB isolation strategy
-- ADR guidelines in `CONTRIBUTING.md` (section 4)
-- ADR reference in `.github/copilot-instructions.md`
 
 ## [2.1.0-dribble] - 2026-03-31
 
