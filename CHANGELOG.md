@@ -44,6 +44,18 @@ This project uses football/soccer terminology for release names:
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+---
+
+## [2.1.1 - Equalizer] - 2026-04-14
+
+### Added
+
 - `lint` job to CI workflow as the first gate, running commitlint and ESLint before
   `build`; all downstream jobs (`build → test → coverage`) now depend on it (#577)
 
@@ -66,6 +78,13 @@ This project uses football/soccer terminology for release names:
   entrypoint to apply migrations on startup) (#107)
 - `predev` npm lifecycle hook runs `db:migrate` automatically before `npm run dev`,
   ensuring the local database is initialized before the app starts (#107)
+- Architecture Decision Records (ADRs) in `docs/adr/` documenting 11 key decisions (#479)
+- Architecture Decisions section in `README.md` linking to the ADR index
+- Runtime verification step in CD workflow to confirm tag commit is reachable from master before build/publish (#556)
+- Jest globals (`globals.jest`) to ESLint flat config for test files, fixing `no-undef` on Jest APIs
+- Clarifying comments to test lifecycle hooks explaining hook execution order and DB isolation strategy
+- ADR guidelines in `CONTRIBUTING.md` (section 4)
+- ADR reference in `.github/copilot-instructions.md`
 
 ### Changed
 
@@ -77,7 +96,6 @@ This project uses football/soccer terminology for release names:
   with `"types": ["jest", "node"]` and `"noEmit": true`, so VS Code resolves Jest
   globals for files in `tests/`
 - `jest.config.ts`: pointed ts-jest transform at `tests/tsconfig.json`
-
 - `scripts/entrypoint.sh`: replaced pre-seeded database copy logic with
   `sequelize-cli db:migrate` (idempotent via `SequelizeMeta`); added `log()`
   helper with timestamps matching the cross-project entrypoint pattern (#107)
@@ -89,6 +107,11 @@ This project uses football/soccer terminology for release names:
 - `README.md`: updated Containerized Deployment feature description and
   Containers section to reflect migration-based initialization; updated Command
   Summary table with migration commands (#107)
+- `tests/player-stub.ts`: added JSDoc comment documenting the three-term data-state
+  vocabulary (`existing`, `nonexistent`, `unknown`) and added `unknown` property
+  (id + squadNumber) for 404-by-lookup test scenarios (#574)
+- `tests/player-test.ts`: renamed three test descriptions from `nonexistent` to
+  `unknown` and updated their bodies to reference `playerStub.unknown` (#574)
 
 ### Fixed
 
@@ -106,31 +129,11 @@ This project uses football/soccer terminology for release names:
 
 - `storage/players-sqlite3.db`: pre-seeded binary database file removed from
   version control; database is now initialized at runtime via migrations (#107)
-
 - `.sonarcloud.properties`: SonarCloud Automatic Analysis configuration —
   sources, tests, coverage exclusions aligned with `codecov.yml` (#561)
 - `.dockerignore`: added `.claude/`, `CLAUDE.md`, `.coderabbit.yaml`,
   `.sonarcloud.properties`, `CHANGELOG.md`, `README.md`; removed stale
   `.codeclimate.yml` entry (#561)
-- Architecture Decision Records (ADRs) in `docs/adr/` documenting 11 key decisions (#479)
-- Architecture Decisions section in `README.md` linking to the ADR index
-- Runtime verification step in CD workflow to confirm tag commit is reachable from master before build/publish (#556)
-- Jest globals (`globals.jest`) to ESLint flat config for test files, fixing `no-undef` on Jest APIs
-- Clarifying comments to test lifecycle hooks explaining hook execution order and DB isolation strategy
-- ADR guidelines in `CONTRIBUTING.md` (section 4)
-- ADR reference in `.github/copilot-instructions.md`
-
-### Changed
-
-- `tests/player-stub.ts`: added JSDoc comment documenting the three-term data-state
-  vocabulary (`existing`, `nonexistent`, `unknown`) and added `unknown` property
-  (id + squadNumber) for 404-by-lookup test scenarios (#574)
-- `tests/player-test.ts`: renamed three test descriptions from `nonexistent` to
-  `unknown` and updated their bodies to reference `playerStub.unknown` (#574)
-
-### Fixed
-
-### Removed
 
 ## [2.1.0-dribble] - 2026-03-31
 
@@ -302,3 +305,12 @@ docker pull ghcr.io/nanotaboada/ts-node-samples-express-restful:latest
 - 📝 Use clear, user-facing descriptions in CHANGELOG
 - 🏷️ Tags trigger CD pipeline - CI only runs on push/PR
 - 🐳 Only releases publish Docker images (not every merge)
+
+---
+
+[unreleased]: https://github.com/nanotaboada/ts-node-samples-express-restful/compare/v2.1.1-equalizer...HEAD
+[2.1.1 - Equalizer]: https://github.com/nanotaboada/ts-node-samples-express-restful/compare/v2.1.0-dribble...v2.1.1-equalizer
+[2.1.0-dribble]: https://github.com/nanotaboada/ts-node-samples-express-restful/compare/v2.0.0-corner...v2.1.0-dribble
+[2.0.0 - corner]: https://github.com/nanotaboada/ts-node-samples-express-restful/compare/v1.0.1-bicyclekick...v2.0.0-corner
+[1.0.1 - bicyclekick]: https://github.com/nanotaboada/ts-node-samples-express-restful/compare/v1.0.0-assist...v1.0.1-bicyclekick
+[1.0.0 - assist]: https://github.com/nanotaboada/ts-node-samples-express-restful/releases/tag/v1.0.0-assist
