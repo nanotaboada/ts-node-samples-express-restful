@@ -130,10 +130,10 @@ export default class PlayerController implements IPlayerController {
      *     responses:
      *       201:
      *         description: Created
-     *       400:
-     *         description: Bad Request
      *       409:
      *         description: Conflict
+     *       422:
+     *         description: Unprocessable Entity
      */
     async postAsync(request: Request, response: Response): Promise<void> {
         const create: IPlayerInput = request.body;
@@ -171,10 +171,10 @@ export default class PlayerController implements IPlayerController {
      *     responses:
      *       204:
      *         description: No Content
-     *       400:
-     *         description: Bad Request
      *       404:
      *         description: Not Found
+     *       422:
+     *         description: Unprocessable Entity
      */
     async putAsync(request: Request, response: Response): Promise<void> {
         const squadNumber = Number.parseInt(request.params.squadNumber);
