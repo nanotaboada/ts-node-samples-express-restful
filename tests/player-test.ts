@@ -182,7 +182,7 @@ describe('Integration Tests', () => {
         }, 60000); // Increase timeout for multiple requests
         // POST /players -------------------------------------------------------
         describe('/players', () => {
-            it('Request POST /players body empty → Response status 400 Bad Request', async () => {
+            it('Request POST /players body empty → Response status 422 Unprocessable Entity', async () => {
                 // Arrange
                 const body: Record<string, any> = {};
                 // Act
@@ -190,10 +190,10 @@ describe('Integration Tests', () => {
                     .post(path)
                     .send(body);
                 // Assert
-                expect(response.status).toBe(400);
+                expect(response.status).toBe(422);
                 expect(response.body.errors).toBeDefined();
             });
-            it('Request POST /players firstName missing → Response status 400 Bad Request', async () => {
+            it('Request POST /players firstName missing → Response status 422 Unprocessable Entity', async () => {
                 // Arrange
                 const body = { lastName: 'Doe', squadNumber: 10, position: 'Forward' };
                 // Act
@@ -201,11 +201,11 @@ describe('Integration Tests', () => {
                     .post(path)
                     .send(body);
                 // Assert
-                expect(response.status).toBe(400);
+                expect(response.status).toBe(422);
                 expect(response.body.errors).toBeDefined();
                 expect(hasFieldError(response.body.errors, 'firstName')).toBe(true);
             });
-            it('Request POST /players lastName missing → Response status 400 Bad Request', async () => {
+            it('Request POST /players lastName missing → Response status 422 Unprocessable Entity', async () => {
                 // Arrange
                 const body = { firstName: 'John', squadNumber: 10, position: 'Forward' };
                 // Act
@@ -213,11 +213,11 @@ describe('Integration Tests', () => {
                     .post(path)
                     .send(body);
                 // Assert
-                expect(response.status).toBe(400);
+                expect(response.status).toBe(422);
                 expect(response.body.errors).toBeDefined();
                 expect(hasFieldError(response.body.errors, 'lastName')).toBe(true);
             });
-            it('Request POST /players squadNumber missing → Response status 400 Bad Request', async () => {
+            it('Request POST /players squadNumber missing → Response status 422 Unprocessable Entity', async () => {
                 // Arrange
                 const body = { firstName: 'John', lastName: 'Doe', position: 'Forward' };
                 // Act
@@ -225,11 +225,11 @@ describe('Integration Tests', () => {
                     .post(path)
                     .send(body);
                 // Assert
-                expect(response.status).toBe(400);
+                expect(response.status).toBe(422);
                 expect(response.body.errors).toBeDefined();
                 expect(hasFieldError(response.body.errors, 'squadNumber')).toBe(true);
             });
-            it('Request POST /players position missing → Response status 400 Bad Request', async () => {
+            it('Request POST /players position missing → Response status 422 Unprocessable Entity', async () => {
                 // Arrange
                 const body = { firstName: 'John', lastName: 'Doe', squadNumber: 10 };
                 // Act
@@ -237,11 +237,11 @@ describe('Integration Tests', () => {
                     .post(path)
                     .send(body);
                 // Assert
-                expect(response.status).toBe(400);
+                expect(response.status).toBe(422);
                 expect(response.body.errors).toBeDefined();
                 expect(hasFieldError(response.body.errors, 'position')).toBe(true);
             });
-            it('Request POST /players squadNumber >99 → Response status 400 Bad Request', async () => {
+            it('Request POST /players squadNumber >99 → Response status 422 Unprocessable Entity', async () => {
                 // Arrange
                 const body = { firstName: 'John', lastName: 'Doe', squadNumber: 100, position: 'Forward' };
                 // Act
@@ -249,11 +249,11 @@ describe('Integration Tests', () => {
                     .post(path)
                     .send(body);
                 // Assert
-                expect(response.status).toBe(400);
+                expect(response.status).toBe(422);
                 expect(response.body.errors).toBeDefined();
                 expect(hasFieldError(response.body.errors, 'squadNumber')).toBe(true);
             });
-            it('Request POST /players squadNumber <1 → Response status 400 Bad Request', async () => {
+            it('Request POST /players squadNumber <1 → Response status 422 Unprocessable Entity', async () => {
                 // Arrange
                 const body = { firstName: 'John', lastName: 'Doe', squadNumber: 0, position: 'Forward' };
                 // Act
@@ -261,7 +261,7 @@ describe('Integration Tests', () => {
                     .post(path)
                     .send(body);
                 // Assert
-                expect(response.status).toBe(400);
+                expect(response.status).toBe(422);
                 expect(response.body.errors).toBeDefined();
                 expect(hasFieldError(response.body.errors, 'squadNumber')).toBe(true);
             });
@@ -333,7 +333,7 @@ describe('Integration Tests', () => {
         }, 60000); // Increase timeout for multiple requests
         // PUT /players/squadNumber/:squadNumber --------------------------------
         describe('/players/squadNumber/:squadNumber', () => {
-            it('Request PUT /players/squadNumber/{squadNumber} body empty → Response status 400 Bad Request', async () => {
+            it('Request PUT /players/squadNumber/{squadNumber} body empty → Response status 422 Unprocessable Entity', async () => {
                 // Arrange
                 const player = makeExistingPlayer();
                 const body: Record<string, any> = {};
@@ -342,10 +342,10 @@ describe('Integration Tests', () => {
                     .put(`${path}/squadNumber/${player.squadNumber}`)
                     .send(body);
                 // Assert
-                expect(response.status).toBe(400);
+                expect(response.status).toBe(422);
                 expect(response.body.errors).toBeDefined();
             });
-            it('Request PUT /players/squadNumber/{squadNumber} firstName missing → Response status 400 Bad Request', async () => {
+            it('Request PUT /players/squadNumber/{squadNumber} firstName missing → Response status 422 Unprocessable Entity', async () => {
                 // Arrange
                 const player = makeExistingPlayer();
                 const body = { lastName: 'Doe', squadNumber: player.squadNumber, position: 'Forward' };
@@ -354,11 +354,11 @@ describe('Integration Tests', () => {
                     .put(`${path}/squadNumber/${player.squadNumber}`)
                     .send(body);
                 // Assert
-                expect(response.status).toBe(400);
+                expect(response.status).toBe(422);
                 expect(response.body.errors).toBeDefined();
                 expect(hasFieldError(response.body.errors, 'firstName')).toBe(true);
             });
-            it('Request PUT /players/squadNumber/{squadNumber} lastName missing → Response status 400 Bad Request', async () => {
+            it('Request PUT /players/squadNumber/{squadNumber} lastName missing → Response status 422 Unprocessable Entity', async () => {
                 // Arrange
                 const player = makeExistingPlayer();
                 const body = { firstName: 'John', squadNumber: player.squadNumber, position: 'Forward' };
@@ -367,11 +367,11 @@ describe('Integration Tests', () => {
                     .put(`${path}/squadNumber/${player.squadNumber}`)
                     .send(body);
                 // Assert
-                expect(response.status).toBe(400);
+                expect(response.status).toBe(422);
                 expect(response.body.errors).toBeDefined();
                 expect(hasFieldError(response.body.errors, 'lastName')).toBe(true);
             });
-            it('Request PUT /players/squadNumber/{squadNumber} squadNumber missing → Response status 400 Bad Request', async () => {
+            it('Request PUT /players/squadNumber/{squadNumber} squadNumber missing → Response status 422 Unprocessable Entity', async () => {
                 // Arrange
                 const player = makeExistingPlayer();
                 const body = { firstName: 'John', lastName: 'Doe', position: 'Forward' };
@@ -380,11 +380,11 @@ describe('Integration Tests', () => {
                     .put(`${path}/squadNumber/${player.squadNumber}`)
                     .send(body);
                 // Assert
-                expect(response.status).toBe(400);
+                expect(response.status).toBe(422);
                 expect(response.body.errors).toBeDefined();
                 expect(hasFieldError(response.body.errors, 'squadNumber')).toBe(true);
             });
-            it('Request PUT /players/squadNumber/{squadNumber} position missing → Response status 400 Bad Request', async () => {
+            it('Request PUT /players/squadNumber/{squadNumber} position missing → Response status 422 Unprocessable Entity', async () => {
                 // Arrange
                 const player = makeExistingPlayer();
                 const body = { firstName: 'John', lastName: 'Doe', squadNumber: player.squadNumber };
@@ -393,11 +393,11 @@ describe('Integration Tests', () => {
                     .put(`${path}/squadNumber/${player.squadNumber}`)
                     .send(body);
                 // Assert
-                expect(response.status).toBe(400);
+                expect(response.status).toBe(422);
                 expect(response.body.errors).toBeDefined();
                 expect(hasFieldError(response.body.errors, 'position')).toBe(true);
             });
-            it('Request PUT /players/squadNumber/{squadNumber} squadNumber >99 → Response status 400 Bad Request', async () => {
+            it('Request PUT /players/squadNumber/{squadNumber} squadNumber >99 → Response status 422 Unprocessable Entity', async () => {
                 // Arrange
                 const player = makeExistingPlayer();
                 const body = { firstName: 'John', lastName: 'Doe', squadNumber: 100, position: 'Forward' };
@@ -406,11 +406,11 @@ describe('Integration Tests', () => {
                     .put(`${path}/squadNumber/${player.squadNumber}`)
                     .send(body);
                 // Assert
-                expect(response.status).toBe(400);
+                expect(response.status).toBe(422);
                 expect(response.body.errors).toBeDefined();
                 expect(hasFieldError(response.body.errors, 'squadNumber')).toBe(true);
             });
-            it('Request PUT /players/squadNumber/{squadNumber} squadNumber <1 → Response status 400 Bad Request', async () => {
+            it('Request PUT /players/squadNumber/{squadNumber} squadNumber <1 → Response status 422 Unprocessable Entity', async () => {
                 // Arrange
                 const player = makeExistingPlayer();
                 const body = { firstName: 'John', lastName: 'Doe', squadNumber: 0, position: 'Forward' };
@@ -419,7 +419,7 @@ describe('Integration Tests', () => {
                     .put(`${path}/squadNumber/${player.squadNumber}`)
                     .send(body);
                 // Assert
-                expect(response.status).toBe(400);
+                expect(response.status).toBe(422);
                 expect(response.body.errors).toBeDefined();
                 expect(hasFieldError(response.body.errors, 'squadNumber')).toBe(true);
             });

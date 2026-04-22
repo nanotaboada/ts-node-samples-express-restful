@@ -49,7 +49,7 @@ export default class PlayerValidator implements IPlayerValidator {
 
     /**
      * Middleware function that handles validation results.
-     * Returns 400 with error details if validation fails, otherwise calls next().
+     * Returns 422 with error details if validation fails, otherwise calls next().
      *
      * @param request - Express Request object
      * @param response - Express Response object
@@ -67,7 +67,7 @@ export default class PlayerValidator implements IPlayerValidator {
                 },
                 'Validation failed'
             );
-            response.status(400).json({ errors: errors.array() });
+            response.status(422).json({ errors: errors.array() });
             return;
         }
         next();

@@ -46,6 +46,9 @@ This project uses football/soccer terminology for release names:
 
 ### Changed
 
+- Validation errors now return `422 Unprocessable Entity` instead of `400 Bad Request`
+  to distinguish field-level validation failures from malformed requests (RFC 4918) (#585)
+
 ### Fixed
 
 ### Removed
