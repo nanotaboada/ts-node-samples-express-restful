@@ -138,7 +138,7 @@ This project uses football/soccer terminology for release names:
   `.sonarcloud.properties`, `CHANGELOG.md`, `README.md`; removed stale
   `.codeclimate.yml` entry (#561)
 
-## [2.1.0-dribble] - 2026-03-31
+## [2.1.0 - Dribble] - 2026-03-31
 
 ### Added
 
@@ -163,7 +163,7 @@ This project uses football/soccer terminology for release names:
 
 ---
 
-## [2.0.0 - corner] - 2026-03-29
+## [2.0.0 - Corner] - 2026-03-29
 
 ### Added
 
@@ -186,7 +186,7 @@ This project uses football/soccer terminology for release names:
 
 ---
 
-## [1.0.1 - bicyclekick] - 2026-03-08
+## [1.0.1 - Bicycle-kick] - 2026-03-08
 
 ### Changed
 
@@ -205,115 +205,25 @@ This project uses football/soccer terminology for release names:
 
 ---
 
-## [1.0.0 - assist] - 2026-02-08
+## [1.0.0 - Assist] - 2026-02-08
 
 Initial release. See [README.md](README.md) for complete feature list and documentation.
 
----
+<!-- Template for new releases:
+## [X.Y.Z - Term] - YYYY-MM-DD
 
-## How to Release
+### Added
 
-💡 **Update CHANGELOG.md continuously with every meaningful change before committing!**
+### Changed
 
-### Pre-Release Checklist
+### Fixed
 
-- [ ] Release branch created from `master`
-- [ ] `CHANGELOG.md` updated with release notes
-- [ ] Changes committed and pushed on the release branch
-- [ ] Release PR merged into `master`
-- [ ] Tag created with correct format: `vX.Y.Z-term`
-- [ ] Term is valid (A-Z from the football terminology list above)
-- [ ] Tag pushed to trigger CD workflow
-
-### Creating a Release
-
-1. **Create a release branch**
-
-   ```bash
-   git checkout master && git pull
-   git checkout -b release/vX.Y.Z-term
-   ```
-
-2. **Update CHANGELOG.md**
-
-   Move items from `[Unreleased]` to a new version section:
-
-   ```markdown
-   ## [X.Y.Z - term] - YYYY-MM-DD
-   ```
-
-   Commit and push:
-
-   ```bash
-   git add CHANGELOG.md
-   git commit -m "chore(release): vX.Y.Z-term"
-   git push origin release/vX.Y.Z-term
-   ```
-
-3. **Merge the release PR**
-
-   Open a pull request from `release/vX.Y.Z-term` into `master` and merge it. The tag must be created **after** the merge so it points to the correct commit on `master`.
-
-4. **Create and push tag**
-
-   ```bash
-   git checkout master && git pull
-   git tag -a vX.Y.Z-term -m "Release X.Y.Z - Term"
-   git push origin vX.Y.Z-term
-   ```
-
-5. **CD pipeline runs automatically**
-
-   GitHub Actions will:
-   - Run full test suite with coverage
-   - Build Docker image
-   - Publish to GHCR with tags: `:X.Y.Z`, `:term`, `:latest`
-   - Create GitHub Release with auto-generated notes
-
-### Release Naming Convention
-
-Format: `v{MAJOR}.{MINOR}.{PATCH}-{TERM}`
-
-Example: `v1.0.0-assist`
-
-- **Version**: Semantic versioning (MAJOR.MINOR.PATCH)
-- **Term**: Football terminology from the alphabetical list above
-
-### Docker Image Tags
-
-Each release publishes three Docker tags:
-
-```bash
-# Pull by semantic version (recommended for production)
-docker pull ghcr.io/nanotaboada/ts-node-samples-express-restful:1.0.0
-
-# Pull by term name (memorable, useful for staging)
-docker pull ghcr.io/nanotaboada/ts-node-samples-express-restful:assist
-
-# Pull latest (development/testing only)
-docker pull ghcr.io/nanotaboada/ts-node-samples-express-restful:latest
-```
-
-### Versioning Guidelines
-
-**MAJOR** (x.0.0): Breaking changes to API contracts
-**MINOR** (1.x.0): New features, backwards-compatible
-**PATCH** (1.0.x): Bug fixes, no new features
-
-### Important Notes
-
-- 💡 Always update CHANGELOG.md `[Unreleased]` section as you work
-- 🚫 Never commit secrets, API keys, or credentials
-- ✅ Test thoroughly before tagging
-- 📝 Use clear, user-facing descriptions in CHANGELOG
-- 🏷️ Tags trigger CD pipeline - CI only runs on push/PR
-- 🐳 Only releases publish Docker images (not every merge)
-
----
+### Removed
+-->
 
 [unreleased]: https://github.com/nanotaboada/ts-node-samples-express-restful/compare/v2.1.1-equalizer...HEAD
 [2.1.1 - Equalizer]: https://github.com/nanotaboada/ts-node-samples-express-restful/compare/v2.1.0-dribble...v2.1.1-equalizer
-[2.1.0-dribble]: https://github.com/nanotaboada/ts-node-samples-express-restful/compare/v2.0.0-corner...v2.1.0-dribble
-[2.0.0 - corner]: https://github.com/nanotaboada/ts-node-samples-express-restful/compare/v1.0.1-bicyclekick...v2.0.0-corner
-[1.0.1 - bicyclekick]: https://github.com/nanotaboada/ts-node-samples-express-restful/compare/v1.0.0-assist...v1.0.1-bicyclekick
-[1.0.0 - assist]: https://github.com/nanotaboada/ts-node-samples-express-restful/releases/tag/v1.0.0-assist
+[2.1.0 - Dribble]: https://github.com/nanotaboada/ts-node-samples-express-restful/compare/v2.0.0-corner...v2.1.0-dribble
+[2.0.0 - Corner]: https://github.com/nanotaboada/ts-node-samples-express-restful/compare/v1.0.1-bicyclekick...v2.0.0-corner
+[1.0.1 - Bicycle-kick]: https://github.com/nanotaboada/ts-node-samples-express-restful/compare/v1.0.0-assist...v1.0.1-bicyclekick
+[1.0.0 - Assist]: https://github.com/nanotaboada/ts-node-samples-express-restful/releases/tag/v1.0.0-assist
