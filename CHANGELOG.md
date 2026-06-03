@@ -48,6 +48,18 @@ This project uses football/soccer terminology for release names:
 
 - Validation errors now return `422 Unprocessable Entity` instead of `400 Bad Request`
   to distinguish field-level validation failures from malformed requests (RFC 4918) (#585)
+- Consolidated project guidance from `.github/copilot-instructions.md` into `CLAUDE.md`;
+  removed the stub `@` include directive and deleted the now-redundant source file (#639)
+- Corrected `CLAUDE.md` "Modify schema" workflow to use Sequelize CLI migrations instead
+  of the stale "manually update `storage/players-sqlite3.db`" instruction (#639)
+- Updated `docs/adr/005-use-sqlite-sequelize.md` to remove the stale "no migration system"
+  claim and reference the new ADR-012 (#639)
+- Created `docs/adr/012-sequelize-cli-migrations.md` to formally document the Sequelize CLI
+  migration decision (migration file location, CommonJS requirement, `predev` automation) (#639)
+- Updated `.coderabbit.yaml`: corrected controller path HTTP status codes (added 409 Conflict
+  and 422 Unprocessable Entity, removed 400), expanded ESM `.js` import instruction with
+  ADR-003 reference, added `database/migrations/**/*.js` path instruction, updated
+  `copilot-instructions.md` references to `CLAUDE.md` (#639)
 
 ### Fixed
 
