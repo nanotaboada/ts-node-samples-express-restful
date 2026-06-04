@@ -24,7 +24,7 @@ We will use SQLite as the database engine and Sequelize as the ORM.
 
 - The pre-seeded database file lives at `storage/players-sqlite3.db` and is versioned in the repository
 - Sequelize models are defined in `src/models/` and accessed only through `src/database/`
-- There is no migration system; schema changes require manually updating the SQLite file
+- Schema management was subsequently adopted via Sequelize CLI migrations (see [ADR-012](012-sequelize-cli-migrations.md))
 - The same database file is used in development, tests (via `.env.test`), and the Docker image
 
 ## Consequences
@@ -39,7 +39,7 @@ We will use SQLite as the database engine and Sequelize as the ORM.
 ### Negative
 
 - Not production-ready: SQLite has no concurrent write support and is unsuitable for multi-instance deployments
-- No migration system means schema changes are manual and error-prone across environments
+- The concern about manual schema changes is addressed by adopting Sequelize CLI migrations (see [ADR-012](012-sequelize-cli-migrations.md))
 - Sequelize's TypeScript support, while functional, requires some boilerplate (`declare` fields, `Model.init`)
 
 ### Neutral
