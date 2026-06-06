@@ -33,7 +33,9 @@ reviews:
       instructions: |
         - Follow TypeScript strict mode conventions
         - Use 4 spaces for indentation (per Prettier config)
-        - Ensure all relative imports include .js extension (ESM requirement)
+        - All relative imports must include the .js extension (native ESM). Node.js does not
+          infer extensions at runtime; omitting .js causes MODULE_NOT_FOUND even when tsc
+          compiles cleanly. See ADR-003.
         - Verify proper async/await patterns for all I/O operations
         - Check type safety - avoid excessive use of any
         - Follow interface-based contracts for dependency injection
@@ -43,7 +45,9 @@ reviews:
       instructions: |
         - Controllers should delegate to services
         - Verify OpenAPI @openapi JSDoc annotations are present
-        - Check proper HTTP status codes (200, 201, 204, 400, 404)
+        - Check proper HTTP status codes: 200 OK, 201 Created, 204 No Content,
+          404 Not Found, 409 Conflict (duplicate squad number on POST),
+          422 Unprocessable Entity (payload validation failures)
         - Ensure methods are bound (.bind(this.controller)) in routes
         - Validate request/response handling with proper types
         - Check that controllers return JSON or status codes appropriately
@@ -64,6 +68,14 @@ reviews:
         - Check proper connection configuration (SQLite)
         - Ensure interface definitions match implementations
         - Validate error handling during database operations
+
+    - path: "database/migrations/**/*.js"
+      instructions: |
+        - Migration files must use CommonJS module.exports syntax (not ESM import/export)
+          because sequelize-cli loads .sequelizerc via require(). See ADR-012.
+        - Each file must export async up(queryInterface, Sequelize) and async down(queryInterface)
+        - File names must use the sequelize-cli timestamp prefix format (e.g. 20260101000001-description.js)
+        - Schema changes go here; do not directly edit storage/players-sqlite3.db
 
     - path: "src/models/**/*.ts"
       instructions: |
@@ -207,10 +219,10 @@ reviews:
           If so, update the relevant sections of README.md to reflect the current state.
           Do not rewrite sections unrelated to the changes.
 
-          ## 3. .github/copilot-instructions.md
+          ## 3. CLAUDE.md
           If the PR introduces patterns, conventions, or architectural decisions that
           should guide future AI-assisted contributions, add or update the relevant
-          instructions in .github/copilot-instructions.md.
+          instructions in CLAUDE.md.
           Focus on things a developer (or AI assistant) unfamiliar with this specific
           stack implementation should know before writing code here.
 
@@ -371,7 +383,7 @@ knowledge_base:
   code_guidelines:
     enabled: true
     filePatterns:
-      - ".github/copilot-instructions.md"
+      - "CLAUDE.md"
   learnings:
     scope: auto
   issues:
