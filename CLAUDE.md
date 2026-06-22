@@ -132,7 +132,7 @@ Example: `feat(api): add player stats endpoint (#42)`
 
 ## Architecture Decision Records
 
-Significant architectural decisions are documented in [`docs/adr/`](docs/adr/) (ADR-001–012). Load these before proposing structural changes — they explain the **why** behind the key decisions in this project. When proposing a change that alters an accepted decision, create a new ADR rather than editing the existing one.
+Significant architectural decisions are documented in [`docs/adr/`](docs/adr/) (ADR-001–015). Load these before proposing structural changes — they explain the **why** behind the key decisions in this project. When proposing a change that alters an accepted decision, create a new ADR rather than editing the existing one.
 
 ## Agent Mode
 
