@@ -44,6 +44,10 @@ This project uses football/soccer terminology for release names:
 
 ### Added
 
+- ADR-013: Use Full-Replace PUT as the Partial Update Strategy
+- ADR-014: Adopt AI-Assisted Development Workflow
+- ADR-015: Adopt Spec-Driven Development (SDD)
+
 ### Changed
 
 - Validation errors now return `422 Unprocessable Entity` instead of `400 Bad Request`
