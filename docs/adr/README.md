@@ -20,6 +20,9 @@ ADRs document architecturally significant decisions: their context, the decision
 | [010](010-use-tsx-over-ts-node.md) | Use tsx instead of ts-node | Accepted |
 | [011](011-football-semantic-versioning.md) | Football-themed semantic versioning | Accepted |
 | [012](012-sequelize-cli-migrations.md) | Use Sequelize CLI for schema migrations | Accepted |
+| [013](013-full-replace-put-no-patch.md) | Use Full-Replace PUT as the Partial Update Strategy | Accepted |
+| [014](014-ai-assisted-development-workflow.md) | Adopt AI-Assisted Development Workflow | Accepted |
+| [015](015-spec-driven-development.md) | Adopt Spec-Driven Development (SDD) | Accepted |
 
 ## Creating a new ADR
 
