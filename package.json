@@ -47,7 +47,7 @@
     "uuid": "^14.0.1"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^21.0.2",
+    "@commitlint/config-conventional": "^21.2.0",
     "@types/body-parser": "^1.19.6",
     "@types/cors": "^2.8.19",
     "@types/eslint": "^9.6.1",
