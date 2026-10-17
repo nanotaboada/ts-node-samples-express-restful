@@ -64,6 +64,10 @@ This project uses football/soccer terminology for release names:
   and 422 Unprocessable Entity, removed 400), expanded ESM `.js` import instruction with
   ADR-003 reference, added `database/migrations/**/*.js` path instruction, updated
   `copilot-instructions.md` references to `CLAUDE.md` (#639)
+- Upgraded TypeScript from 5.9.3 to 6.0.3; typescript-eslint and ts-jest now support 6.0.
+  TypeScript 7.0 is deferred because it ships without the compiler API both tools require (#709)
+- `CLAUDE.md` commit example no longer hardcodes a model in the `Co-Authored-By` line;
+  it uses the line Claude Code provides for the current model
 
 ### Fixed
 

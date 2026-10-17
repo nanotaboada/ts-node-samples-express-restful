@@ -213,7 +213,7 @@ This project uses Spec-Driven Development (SDD): discuss in Plan mode first, cre
 ```text
 feat(scope): description (#issue)
 
-Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+Co-Authored-By: <the line Claude Code provides for the current model>
 ```
 
 ## Claude Code
