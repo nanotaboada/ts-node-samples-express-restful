@@ -47,9 +47,13 @@ This project uses football/soccer terminology for release names:
 - ADR-013: Use Full-Replace PUT as the Partial Update Strategy
 - ADR-014: Adopt AI-Assisted Development Workflow
 - ADR-015: Adopt Spec-Driven Development (SDD)
+- `create-issue` and `api-workflows` Claude Code skills in `.claude/skills/`, holding the
+  issue templates and add-endpoint / modify-schema checklists moved out of `CLAUDE.md` (#743)
 
 ### Changed
 
+- Trimmed `CLAUDE.md` by removing content derivable from the codebase (tech stack table,
+  directory tree, Quick Start commands, duplicate Commits section) (#743)
 - Validation errors now return `422 Unprocessable Entity` instead of `400 Bad Request`
   to distinguish field-level validation failures from malformed requests (RFC 4918) (#585)
 - Consolidated project guidance from `.github/copilot-instructions.md` into `CLAUDE.md`;

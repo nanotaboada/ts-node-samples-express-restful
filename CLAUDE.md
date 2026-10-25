@@ -4,49 +4,15 @@
 
 REST API for managing football players built with Node.js and Express.js in TypeScript (native ESM). Implements CRUD operations with a layered architecture, Sequelize ORM + SQLite, in-memory caching, Swagger documentation, and Pino structured logging.
 
-## Tech Stack
-
-| Category         | Technology                                    |
-|------------------|-----------------------------------------------|
-| Runtime          | Node.js 24 LTS (Krypton)                      |
-| Language         | TypeScript (strict mode, native ESM)          |
-| Framework        | Express.js 5                                  |
-| ORM              | Sequelize                                     |
-| Database         | SQLite                                        |
-| Caching          | node-cache (in-memory, 1-hour TTL)            |
-| Logging          | Pino (structured, with request correlation IDs) |
-| Security         | Helmet, CORS, express-rate-limit              |
-| Testing          | Jest 30 + Supertest                           |
-| Linting/Formatting | ESLint + Prettier                           |
-| API Docs         | Swagger (JSDoc `@openapi` annotations → `swagger.json`) |
-| Containerization | Docker (multi-stage builds)                   |
-
-## Structure
-
-```text
-src/
-├── app.ts              — Express app factory; manual DI wiring of all instances
-├── server.ts           — entry point; starts HTTP server
-├── controllers/        — request handlers + @openapi JSDoc + try/catch      [HTTP layer]
-├── routes/             — Express Router definitions + middleware wiring
-├── services/           — business logic + node-cache caching                [business layer]
-├── database/           — Sequelize interfaces + implementations             [data layer]
-├── models/             — Sequelize Player model + IPlayer interface
-├── middlewares/        — rate limiter, validators, Swagger CSP middleware
-├── docs/               — Swagger config and doc generation
-└── utils/              — Pino logger configuration
-tests/                  — Jest + Supertest integration tests (real SQLite DB)
-storage/                — SQLite database (runtime, managed by Sequelize CLI migrations)
-scripts/                — Docker entrypoint and healthcheck scripts
-database/
-└── migrations/         — Sequelize CLI migration files (CommonJS, timestamp-prefixed)
-```
+## Architecture
 
 **Layer rule**: `Routes → Controllers → Services → Database`. Never skip a layer. Controllers must not contain business logic — they parse the request, call one service method, and send the response. Services own all caching and Sequelize operations.
 
 **DI wiring**: All instances are manually composed in `src/app.ts` using constructor injection:
 `PlayerDatabase → PlayerService → PlayerController → PlayerRoute` (and the same for Health and middleware).
 When adding a new dependency, wire it here.
+
+**Migrations**: files in `database/migrations/` are CommonJS (Sequelize CLI requirement), unlike the ESM `src/` tree.
 
 ## Coding Guidelines
 
@@ -90,21 +56,6 @@ When adding a new dependency, wire it here.
 
 ## Commands
 
-### Quick Start
-
-```bash
-npm install
-npm run dev             # http://localhost:9000
-npm run build && npm start
-npm test                # all tests
-npm run coverage        # tests + coverage report
-npm run lint
-npx tsc --noEmit        # type check only
-npx prettier --write .
-docker compose up
-docker compose down -v
-```
-
 ### Pre-commit Checks
 
 1. Update `CHANGELOG.md` `[Unreleased]` section (Added / Changed / Fixed / Removed)
@@ -115,12 +66,6 @@ docker compose down -v
 6. `npm run lint:commit` — Conventional Commits validation
 7. Commit message follows Conventional Commits format (enforced by commitlint)
 8. If this commit introduces or changes an architectural decision, update `CLAUDE.md` and create or amend the relevant ADR in `docs/adr/`
-
-### Commits
-
-Format: `type(scope): description (#issue)` — max 80 chars
-Types: `feat` `fix` `chore` `docs` `test` `refactor` `ci` `perf`
-Example: `feat(api): add player stats endpoint (#42)`
 
 ## Invariants (never change without explicit discussion)
 
@@ -166,45 +111,11 @@ Significant architectural decisions are documented in [`docs/adr/`](docs/adr/) (
 
 ### Creating Issues
 
-This project uses Spec-Driven Development (SDD): discuss in Plan mode first, create a GitHub Issue as the spec artifact, then implement. Always offer to draft an issue before writing code.
-
-**Feature request** (`enhancement` label):
-- **Problem**: the pain point being solved
-- **Proposed Solution**: expected behavior and functionality
-- **Suggested Approach** *(optional)*: implementation plan if known
-- **Acceptance Criteria**: at minimum — behaves as proposed, tests added/updated, no regressions
-- **References**: related issues, docs, or examples
-
-**Bug report** (`bug` label):
-- **Description**: clear summary of the bug
-- **Steps to Reproduce**: numbered, minimal steps
-- **Expected / Actual Behavior**: one section each
-- **Environment**: runtime versions + OS
-- **Additional Context**: logs, screenshots, stack traces
-- **Possible Solution** *(optional)*: suggested fix or workaround
+This project uses Spec-Driven Development (SDD): discuss in Plan mode first, create a GitHub Issue as the spec artifact, then implement. Always offer to draft an issue before writing code. Issue templates live in the `create-issue` skill.
 
 ### Key workflows
 
-**Add an endpoint**:
-1. Define interface method in `src/controllers/player-controller-interface.ts`
-2. Implement in `src/controllers/player-controller.ts` with `@openapi` JSDoc + try/catch
-3. Add service method in `src/services/player-service-interface.ts` + implementation in `src/services/player-service.ts` with caching + cache invalidation as needed
-4. Add database method in `src/database/player-database-interface.ts` + `src/database/player-database.ts` using Sequelize
-5. Register route in `src/routes/player-route.ts` (wire validator middleware if needed)
-6. Wire any new instances in `src/app.ts`
-7. Add integration tests in `tests/player-test.ts` following naming and Arrange/Act/Assert conventions
-8. Run `npm run swagger:docs` to regenerate `swagger.json`
-9. Run pre-commit checks
-
-**Modify schema**:
-1. Update `IPlayer` interface in `src/models/player-interface.ts`
-2. Update Sequelize model in `src/models/player-model.ts`
-3. Generate a migration: `npx sequelize-cli migration:generate --name describe-the-change`
-4. Edit the generated file in `database/migrations/` — implement `up` and `down`
-5. Apply the migration: `npm run db:migrate`
-6. Rebuild Docker image: `docker compose build`
-7. Update services, controllers, validators, and tests
-8. Run `npm run coverage`
+Step-by-step guides for adding an endpoint and modifying the schema live in the `api-workflows` skill.
 
 **Cross-repo consistency**: API contracts (endpoints, schemas, HTTP status codes), release naming (football terminology, alphabetical), and CI/CD patterns must stay consistent across all stacks (.NET, Go, Java, Python, Rust).
 
