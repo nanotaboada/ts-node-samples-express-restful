@@ -21,7 +21,7 @@ description: Step-by-step checklists for adding a new player endpoint or modifyi
 
 1. Update `IPlayer` interface in `src/models/player-interface.ts`
 2. Update Sequelize model in `src/models/player-model.ts`
-3. Generate a migration: `npx sequelize-cli migration:generate --name describe-the-change`
+3. Generate a migration: `npx --no sequelize-cli migration:generate --name describe-the-change`
 4. Edit the generated file in `database/migrations/` — implement `up` and `down`
 5. Apply the migration: `npm run db:migrate`
 6. Rebuild Docker image: `docker compose build`
